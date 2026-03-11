@@ -1,0 +1,4233 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Frequenzjaeger // Radio Deck</title>
+  <style>
+    :root {
+      --bg-a: #353b43;
+      --bg-b: #525c68;
+
+      --chassis-top: #7f8893;
+      --chassis-mid: #6a737e;
+      --chassis-low: #585f68;
+
+      --bezel: #253547;
+      --bezel-hi: #3a526d;
+
+      --screen: #09111a;
+      --lcd-bg: #0b140d;
+      --lcd-text: #86e8a6;
+
+      --dispatch: #ffd166;
+      --stack: #8ec8ff;
+      --scan: #8df0ca;
+
+      --text: #f3f8ff;
+      --muted: #cfe0f0;
+
+      --good: #7de09d;
+      --warn: #f4cb7b;
+      --bad: #ee8b7f;
+
+      --mono: "IBM Plex Mono", Menlo, monospace;
+      --sans: "Space Grotesk", "Segoe UI", sans-serif;
+      --title: "Bebas Neue", Impact, sans-serif;
+      --snow-opacity: 0;
+      --snow-strength: 0;
+      --beat-pulse: 0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: var(--sans);
+      background:
+        radial-gradient(1200px 560px at -10% -10%, rgba(255, 208, 138, 0.2), transparent 65%),
+        radial-gradient(1000px 560px at 110% 120%, rgba(141, 240, 202, 0.16), transparent 65%),
+        linear-gradient(160deg, var(--bg-b) 0%, var(--bg-a) 75%);
+      padding: 16px;
+    }
+
+    .radio {
+      max-width: 1180px;
+      margin: 0 auto;
+      border-radius: 34px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.1);
+      background:
+        linear-gradient(180deg, var(--chassis-top), var(--chassis-mid) 52%, var(--chassis-low)),
+        radial-gradient(circle at 14% 18%, rgba(255,255,255,.2), transparent 32%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.02) 1px, transparent 1px, transparent 4px),
+        repeating-linear-gradient(0deg, rgba(0,0,0,.03), rgba(0,0,0,.03) 1px, transparent 1px, transparent 3px);
+      box-shadow:
+        0 28px 60px rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.26),
+        inset 0 -3px 0 rgba(0,0,0,.22);
+    }
+
+    .radio::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .22;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.25) 0 2px, transparent 3px) 0 0 / 36px 36px,
+        radial-gradient(circle at 62% 68%, rgba(0,0,0,.25) 0 2px, transparent 3px) 0 0 / 44px 44px;
+      mix-blend-mode: soft-light;
+    }
+
+    .radio::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 22px;
+      pointer-events: none;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
+    }
+
+    .top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding: 2px 4px;
+    }
+
+    h1 {
+      margin: 0;
+      font: 400 clamp(30px, 4.8vw, 46px)/.85 var(--title);
+      letter-spacing: 1px;
+      color: #ffefc7;
+      text-shadow: 0 1px 0 rgba(0,0,0,.3);
+    }
+
+    .sub {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: #e1eefb;
+    }
+
+    .ticker {
+      border-radius: 999px;
+      padding: 9px 12px;
+      border: 1px solid rgba(149, 237, 196, .54);
+      background: linear-gradient(180deg, rgba(9, 20, 30, .84), rgba(16, 28, 41, .72));
+      color: #affad6;
+      font: 700 12px/1 var(--mono);
+      letter-spacing: .2px;
+      white-space: nowrap;
+      box-shadow: inset 0 0 0 1px rgba(149,237,196,.1);
+    }
+
+    .face {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.25fr .95fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 980px) {
+      .face { grid-template-columns: 1fr; }
+    }
+
+    .module {
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(180deg, rgba(26, 39, 55, .92), rgba(14, 23, 35, .92)),
+        repeating-linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.02) 1px, transparent 1px, transparent 4px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 -2px 0 rgba(0,0,0,.2);
+      padding: 12px;
+    }
+
+    .scope-shell {
+      border-radius: 16px;
+      border: 2px solid var(--bezel-hi);
+      background: linear-gradient(180deg, #8e959e, #737b85);
+      padding: 9px;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.18),
+        inset 0 0 0 2px rgba(36,44,53,.42),
+        inset 0 16px 24px rgba(255,255,255,.08),
+        inset 0 -22px 30px rgba(0,0,0,.34);
+      position: relative;
+      overflow: hidden;
+    }
+    .scope-shell.power-off .scope-grid,
+    .scope-shell.power-off::before,
+    .scope-shell.power-off::after {
+      opacity: 0;
+      animation: none;
+    }
+    .scope-shell.power-off canvas {
+      background: #050608;
+      box-shadow:
+        inset 0 0 0 1px rgba(140,150,164,.08),
+        inset 0 0 28px rgba(0,0,0,.74);
+    }
+    .left-display.power-off .scope-shell {
+      background: #3b434d;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.08),
+        inset 0 0 0 2px rgba(20,26,33,.5),
+        inset 0 -22px 30px rgba(0,0,0,.42);
+    }
+    .lcd.power-off {
+      background: inherit;
+      border-color: inherit;
+      box-shadow: inherit;
+      filter: none;
+    }
+    .lcd.power-off::before,
+    .lcd.power-off::after {
+      opacity: 0;
+      animation: none;
+    }
+    .lcd.power-off > * {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .display-selects {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .display-select {
+      border-radius: 8px;
+      border: 1px solid rgba(132, 178, 132, .24);
+      background: linear-gradient(180deg, rgba(78, 108, 56, .34), rgba(56, 82, 40, .36));
+      box-shadow: none;
+      padding: 6px 7px;
+      display: grid;
+      gap: 5px;
+    }
+    .display-select label {
+      font: 700 9px/1 "Press Start 2P", "VT323", "Lucida Console", monospace;
+      letter-spacing: .4px;
+      color: #a4bf86;
+      text-transform: uppercase;
+      text-shadow: none;
+    }
+    .display-select select {
+      width: 100%;
+      min-height: 34px;
+      border-radius: 3px;
+      border: 1px solid rgba(138, 176, 114, .36);
+      background: linear-gradient(180deg, rgba(122, 153, 84, .46), rgba(94, 121, 64, .48));
+      color: #d0e0a8;
+      font: 700 13px/1.2 "Press Start 2P", "VT323", "Lucida Console", monospace;
+      text-transform: uppercase;
+      letter-spacing: .25px;
+      padding: 8px 26px 8px 10px;
+      box-shadow: none;
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #c3d39b 50%),
+        linear-gradient(135deg, #c3d39b 50%, transparent 50%),
+        linear-gradient(180deg, rgba(122, 153, 84, .46), rgba(94, 121, 64, .48));
+      background-position:
+        calc(100% - 12px) 11px,
+        calc(100% - 7px) 11px,
+        0 0;
+      background-size: 5px 5px, 5px 5px, auto;
+      background-repeat: no-repeat;
+      outline: none;
+    }
+    .display-select select:focus {
+      border-color: rgba(182, 208, 132, .58);
+      box-shadow: none;
+    }
+    .lcd .display-selects {
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+
+    .scope-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg, rgba(149,237,196,.06), rgba(149,237,196,.06) 1px, transparent 1px, transparent 3px);
+      opacity: .24;
+    }
+    .scope-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      opacity: var(--snow-opacity);
+      background:
+        radial-gradient(circle, rgba(255,255,255,.9) 0 1px, transparent 1px 100%) 0 0 / 4px 4px,
+        radial-gradient(circle, rgba(210,230,255,.65) 0 1px, transparent 1px 100%) 1px 2px / 5px 5px;
+      mix-blend-mode: screen;
+      animation: tvSnow 120ms steps(2, end) infinite;
+    }
+
+    .scope-grid {
+      position: absolute;
+      inset: 9px;
+      pointer-events: none;
+      border-radius: 9px;
+      background-image:
+        linear-gradient(rgba(108,120,134,.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,120,134,.22) 1px, transparent 1px);
+      background-size: 18px 18px;
+      opacity: .72;
+      box-shadow:
+        inset 0 0 0 1px rgba(210,220,230,.24),
+        inset 0 0 18px rgba(26,34,42,.35);
+    }
+
+    canvas {
+      width: 100%;
+      height: 188px;
+      display: block;
+      border-radius: 9px;
+      background: linear-gradient(180deg, #979ea8, #7a838e);
+      box-shadow:
+        inset 0 0 0 1px rgba(226,233,240,.24),
+        inset 0 0 0 2px rgba(40,48,58,.34),
+        inset 0 14px 24px rgba(255,255,255,.08),
+        inset 0 -18px 26px rgba(0,0,0,.34);
+      position: relative;
+      z-index: 1;
+    }
+
+    .screen-readouts {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 760px) {
+      .screen-readouts { grid-template-columns: 1fr; }
+      .display-selects { grid-template-columns: 1fr; }
+    }
+
+    .chip {
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color: #c9d9e8;
+      padding: 8px;
+      font: 700 12px/1 var(--mono);
+    }
+
+    .meters {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .meter {
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.24);
+      padding: 7px;
+      color: #bed2e4;
+      font: 700 11px/1 var(--mono);
+    }
+    .dash-meter {
+      display: grid;
+      gap: 6px;
+    }
+    .dash-label {
+      color: #d5dbe2;
+      letter-spacing: .2px;
+    }
+    .dash-face {
+      position: relative;
+      height: 50px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(180deg, rgba(104,112,122,.82), rgba(84,92,101,.86)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.16), rgba(255,255,255,.16) 1px, transparent 1px, transparent 12px);
+      overflow: hidden;
+    }
+    .led-lock {
+      display: grid;
+      grid-template-columns: repeat(20, 1fr);
+      gap: 4px;
+      align-items: center;
+      height: 50px;
+      padding: 11px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(180deg, rgba(18, 24, 32, .9), rgba(10, 14, 20, .92)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.06) 1px, transparent 1px, transparent 12px);
+      overflow: hidden;
+    }
+    .led-lock .led {
+      height: 10px;
+      border-radius: 2px;
+      background: #2e343c;
+      opacity: .16;
+      transition: opacity .08s linear, background-color .08s linear, box-shadow .08s linear;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.28);
+    }
+    .led-lock .led.on.dispatch {
+      background: #83ffab;
+      box-shadow: 0 0 7px rgba(131,255,171,.45), inset 0 0 2px rgba(215,255,228,.7);
+    }
+    .led-lock .led.on.dispatch-yellow {
+      background: #ffd86c;
+      box-shadow: 0 0 7px rgba(255,216,108,.42), inset 0 0 2px rgba(255,242,206,.65);
+    }
+    .led-lock .led.on.dispatch-red {
+      background: #ff6a6a;
+      box-shadow: 0 0 7px rgba(255,106,106,.44), inset 0 0 2px rgba(255,222,222,.6);
+    }
+    .led-lock .led.on.stack {
+      background: #ff6767;
+      box-shadow: 0 0 7px rgba(255,103,103,.45), inset 0 0 2px rgba(255,222,222,.62);
+    }
+    .dash-face::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 10px;
+      height: 1px;
+      background: rgba(255,255,255,.2);
+    }
+    .dash-needle {
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      width: 1px;
+      height: 58px;
+      border-radius: 2px;
+      background: #eceff3;
+      transform-origin: 50% calc(100% - 1px);
+      transform: translateX(-50%) rotate(-88deg);
+      transition: transform .11s linear;
+      box-shadow: 0 0 6px rgba(236,239,243,.32);
+    }
+    .dash-cap {
+      position: absolute;
+      left: 50%;
+      bottom: 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 99px;
+      transform: translateX(-50%);
+      background: #e2e6eb;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.3);
+    }
+    .meter.dispatch .dash-needle { background: #eceff3; box-shadow: 0 0 6px rgba(236,239,243,.32); }
+    .meter.stack .dash-needle { background: #eceff3; box-shadow: 0 0 6px rgba(236,239,243,.32); }
+
+    .lower {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1.2fr .95fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 980px) {
+      .lower { grid-template-columns: 1fr; }
+    }
+
+    .knob-card {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.2), rgba(255,255,255,.04)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.02) 2px, transparent 2px, transparent 7px);
+      padding: 10px;
+    }
+
+    .knob-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #d5e2ee;
+      font: 700 12px/1 var(--mono);
+      margin-bottom: 8px;
+    }
+
+    .freq {
+      color: #fff1cd;
+      font-size: 16px;
+      display: none;
+    }
+
+    .knob-area {
+      display: grid;
+      grid-template-columns: 268px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 740px) {
+      .knob-area { grid-template-columns: 1fr; }
+    }
+
+    .dial {
+      width: 196px;
+      height: 196px;
+      border-radius: 50%;
+      position: relative;
+      user-select: none;
+      touch-action: none;
+      margin: 0 auto;
+      border: 3px solid rgba(188, 200, 214, .24);
+      background:
+        radial-gradient(circle at 28% 24%, rgba(255,255,255,.18), transparent 25%),
+        radial-gradient(circle at 70% 74%, rgba(0,0,0,.42), transparent 32%),
+        linear-gradient(160deg, #5f7184, #34475c);
+      box-shadow:
+        0 10px 22px rgba(0,0,0,.45),
+        inset 0 1px 2px rgba(255,255,255,.18),
+        inset 0 -4px 8px rgba(0,0,0,.32);
+    }
+    .dial-rig {
+      display: grid;
+      grid-template-columns: 1fr 54px;
+      gap: 10px;
+      align-items: center;
+    }
+    .fine-rig {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+    .fine-dial {
+      width: 100%;
+      height: 34px;
+      border-radius: 999px;
+      position: relative;
+      user-select: none;
+      touch-action: none;
+      border: 2px solid rgba(206,216,228,.28);
+      cursor: ew-resize;
+      background:
+        linear-gradient(180deg, rgba(58,66,76,.92), rgba(32,40,50,.94));
+      box-shadow:
+        0 3px 10px rgba(0,0,0,.28),
+        inset 0 1px 0 rgba(255,255,255,.2),
+        inset 0 -8px 14px rgba(0,0,0,.38);
+    }
+    .fine-dial::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: 50%;
+      height: 8px;
+      border-radius: 99px;
+      transform: translateY(-50%);
+      background:
+        linear-gradient(180deg, rgba(18,24,32,.95), rgba(8,12,18,.95)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.12), rgba(255,255,255,.12) 1px, transparent 1px, transparent 8px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.16),
+        inset 0 -2px 4px rgba(0,0,0,.42);
+      pointer-events: none;
+    }
+    .fine-dial::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      top: 7px;
+      height: 6px;
+      border-radius: 99px;
+      background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+      pointer-events: none;
+    }
+    .fine-notch {
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      background:
+        radial-gradient(circle at 30% 28%, rgba(255,255,255,.62), transparent 34%),
+        radial-gradient(circle at 70% 72%, rgba(0,0,0,.35), transparent 45%),
+        repeating-conic-gradient(from 0deg, rgba(255,255,255,.13) 0deg 3deg, transparent 3deg 9deg),
+        linear-gradient(160deg, #d4dde7, #8f9dad);
+      border: 1px solid rgba(242,247,255,.36);
+      box-shadow:
+        0 5px 10px rgba(0,0,0,.36),
+        inset 0 1px 2px rgba(255,255,255,.5),
+        inset 0 -4px 6px rgba(0,0,0,.3);
+      z-index: 2;
+    }
+    .fine-meta {
+      display: grid;
+      gap: 4px;
+      font: 700 11px/1.2 var(--mono);
+      color: #d3dee8;
+    }
+    .fine-meta b {
+      color: #ebf4ff;
+      letter-spacing: .5px;
+    }
+    .fm-meter {
+      align-self: stretch;
+      border-radius: 14px;
+      border: 1px solid rgba(231, 236, 242, .38);
+      background:
+        linear-gradient(180deg, rgba(22, 27, 34, .9), rgba(10, 12, 17, .92)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.05), rgba(255,255,255,.05) 1px, transparent 1px, transparent 4px);
+      box-shadow: inset 0 0 0 1px rgba(240, 243, 248, .08), inset 0 -10px 16px rgba(0,0,0,.36);
+      padding: 6px 6px 7px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 5px;
+      min-height: 248px;
+    }
+    .fm-title {
+      font: 800 10px/1 var(--mono);
+      letter-spacing: .7px;
+      color: #e2e8f0;
+      text-align: center;
+    }
+    .fm-led-wrap {
+      display: grid;
+      place-items: center;
+    }
+    .sig-led {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1px solid rgba(245, 248, 252, .55);
+      background: rgb(36, 108, 55);
+      box-shadow: 0 0 4px rgba(127,255,170,.22), inset 0 0 6px rgba(142,255,190,.2);
+      transition: opacity .1s linear, background-color .1s linear, box-shadow .1s linear, transform .08s linear, filter .08s linear;
+      opacity: .45;
+      transform: scale(calc(1 + var(--beat-pulse) * 0.22));
+      filter: brightness(calc(1 + var(--beat-pulse) * 0.36));
+    }
+    .fm-track {
+      position: relative;
+      border-radius: 8px;
+      border: 1px solid rgba(232, 236, 241, .3);
+      background:
+        linear-gradient(180deg, rgba(215, 221, 229, .06), rgba(120, 129, 142, .08)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.15), rgba(255,255,255,.15) 1px, transparent 1px, transparent 10px);
+      overflow: hidden;
+    }
+    .fm-track::before {
+      content: "";
+      position: absolute;
+      left: 3px;
+      right: 3px;
+      top: 50%;
+      height: 1px;
+      transform: translateY(-50%);
+      background: rgba(221, 227, 238, .45);
+      pointer-events: none;
+    }
+    .fm-needle {
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      height: 3px;
+      bottom: 0%;
+      transform: translateY(50%);
+      background: #f1f4f7;
+      box-shadow: 0 0 8px rgba(241, 244, 247, .55);
+      transition: bottom .09s linear, background .12s ease;
+    }
+    .fm-needle.good {
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(255,255,255,.68);
+    }
+    .fm-signal {
+      position: absolute;
+      left: 7px;
+      right: 7px;
+      height: 2px;
+      bottom: 0%;
+      transform: translateY(50%);
+      border-radius: 99px;
+      opacity: 0;
+      transition: bottom .09s linear, opacity .12s ease;
+      box-shadow: 0 0 6px rgba(0,0,0,.35);
+    }
+    .fm-signal.show { opacity: .95; }
+    .fm-signal.dispatch { background: #e8edf3; }
+    .fm-signal.stack { background: #cfd7e1; }
+    .fm-signal.jammer { background: #8f98a3; }
+    .fm-nums {
+      display: grid;
+      gap: 2px;
+      font: 700 9px/1 var(--mono);
+      color: #d0d7e1;
+      text-align: center;
+    }
+    .fm-readout {
+      color: #f2f4f7;
+      font-size: 10px;
+    }
+
+    .dial::before {
+      content: "";
+      position: absolute;
+      inset: 15px;
+      border-radius: 50%;
+      border: 1px solid rgba(215,224,235,.22);
+      background:
+        radial-gradient(circle at 30% 30%, #7a8ea2, #445a70),
+        repeating-conic-gradient(from 0deg, rgba(255,255,255,.06) 0deg 2deg, transparent 2deg 6deg);
+      box-shadow: inset 0 3px 6px rgba(255,255,255,.1), inset 0 -6px 10px rgba(0,0,0,.3);
+    }
+    .dial::after {
+      content: "";
+      position: absolute;
+      inset: -10px;
+      border-radius: 50%;
+      pointer-events: none;
+      background:
+        repeating-conic-gradient(
+          from -140deg,
+          rgba(229, 237, 247, .74) 0deg 1deg,
+          transparent 1deg 8deg
+        );
+      -webkit-mask: radial-gradient(circle, transparent 0 82px, #000 82px 90px, transparent 90px);
+      mask: radial-gradient(circle, transparent 0 82px, #000 82px 90px, transparent 90px);
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,.35));
+    }
+
+    .dial-notch {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      width: 8px;
+      height: 28px;
+      border-radius: 8px;
+      transform: translateX(-50%) rotate(0deg);
+      transform-origin: 50% 84px;
+      background: #f9deb1;
+      box-shadow: 0 0 10px rgba(249,222,177,.55);
+      z-index: 2;
+    }
+
+    .knob-legend {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      color: #b8cde0;
+      font: 700 11px/1 var(--mono);
+    }
+
+    .ctrl-grid {
+      display: grid;
+      gap: 8px;
+    }
+    .hidden-config {
+      display: none;
+    }
+    .knob-card .ctrl-grid button {
+      border-radius: 6px;
+    }
+
+    .row3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .row3.io-row {
+      grid-template-columns: 1fr;
+    }
+    .io-wrap {
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      min-height: 84px;
+    }
+    .io-switch {
+      width: 100%;
+      max-width: 190px;
+      position: relative;
+      display: inline-grid;
+      gap: 6px;
+      justify-items: center;
+      user-select: none;
+      min-height: 78px;
+      align-content: center;
+    }
+    .io-switch input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+      height: 0;
+    }
+    .io-label {
+      font: 700 11px/1 var(--mono);
+      letter-spacing: .5px;
+      color: #d7e4f1;
+    }
+    .io-track {
+      width: 110px;
+      height: 54px;
+      border-radius: 9px;
+      border: 1px solid rgba(170,178,190,.32);
+      background: #676f7a;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.08),
+        inset 0 -9px 12px rgba(0,0,0,.24),
+        0 4px 8px rgba(0,0,0,.28);
+      position: relative;
+      transition: box-shadow .16s ease, background .16s ease;
+      overflow: hidden;
+    }
+    .io-track::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 8px;
+      bottom: 8px;
+      border-radius: 8px;
+      background: #2b3037;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05), inset 0 -2px 8px rgba(0,0,0,.48);
+    }
+    .io-track::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 8px;
+      bottom: 8px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, rgba(0,0,0,.28) 0 50%, rgba(0,0,0,.04) 50% 100%);
+      pointer-events: none;
+      transition: background .16s ease;
+    }
+    .io-knob {
+      display: none;
+    }
+    .io-knob::after {
+      content: none;
+    }
+    .io-marks {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      font: 800 10px/1 var(--mono);
+      pointer-events: none;
+    }
+    .io-off,
+    .io-on {
+      width: auto;
+      height: auto;
+      border-radius: 0;
+      text-indent: 0;
+      overflow: visible;
+      border: 0;
+      box-shadow: none;
+      letter-spacing: .7px;
+      text-shadow: none;
+    }
+    .io-off,
+    .io-on { color: #c9ced7; }
+    .io-switch input:checked + .io-track .io-knob {
+      transform: none;
+    }
+    .io-switch input:checked + .io-track::after {
+      background: linear-gradient(90deg, rgba(0,0,0,.04) 0 50%, rgba(0,0,0,.28) 50% 100%);
+    }
+    .io-switch.blink-hint .io-track {
+      animation: buttonLedBlink 1.05s steps(2, end) infinite;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.1),
+        inset 0 -9px 12px rgba(0,0,0,.26),
+        0 0 8px rgba(170,182,198,.16);
+    }
+
+    @media (max-width: 560px) {
+      .row3 { grid-template-columns: 1fr; }
+    }
+
+    input, select, button {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.2);
+      background: linear-gradient(180deg, rgba(15, 30, 45, .8), rgba(10, 20, 31, .8));
+      color: #f2f8ff;
+      font: 700 13px/1 var(--sans);
+      padding: 10px;
+    }
+
+    button {
+      position: relative;
+      cursor: pointer;
+      padding-right: 26px;
+      border-color: rgba(196,206,219,.3);
+      background: #4a5564;
+      box-shadow:
+        0 3px 0 rgba(22,32,44,.65),
+        0 8px 12px rgba(0,0,0,.2),
+        inset 0 -2px 5px rgba(0,0,0,.2);
+      transition: transform .12s ease, filter .12s ease, background .12s ease, box-shadow .12s ease;
+    }
+    button::before {
+      content: none;
+    }
+    button::after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      border: 1px solid rgba(225,235,246,.35);
+      background: #273241;
+      opacity: .35;
+      box-shadow: inset 0 0 3px rgba(0,0,0,.4);
+      pointer-events: none;
+    }
+    button:hover:not(:disabled) {
+      background: #556174;
+      filter: none;
+      box-shadow:
+        0 4px 0 rgba(23,34,46,.7),
+        0 10px 14px rgba(0,0,0,.24),
+        inset 0 -3px 6px rgba(0,0,0,.24);
+      transform: translateY(-1px);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow:
+        0 1px 0 rgba(20,31,43,.75),
+        0 4px 7px rgba(0,0,0,.2),
+        inset 0 -2px 5px rgba(0,0,0,.28);
+    }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    button:disabled::after { opacity: .14; }
+    button.blink-hint:not(:disabled)::after {
+      background: var(--led-color, #ffd27a);
+      animation: buttonLedBlink 1.05s steps(2, end) infinite;
+    }
+    @keyframes buttonLedBlink {
+      0%, 100% { opacity: .28; box-shadow: inset 0 0 3px rgba(0,0,0,.4), 0 0 0 rgba(0,0,0,0); }
+      50% { opacity: 1; box-shadow: inset 0 0 2px rgba(255,255,255,.45), 0 0 8px color-mix(in oklab, var(--led-color, #ffd27a) 70%, white 30%); }
+    }
+    button.cta-focus {
+      --led-color: #ffd27a;
+    }
+    button.cta-focus-alt {
+      --led-color: #8dd6ff;
+    }
+
+    #fineCenterBtn {
+      font-family: var(--mono);
+      letter-spacing: .5px;
+      border-width: 2px;
+      text-transform: uppercase;
+    }
+    #fineCenterBtn.mode-coarse {
+      border-color: rgba(255, 194, 118, .75);
+      background: rgba(86, 55, 18, .95);
+      color: #ffe4b1;
+      box-shadow: inset 0 -2px 5px rgba(0,0,0,.2), 0 0 8px rgba(255, 163, 63, .16);
+    }
+    #fineCenterBtn.mode-fine {
+      border-color: rgba(122, 210, 255, .75);
+      background: rgba(14, 52, 76, .95);
+      color: #c9edff;
+      box-shadow: inset 0 -2px 5px rgba(0,0,0,.22), 0 0 8px rgba(89, 188, 255, .18);
+    }
+    .status-line {
+      min-height: 35px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.2);
+      padding: 8px;
+      font: 700 12px/1.35 var(--mono);
+      color: #bfd3e5;
+    }
+    .action-hint {
+      min-height: 29px;
+      border-radius: 10px;
+      border: 1px dashed rgba(255,255,255,.18);
+      background: rgba(6, 11, 18, .3);
+      color: #dbe9f8;
+      padding: 6px 8px;
+      font: 700 11px/1.25 var(--mono);
+    }
+    .log.receipt-log {
+      border-radius: 4px;
+      border: 1px solid rgba(118, 104, 84, .38);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(255,255,255,.28), transparent 38%),
+        repeating-linear-gradient(0deg, rgba(88, 72, 52, .06), rgba(88, 72, 52, .06) 1px, transparent 1px, transparent 5px),
+        linear-gradient(180deg, #efe6d5, #e6dcc9 54%, #ddd2be);
+      color: #352b1f;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.2),
+        inset 0 -12px 18px rgba(96, 78, 56, .08),
+        0 7px 14px rgba(0,0,0,.18);
+      position: relative;
+    }
+    .log.receipt-log::before,
+    .log.receipt-log::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 8px;
+      pointer-events: none;
+      background:
+        linear-gradient(-45deg, transparent 4px, #e9decc 0) 0 0/8px 8px repeat-x,
+        linear-gradient(45deg, transparent 4px, #e9decc 0) 4px 0/8px 8px repeat-x;
+      opacity: .9;
+    }
+    .log.receipt-log::before { top: -8px; }
+    .log.receipt-log::after {
+      bottom: -8px;
+      transform: rotate(180deg);
+    }
+    .log.receipt-log {
+      margin-top: 4px;
+      height: 270px;
+      padding: 12px 12px 10px;
+      font: 700 14px/1.4 "OCR A Std", "OCR A Extended", "IBM Plex Mono", "Courier Prime", "Courier New", monospace;
+      color: #1f4ea5;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+      overflow: auto;
+      scrollbar-color: rgba(92,75,52,.55) rgba(228,218,200,.5);
+      background:
+        linear-gradient(180deg, rgba(120, 96, 68, .28) 0%, rgba(120, 96, 68, .14) 10%, rgba(255,255,255,0) 28%),
+        radial-gradient(120% 18px at 50% -2px, rgba(66, 50, 33, .32), rgba(66, 50, 33, 0) 72%),
+        radial-gradient(circle at 18% 12%, rgba(255,255,255,.28), transparent 38%),
+        repeating-linear-gradient(0deg, rgba(88, 72, 52, .06), rgba(88, 72, 52, .06) 1px, transparent 1px, transparent 5px),
+        linear-gradient(180deg, #efe6d5, #e6dcc9 54%, #ddd2be);
+      box-shadow:
+        inset 0 9px 12px rgba(92, 73, 50, .16),
+        inset 0 0 0 1px rgba(255,255,255,.2),
+        inset 0 -12px 18px rgba(96, 78, 56, .08),
+        0 7px 14px rgba(0,0,0,.18);
+    }
+    .log.receipt-log p {
+      margin: 0 0 9px;
+      padding-bottom: 6px;
+      border-bottom: 1px dotted rgba(89, 70, 47, .28);
+    }
+    .log.receipt-log .tone-d,
+    .log.receipt-log .tone-s,
+    .log.receipt-log .tone-n {
+      color: #1f4ea5;
+    }
+
+    .deck {
+      display: grid;
+      gap: 10px;
+    }
+
+    .lcd {
+      border-radius: 14px;
+      border: 1px solid rgba(109, 132, 63, .74);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(185, 204, 124, .24), transparent 40%),
+        linear-gradient(180deg, #8ea35a, #7b9150 58%, #6b8046);
+      box-shadow:
+        inset 0 0 0 1px rgba(199,217,133,.2),
+        inset 0 0 0 2px rgba(48, 64, 24, .28),
+        inset 0 10px 14px rgba(216,229,162,.1),
+        inset 0 -12px 18px rgba(47,64,23,.2),
+        inset 0 -20px 26px rgba(28, 39, 14, .2),
+        inset 0 16px 20px rgba(216,229,162,.1);
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
+      filter: contrast(calc(1 + var(--snow-strength) * 0.14)) saturate(calc(1 + var(--snow-strength) * 0.1)) brightness(calc(1 + var(--beat-pulse) * 0.08));
+      transform: none;
+    }
+    .lcd::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: calc(.18 + var(--snow-strength) * 0.92);
+      background:
+        linear-gradient(90deg,
+          rgba(255, 66, 66, calc(var(--snow-strength) * .22)) 0%,
+          rgba(255, 66, 66, calc(var(--snow-strength) * .1)) 38%,
+          rgba(114, 190, 255, calc(var(--snow-strength) * .18)) 100%),
+        radial-gradient(circle at 84% 18%, rgba(238, 250, 170, .16), transparent 32%),
+        repeating-linear-gradient(90deg,
+          rgba(56, 86, 24, .06) 0 1px,
+          rgba(178, 210, 82, .02) 1px 2px,
+          transparent 2px 4px),
+        repeating-linear-gradient(0deg,
+          rgba(47, 72, 18, .12) 0 1px,
+          rgba(189, 215, 86, .03) 1px 3px,
+          transparent 3px 5px);
+      mix-blend-mode: screen;
+      animation: lcdInterference 95ms steps(2, end) infinite, lcdJitter 86ms steps(2, end) infinite;
+    }
+    .lcd::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      opacity: calc(var(--snow-opacity) * 1.15 + var(--snow-strength) * 0.1);
+      background:
+        linear-gradient(0deg,
+          transparent 0 24%,
+          rgba(228, 247, 150, calc(var(--snow-strength) * .34)) 24% 28%,
+          transparent 28% 56%,
+          rgba(188, 220, 106, calc(var(--snow-strength) * .26)) 56% 60%,
+          transparent 60% 100%),
+        repeating-linear-gradient(0deg,
+          transparent 0 10px,
+          rgba(255,255,255, calc(var(--snow-strength) * .14)) 10px 11px,
+          transparent 11px 18px),
+        radial-gradient(circle, rgba(205, 226, 130, .36) 0 1px, transparent 1px 100%) 0 0 / 6px 6px,
+        repeating-linear-gradient(0deg, rgba(56, 78, 24, .09), rgba(56, 78, 24, .09) 1px, transparent 1px, transparent 3px);
+      mix-blend-mode: screen;
+      animation: lcdSnow 110ms steps(2, end) infinite, lcdJitter 72ms steps(2, end) infinite, lcdFaultBars 130ms steps(2, end) infinite;
+    }
+    .lcd > *:not(.lcd-ghost) {
+      position: relative;
+      z-index: 3;
+      animation: none;
+    }
+
+    .lcd-title {
+      color: #29471b;
+      font: 700 13px/1.15 "Press Start 2P", "VT323", "Lucida Console", monospace;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      text-shadow: 0 1px 0 rgba(216,237,140,.35);
+    }
+    .lcd-readout {
+      margin: 0 0 8px;
+      color: #203b16;
+      font: 700 22px/1.2 "Press Start 2P", "VT323", "Lucida Console", monospace;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(224,241,153,.3);
+    }
+    .lcd-ghost {
+      position: absolute;
+      inset: 0;
+      padding: 10px;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 2;
+      filter: none;
+      transform: none;
+    }
+    .lcd-ghost-stats {
+      display: grid;
+      gap: 8px;
+    }
+    .lcd-ghost.show {
+      animation: lcdGhostFade .62s ease-out;
+    }
+    .lcd-ghost .lcd-readout,
+    .lcd-ghost .stat-row,
+    .lcd-ghost .lcd-title {
+      animation: none !important;
+      transform: none !important;
+    }
+    @keyframes lcdGhostFade {
+      0% { opacity: .42; }
+      100% { opacity: 0; }
+    }
+
+    #stats {
+      display: grid;
+      gap: 8px;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: 118px 1fr 44px;
+      gap: 8px;
+      align-items: center;
+      color: #1f3a15;
+      font: 700 16px/1.25 "Press Start 2P", "VT323", "Lucida Console", monospace;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(219,238,143,.26);
+      -webkit-font-smoothing: none;
+      font-smooth: never;
+    }
+
+    .stat-row .track {
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(55, 80, 23, .22);
+      overflow: hidden;
+    }
+
+    .stat-row .fill {
+      height: 100%;
+      border-radius: inherit;
+      transition: width .2s ease;
+    }
+
+    .fill.good { background: linear-gradient(90deg, #29491e, #365e29); }
+    .fill.warn { background: linear-gradient(90deg, #355426, #466f31); }
+    .fill.bad { background: linear-gradient(90deg, #4b6c34, #5f8843); }
+
+    .decision {
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.13);
+      background: rgba(0,0,0,.22);
+      padding: 10px;
+    }
+
+    .mission {
+      background: linear-gradient(180deg, rgba(17, 28, 41, .86), rgba(8, 15, 24, .8));
+      border: 1px solid rgba(255, 209, 102, .24);
+    }
+
+    .decision h3 {
+      margin: 0 0 8px;
+      color: #f5d7a4;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+
+    .decision p {
+      margin: 0;
+      min-height: 68px;
+      color: #c5d6e6;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .decision-buttons {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .decision-cons {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font: 700 11px/1.35 var(--mono);
+      color: #aec6db;
+    }
+
+    .decision-cons p {
+      margin: 0;
+      min-height: 36px;
+      border: 1px dashed rgba(255,255,255,.14);
+      border-radius: 8px;
+      padding: 6px;
+      background: rgba(0,0,0,.16);
+    }
+    .decision-lcd {
+      border-radius: 14px;
+      border: 1px solid rgba(111, 136, 66, .72);
+      background: linear-gradient(180deg, rgba(30, 40, 20, .84), rgba(17, 25, 11, .86));
+      box-shadow: inset 0 0 0 1px rgba(170, 190, 108, .2);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+    .decision-screen {
+      border-radius: 10px;
+      border: 1px solid rgba(109, 132, 63, .74);
+      background:
+        radial-gradient(circle at 16% 10%, rgba(178, 199, 113, .2), transparent 38%),
+        linear-gradient(180deg, #839a4f, #718744 58%, #63783c);
+      box-shadow:
+        inset 0 0 0 1px rgba(196,216,132,.2),
+        inset 0 -10px 16px rgba(44,60,21,.24);
+      padding: 10px;
+      color: #1f3816;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      filter: brightness(calc(1 + var(--beat-pulse) * 0.06));
+      transform: none;
+    }
+    .decision-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(0deg, rgba(45,67,20,.14), rgba(45,67,20,.14) 1px, transparent 1px, transparent 3px),
+        repeating-linear-gradient(90deg, rgba(45,67,20,.06), rgba(45,67,20,.06) 1px, transparent 1px, transparent 4px);
+      mix-blend-mode: multiply;
+      z-index: 1;
+    }
+    .decision-screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      opacity: calc(.04 + var(--snow-strength) * .86);
+      background:
+        linear-gradient(90deg,
+          rgba(255, 66, 66, calc(var(--snow-strength) * .24)) 0%,
+          rgba(255, 66, 66, calc(var(--snow-strength) * .08)) 34%,
+          rgba(100, 186, 255, calc(var(--snow-strength) * .2)) 100%),
+        linear-gradient(0deg,
+          transparent 0 20%,
+          rgba(255, 248, 202, calc(var(--snow-strength) * .24)) 20% 24%,
+          transparent 24% 49%,
+          rgba(255, 206, 156, calc(var(--snow-strength) * .22)) 49% 53%,
+          transparent 53% 100%),
+        repeating-linear-gradient(0deg,
+          rgba(26, 38, 14, .2) 0 1px,
+          transparent 1px 4px),
+        radial-gradient(circle at 75% 25%, rgba(236, 255, 173, .16), transparent 42%);
+      mix-blend-mode: screen;
+      animation: rightShader 85ms steps(2, end) infinite, rightFaultBars 145ms steps(2, end) infinite;
+    }
+    .decision-screen > * {
+      position: relative;
+      z-index: 2;
+      animation: rightWarp 120ms steps(2, end) infinite;
+    }
+    .decision-screen .lcd-title {
+      margin-bottom: 6px;
+    }
+    .decision-screen #decisionText {
+      position: relative;
+      margin: 0;
+      min-height: 74px;
+      color: #1d3414;
+      font: 700 12px/1.35 "Press Start 2P", "VT323", monospace;
+      text-transform: uppercase;
+      letter-spacing: .2px;
+      text-shadow: 0 1px 0 rgba(220,236,154,.25);
+      z-index: 1;
+    }
+    .decision-screen .decision-cons {
+      margin-top: 8px;
+      position: relative;
+      z-index: 1;
+      color: #243f17;
+      font: 700 10px/1.35 "Press Start 2P", "VT323", monospace;
+      text-transform: uppercase;
+    }
+    .decision-screen .decision-cons p {
+      border: 1px dashed rgba(55, 78, 25, .35);
+      background: rgba(174, 196, 110, .14);
+      color: #203816;
+    }
+    .decision-hw {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .decision-hw button {
+      min-height: 42px;
+      border-radius: 8px;
+      font: 700 12px/1 "IBM Plex Mono", Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .35px;
+    }
+
+    .log {
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.2);
+      padding: 10px;
+      height: 260px;
+      overflow: auto;
+      font: 700 12px/1.45 var(--mono);
+    }
+
+    .log p { margin: 0 0 8px; }
+    .tone-d { color: #ffd08a; }
+    .tone-s { color: #a7d5ff; }
+    .tone-n { color: #bdd0e2; }
+
+    .stickers {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    @keyframes tvSnow {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-1px, 1px); }
+      50% { transform: translate(1px, -1px); }
+      75% { transform: translate(0, 1px); }
+      100% { transform: translate(1px, 0); }
+    }
+    @keyframes lcdInterference {
+      0%, 100% { opacity: calc(.16 + var(--snow-strength) * .78); background-position: 0 0, 0 0, 0 0, 0 0; }
+      50% { opacity: calc(.12 + var(--snow-strength) * .9); background-position: 0 0, 0 0, 0 0, 0 0; }
+    }
+    @keyframes lcdSnow {
+      0%, 100% { opacity: calc(var(--snow-opacity) * 1.15 + var(--snow-strength) * 0.1); background-position: 0 0, 0 0; }
+      50% { opacity: calc(var(--snow-opacity) * 1.28 + var(--snow-strength) * 0.14); background-position: 0 0, 0 0; }
+    }
+    @keyframes lcdJitter {
+      0%, 100% { transform: translate(0, 0); }
+      22% { transform: translate(calc(var(--snow-strength) * .9px), calc(var(--snow-strength) * -.55px)); }
+      48% { transform: translate(calc(var(--snow-strength) * -1.4px), calc(var(--snow-strength) * .75px)); }
+      74% { transform: translate(calc(var(--snow-strength) * .6px), calc(var(--snow-strength) * .45px)); }
+    }
+    @keyframes lcdFaultBars {
+      0%, 100% { background-position: 0 0, 0 0, 0 0, 0 0; opacity: calc(var(--snow-opacity) * 1.15 + var(--snow-strength) * 0.1); }
+      33% { background-position: 0 1px, 0 -2px, 1px 0, 0 0; opacity: calc(var(--snow-opacity) * 1.24 + var(--snow-strength) * 0.18); }
+      66% { background-position: 0 -2px, 0 2px, -1px 1px, 0 1px; opacity: calc(var(--snow-opacity) * 1.2 + var(--snow-strength) * 0.16); }
+    }
+    @keyframes rightShader {
+      0%, 100% { background-position: 0 0, 0 0, 0 0, 0 0; opacity: calc(.04 + var(--snow-strength) * .86); }
+      50% { background-position: 1px 0, 0 1px, -1px 0, 0 0; opacity: calc(.02 + var(--snow-strength) * .96); }
+    }
+    @keyframes rightFaultBars {
+      0%, 100% { background-position: 0 0, 0 0, 0 0, 0 0; }
+      35% { background-position: 1px 0, 0 2px, 0 0, 0 0; }
+      70% { background-position: -1px 0, 0 -2px, 0 1px, 0 0; }
+    }
+    @keyframes rightWarp {
+      0%, 100% { transform: none; filter: contrast(1); }
+      35% { transform: none; filter: contrast(calc(1 + var(--snow-strength) * .22)) brightness(calc(1 + var(--snow-strength) * .08)); }
+      70% { transform: none; filter: contrast(calc(1 + var(--snow-strength) * .28)) brightness(calc(1 + var(--snow-strength) * .12)); }
+    }
+
+    .sticker {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font: 800 11px/1 var(--mono);
+      border: 1px solid rgba(255,255,255,.25);
+      box-shadow: 0 2px 0 rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.3);
+    }
+
+    .sticker.s1 { background: linear-gradient(180deg, #ffd166, #f5a623); color: #40290e; }
+    .sticker.s2 { background: linear-gradient(180deg, #9be6ff, #67baf2); color: #0f3046; }
+    .sticker.s3 { background: linear-gradient(180deg, #9bf3c2, #64c98d); color: #103623; }
+
+    /* Dark display schema */
+    .scope-shell {
+      background: linear-gradient(180deg, #8a919a, #6f7781);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.2),
+        inset 0 0 0 2px rgba(34,42,50,.45),
+        inset 0 14px 22px rgba(255,255,255,.07),
+        inset 0 -20px 28px rgba(0,0,0,.36);
+    }
+    .fm-meter {
+      background:
+        linear-gradient(180deg, rgba(16, 21, 28, .94), rgba(8, 11, 16, .95)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.045), rgba(255,255,255,.045) 1px, transparent 1px, transparent 4px);
+    }
+    .fm-track {
+      background:
+        linear-gradient(180deg, rgba(120, 130, 144, .1), rgba(84, 93, 106, .09)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.14), rgba(255,255,255,.14) 1px, transparent 1px, transparent 10px);
+    }
+    .lcd {
+      border-color: rgba(109, 132, 63, .74);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(185, 204, 124, .24), transparent 40%),
+        linear-gradient(180deg, #8ea35a, #7b9150 58%, #6b8046);
+      box-shadow:
+        inset 0 0 0 1px rgba(199,217,133,.2),
+        inset 0 0 0 2px rgba(48, 64, 24, .28),
+        inset 0 10px 14px rgba(216,229,162,.1),
+        inset 0 -12px 18px rgba(47,64,23,.2),
+        inset 0 -20px 26px rgba(28, 39, 14, .2),
+        inset 0 16px 20px rgba(216,229,162,.1);
+    }
+  </style>
+</head>
+<body>
+  <main class="radio">
+    <header class="top">
+      <div>
+        <h1>Frequenzjaeger</h1>
+        <p class="sub">Live-Tuning, locken, entscheiden. Bunter Funk, gleiche Core-Mechanik.</p>
+        <div class="stickers">
+          <span class="sticker s1">Dispatch Vibes</span>
+          <span class="sticker s2">Stack Hunter</span>
+          <span class="sticker s3">Noisy but Lucky</span>
+        </div>
+      </div>
+      <div class="ticker" id="ticker">Block 0/12 · Offline</div>
+    </header>
+
+    <section class="face">
+      <div id="leftDisplay" class="module left-display">
+        <div class="scope-shell">
+          <div class="scope-grid"></div>
+          <canvas id="scope" width="900" height="320"></canvas>
+        </div>
+        <div class="screen-readouts">
+          <div class="chip" id="channelChip">Kanal: Noise</div>
+          <div class="chip" id="qualityChip">Qualitaet: 0%</div>
+          <div class="chip" id="gameChip">Combo 0 · Heat 0</div>
+        </div>
+        <div class="meters">
+          <div class="meter dispatch dash-meter"><div class="dash-label">Dispatch Lock</div><div id="lockDispatchLeds" class="led-lock" aria-label="Dispatch lock LEDs"></div></div>
+          <div class="meter stack dash-meter"><div class="dash-label">STACK Lock</div><div id="lockStackLeds" class="led-lock" aria-label="Stack lock LEDs"></div></div>
+          <div class="meter dash-meter"><div class="dash-label">Empfang</div><div class="dash-face"><div id="qualityNeedle" class="dash-needle"></div><div class="dash-cap"></div></div></div>
+          <div class="meter dash-meter"><div class="dash-label">Signalpegel</div><div class="dash-face"><div id="signalNeedle" class="dash-needle"></div><div class="dash-cap"></div></div></div>
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="lower" style="margin-top:0; grid-template-columns: 1fr; gap:10px;">
+          <div class="knob-card">
+            <div class="knob-top"><span>VFO Tuning</span><span class="freq" id="freqValue">50.0 MHz</span></div>
+            <div class="knob-area">
+              <div>
+                <div class="dial-rig">
+                  <div id="dial" class="dial" role="slider" tabindex="0" aria-label="Drehregler" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+                    <div id="dialNotch" class="dial-notch"></div>
+                  </div>
+                  <div class="fm-meter" aria-hidden="true">
+                    <div class="fm-title">FM TUNE</div>
+                    <div class="fm-led-wrap"><div id="sigLed" class="sig-led"></div></div>
+                    <div class="fm-track">
+                      <div id="fmNeedle" class="fm-needle"></div>
+                      <div id="dispatchMarker" class="fm-signal dispatch"></div>
+                      <div id="stackMarker" class="fm-signal stack"></div>
+                      <div id="jammer1Marker" class="fm-signal jammer"></div>
+                      <div id="jammer2Marker" class="fm-signal jammer"></div>
+                    </div>
+                    <div class="fm-nums">
+                      <span>108</span>
+                      <span id="fmReadout" class="fm-readout">98.0</span>
+                      <span>88</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="fine-rig">
+                  <div id="fineDial" class="fine-dial" role="slider" tabindex="0" aria-label="Fein-Regler" aria-valuemin="-6" aria-valuemax="6" aria-valuenow="0">
+                    <div id="fineDialNotch" class="fine-notch"></div>
+                  </div>
+                  <div class="fine-meta">
+                    <span><b>FINE</b> local tune</span>
+                    <span id="fineReadout">SPEED +0%</span>
+                  </div>
+                </div>
+                <div class="knob-legend"><span>0.0</span><span>Band driftet</span><span>Jammer aktiv</span><span>100.0</span></div>
+              </div>
+              <div class="ctrl-grid">
+                <div class="row3 io-row">
+                  <div class="io-wrap">
+                    <label id="powerSwitchWrap" class="io-switch" for="powerToggle">
+                      <span class="io-label">RUN I/O</span>
+                      <input id="powerToggle" type="checkbox" aria-label="Power I/O" />
+                      <span class="io-track"><span class="io-knob"></span><span class="io-marks"><span class="io-off">O</span><span class="io-on">I</span></span></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="row3">
+                  <button id="nextBtn">Naechster Block</button>
+                  <button id="stabilizeBtn">Signal Stabilizer</button>
+                  <button id="hintBtn">Hint Ping</button>
+                </div>
+                <div class="row3">
+                  <button id="nudgeDownBtn">- Grob</button>
+                  <button id="fineCenterBtn">Fine Reset</button>
+                  <button id="nudgeUpBtn">+ Grob</button>
+                </div>
+                <div class="row3">
+                  <button id="mapBtn">Map Ping</button>
+                  <button type="button" disabled>Overlay optional</button>
+                </div>
+                <div class="status-line" id="statusLine">Starte einen Run und tune live auf klare Signale.</div>
+                <div class="action-hint" id="actionHint">Naechster Schritt: Run Start.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="hidden-config" aria-hidden="true">
+      <input id="nameInput" maxlength="18" value="Wavefox" aria-label="Handle hidden" />
+      <select id="factionSelect" aria-label="Fraktion hidden">
+        <option value="maker">Maker</option>
+        <option value="orden">Orden</option>
+        <option value="roamer">Roamer</option>
+      </select>
+      <select id="themeSelect" aria-label="Theme hidden">
+        <option value="field">Theme: Field Unit</option>
+        <option value="military">Theme: Military Green</option>
+        <option value="rusty">Theme: Rusty Amber</option>
+      </select>
+    </div>
+
+    <section class="lower" style="position:relative; z-index:1;">
+      <div class="deck">
+        <div class="lcd">
+          <div id="lcdTitle" class="lcd-title">LCD Status</div>
+          <div class="display-selects">
+            <div class="display-select">
+              <label for="displayNameSelect">Handle</label>
+              <select id="displayNameSelect" aria-label="Display Handle">
+                <option value="Wavefox">Wavefox</option>
+                <option value="Mad Dog">Mad Dog</option>
+                <option value="Loop Rider">Loop Rider</option>
+                <option value="Signal Saint">Signal Saint</option>
+                <option value="Zero Trace">Zero Trace</option>
+              </select>
+            </div>
+            <div class="display-select">
+              <label for="displayFactionSelect">Faction</label>
+              <select id="displayFactionSelect" aria-label="Display Fraktion">
+                <option value="maker">Maker</option>
+                <option value="orden">Orden</option>
+                <option value="roamer">Roamer</option>
+              </select>
+            </div>
+            <div class="display-select">
+              <label for="displayThemeSelect">Theme</label>
+              <select id="displayThemeSelect" aria-label="Display Theme">
+                <option value="field">Field Unit</option>
+                <option value="military">Military Green</option>
+                <option value="rusty">Rusty Amber</option>
+              </select>
+            </div>
+          </div>
+          <div id="lcdGhost" class="lcd-ghost" aria-hidden="true"></div>
+          <div id="lcdFreq" class="lcd-readout">FREQ 50.00 MHz</div>
+          <div id="stats"></div>
+        </div>
+        <div class="decision mission">
+          <h3>Bounty Board</h3>
+          <p id="contractText">Kein Vertrag aktiv.</p>
+        </div>
+      </div>
+
+      <div class="deck">
+        <div class="decision-lcd">
+          <div class="decision-screen">
+            <div class="lcd-title">Aktive Entscheidung</div>
+            <p id="decisionText">Kein Event aktiv. Tune den Regler, bis ein Kanal lockt.</p>
+            <div class="decision-cons">
+              <p id="optAText">Konsequenz A: -</p>
+              <p id="optBText">Konsequenz B: -</p>
+            </div>
+          </div>
+          <div class="decision-hw">
+            <button id="optA" disabled>A</button>
+            <button id="optB" disabled>B</button>
+          </div>
+        </div>
+        <div class="log receipt-log" id="log"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      powerOn: false,
+      running: false,
+      block: 0,
+      maxBlocks: 12,
+      day: 1,
+      hour: 6,
+      score: 0,
+      combo: 0,
+      heat: 0,
+      name: "Wavefox",
+      faction: "maker",
+      freq: 50,
+      fineMode: false,
+      fineAnchor: 50,
+      fineAccel: 0,
+      fineVelocity: 0,
+      t: 0,
+      dispatchBase: 29,
+      stackBase: 72,
+      dispatchDriftVel: 0.06,
+      stackDriftVel: -0.05,
+      dispatchFreq: 29,
+      stackFreq: 72,
+      channel: "noise",
+      quality: 0,
+      jamPenalty: 0,
+      lastChannel: "noise",
+      blockWinner: null,
+      musicLast: { dispatch: "", stack: "" },
+      musicHistory: { dispatch: [], stack: [] },
+      lock: { dispatch: 0, stack: 0 },
+      locksThisBlock: { dispatch: 0, stack: 0 },
+      mapReveal: 0,
+      autoNextMs: 0,
+      storyFlags: {},
+      storySeen: {},
+      jammers: [
+        { base: 40, amp: 9, speed: 0.8, phase: 0.4, width: 1.6, range: 4.2, power: 104, freq: 40 },
+        { base: 63, amp: 11, speed: 1.05, phase: 1.6, width: 1.9, range: 4.8, power: 112, freq: 63 }
+      ],
+      contract: null,
+      pending: null,
+      creditsSpendCooldown: 0,
+      stats: {
+        reputation: 54,
+        morale: 57,
+        tech: 57,
+        credits: 22,
+        intel: 28,
+        signal: 58,
+      }
+    };
+
+    const dispatchEvents = [
+      {
+        id: "d_leak_messingmarkt",
+        title: "Messingmarkt 9 // Hot Mic",
+        text: "Mad Dog erfaehrt von einem Zero-Leak ueber Lieferwege zur Glaspforte. Gehst du damit on-air oder nur verschluesselt an Maker-Knoten?",
+        a: "On-air droppen",
+        b: "Nur Maker-Kanal",
+        effectA: { reputation: +7, morale: +4, credits: +2, heat: +8 },
+        effectB: { intel: +6, tech: +4, reputation: +2 },
+        flagA: "leak_public",
+        flagB: "leak_private"
+      },
+      {
+        id: "d_orden_convoy",
+        title: "Pilgerrast // Orden-Konvoi",
+        text: "Ein Orden-Konvoi mit Looper-Kandidat ist auf der Nullbahn festgesetzt. Hilfst du bei Evak-Routen oder forderst du Bezahlung fuer Frequenzschutz?",
+        a: "Evak-Routen senden",
+        b: "Paywall + Schutz",
+        effectA: { reputation: +6, morale: +5, intel: +3 },
+        effectB: { credits: +9, reputation: -2, morale: -2, heat: +4 },
+        flagA: "orden_evacuated",
+        flagB: "orden_paywalled"
+      },
+      {
+        id: "d_hillbilly_window",
+        title: "Sumpf-Festung // Hillbilly Request",
+        text: "Die Hillbillys bitten um Wetterfenster fuer Wasserfilter-Bergung. Gibst du Full-Window oder nur einen Teil?",
+        a: "Volles Fenster",
+        b: "Teilfenster behalten",
+        effectA: { morale: +7, reputation: +5, credits: +2 },
+        effectB: { intel: +4, credits: +5, reputation: -1 }
+      },
+      {
+        id: "d_sponsor_slot",
+        title: "Doomsday Fanshop // Sponsor Slot",
+        text: "Ein Sponsor will 5 Minuten Sendezeit fuer Schrott-Merch. Nimmst du den Deal oder gibst du den Slot ThermoBot-9?",
+        a: "Sponsor nehmen",
+        b: "ThermoBot priorisieren",
+        effectA: { credits: +10, morale: +2, reputation: -2 },
+        effectB: { reputation: +6, intel: +5, credits: +1 },
+        flagA: "sponsor_heavy",
+        flagB: "public_service"
+      },
+      {
+        id: "d_chaos_chapel",
+        title: "Chaos-Kapelle // Nacht der drei Stimmen",
+        text: "Drei parallele Funkschichten kollidieren. Moderierst du den Streit live oder kappst du zwei Kanaele?",
+        a: "Live moderieren",
+        b: "Kanaele drosseln",
+        effectA: { reputation: +8, morale: +3, heat: +5 },
+        effectB: { intel: +5, signal: +4, reputation: -1 }
+      },
+      {
+        id: "d_warlord_truce",
+        title: "Kaliber 50 // Waffenruhe-Geruecht",
+        text: "Ein lokaler Warlord bietet temporaere Waffenruhe gegen wohlwollende Berichterstattung.",
+        a: "Deal senden",
+        b: "Neutral bleiben",
+        effectA: { credits: +8, morale: +2, reputation: -3 },
+        effectB: { reputation: +4, intel: +4 }
+      },
+      {
+        id: "d_geocache_raster",
+        title: "Koordinaten-Kreuz // Geocacher Rush",
+        text: "Geocacher wollen exakte Rasterdaten fuer einen Killcoin-Cache. Gibst du volle Aufloesung?",
+        a: "Raster komplett",
+        b: "Raster verrauschen",
+        effectA: { credits: +9, heat: +6, reputation: -2 },
+        effectB: { reputation: +5, morale: +3, intel: +2 }
+      },
+      {
+        id: "d_filter_fake",
+        title: "Low-Tech-Basar // Wasserfilter-Alarm",
+        text: "Filterfakes machen die Runde. Enttarnst du Haendler on-air oder gibst du nur Warnsignaturen?",
+        a: "Namen nennen",
+        b: "Nur Signaturen",
+        effectA: { reputation: +7, heat: +4, credits: -2 },
+        effectB: { intel: +6, morale: +3, reputation: +2 }
+      },
+      {
+        id: "d_maker_shift",
+        title: "Nullpunkt // Maker-Schichtwechsel",
+        text: "Maker bitten um Funkstille fuer einen heiklen Umbau am Relaisknoten.",
+        a: "Funkstille gewaehrn",
+        b: "Trotzdem senden",
+        effectA: { tech: +7, reputation: +3, credits: +1 },
+        effectB: { morale: +4, credits: +4, heat: +3 }
+      },
+      {
+        id: "d_shop_prices",
+        title: "The Shop // Preismanipulation",
+        text: "Ein Trader-Kartell will Preisinfos exklusiv. Teuer verkaufen oder transparent senden?",
+        a: "Exklusiv verkaufen",
+        b: "Transparent senden",
+        effectA: { credits: +11, reputation: -3 },
+        effectB: { reputation: +6, morale: +4, credits: +1 }
+      },
+      {
+        id: "d_harbor_cells",
+        title: "Der Hafen // Rettungsfenster",
+        text: "Ein Frachter mit Energiezellen sitzt in toxischem Schlick fest. Oeffnest du Notfrequenzen fuer alle?",
+        a: "Offene Notfrequenz",
+        b: "Fraktionsweise priorisieren",
+        effectA: { morale: +8, reputation: +6, credits: -1 },
+        effectB: { credits: +6, intel: +4, reputation: -2 }
+      },
+      {
+        id: "d_archive_looper",
+        title: "Archivkuppe // Alte Logs",
+        text: "Du findest Vor-Doomsday-Sendelogik mit Looper-Metadaten. Archivieren oder direkt nutzen?",
+        a: "Sicher archivieren",
+        b: "Sofort einsetzen",
+        effectA: { intel: +8, tech: +4, reputation: +2 },
+        effectB: { signal: +8, credits: +4, heat: +5 }
+      },
+      {
+        id: "d_cracked_monorail",
+        title: "Monorail-Bruch // Nachtzug 13",
+        text: "Ein rostiger Monorail-Zug haengt zwischen zwei Pfeilern. Du bekommst einen offenen Notruf und einen versiegelten Broker-Call.",
+        a: "Notruf priorisieren",
+        b: "Broker-Call nehmen",
+        effectA: { morale: +8, reputation: +6, credits: -2 },
+        effectB: { credits: +10, intel: +4, reputation: -3 }
+      },
+      {
+        id: "d_last_migration",
+        title: "Orden // Letzte Migration",
+        text: "Die Letzte Migration braucht eine sichere Korridoransage durch den Kabelwald. Oeffnest du den Kanal fuer alle oder nur fuer markierte Pilgergruppen?",
+        a: "Kanal fuer alle",
+        b: "Nur markierte Gruppen",
+        effectA: { reputation: +7, morale: +6, heat: +3 },
+        effectB: { intel: +6, credits: +5, reputation: -2 }
+      },
+      {
+        id: "d_thermobot_patch",
+        title: "ThermoBot-9 // Kern-Patch",
+        text: "ThermoBot-9 meldet kritische Kuehlwerte in Schacht 47. Verteilst du den Patch offen oder bindest du ihn an Sponsordeals?",
+        a: "Patch offen verteilen",
+        b: "Patch an Sponsor koppeln",
+        effectA: { morale: +6, tech: +5, credits: +1 },
+        effectB: { credits: +9, reputation: -3, heat: +4 }
+      },
+      {
+        id: "d_roamer_splinter",
+        title: "Roamer // Splitterzug",
+        text: "Zwei Roamer-Zuege streiten um dieselbe Wasserfilter-Ladung. Moderierst du auf Ausgleich oder gibst du einer Seite Vorfahrt?",
+        a: "Ausgleich moderieren",
+        b: "Eine Seite pushen",
+        effectA: { reputation: +6, morale: +4, intel: +3 },
+        effectB: { credits: +8, heat: +5, reputation: -2 }
+      },
+      {
+        id: "d_dispatch_blackbook",
+        title: "Dispatch // Blackbook-Leak",
+        text: "Ein altes Dispatcher-Blackbook nennt Namen von Profiteuren der Nulljahre. Gehst du voll on-air oder schneidest du die Liste auf harte Beweise?",
+        a: "Voll on-air",
+        b: "Nur Beweisnamen",
+        effectA: { reputation: +8, morale: +3, heat: +7 },
+        effectB: { intel: +7, reputation: +4, credits: +1 }
+      },
+      {
+        id: "d_messingmarkt_embargo",
+        title: "Messingmarkt 9 // Embargo-Funk",
+        text: "Ein Embargo auf Energiezellen wird ueber geheime Slots koordiniert. Stoerst du den Slot oder verkaufst du die Timing-Daten?",
+        a: "Slot stoeren",
+        b: "Timing verkaufen",
+        effectA: { morale: +5, reputation: +6, credits: -1 },
+        effectB: { credits: +11, intel: +4, reputation: -3 }
+      },
+      {
+        id: "d_zero_counterstrike",
+        requiresFlags: { leak_public: 1 },
+        title: "Messingmarkt 9 // Zero-Gegenschlag",
+        text: "Nach deinem offenen Leak sperrt ein Zero-Broker zwei Versorgungsrouten. Oeffnest du den Konflikt live oder drehst du auf Schadensbegrenzung?",
+        a: "Konflikt offen senden",
+        b: "Schadensbegrenzung",
+        effectA: { reputation: +6, morale: +3, heat: +9 },
+        effectB: { intel: +5, reputation: +2, credits: +2 },
+        flagA: "zero_open_conflict",
+        flagB: "zero_contained"
+      },
+      {
+        id: "d_maker_shadowroute",
+        requiresFlags: { leak_private: 1 },
+        title: "Maker-Kanal // Schattenroute Delta",
+        text: "Dein verschluesselter Leak hat eine Maker-Schattenroute aktiviert. Hältst du sie exklusiv oder gibst du Teilen davon an Dispatch-Hörer?",
+        a: "Exklusiv halten",
+        b: "Teiloeffnung",
+        effectA: { tech: +7, credits: +6, reputation: -1 },
+        effectB: { reputation: +5, morale: +4, intel: +3 }
+      },
+      {
+        id: "d_orden_backlash",
+        requiresFlags: { orden_paywalled: 1 },
+        title: "Pilgerrast // Orden-Backlash",
+        text: "Nach der Paywall besetzen Orden-Retros einen Relaymast. Gehst du in Verhandlung oder schickst du Roamer-Eskorte?",
+        a: "Verhandeln",
+        b: "Roamer-Eskorte",
+        effectA: { reputation: +5, intel: +5, credits: +1 },
+        effectB: { credits: +7, morale: -3, heat: +5 }
+      },
+      {
+        id: "d_public_trust_wave",
+        requiresFlags: { public_service: 1 },
+        title: "Dispatch // Vertrauenswelle",
+        text: "Durch deine gemeinwohl-orientierten Slots schicken Camps freiwillig Lagebilder. Nutzt du sie fuer offene Warnkarten oder fuer Contract-Preise?",
+        a: "Warnkarten",
+        b: "Contract-Preise",
+        effectA: { reputation: +7, morale: +5, intel: +4 },
+        effectB: { credits: +8, reputation: -2, morale: -1 }
+      }
+    ];
+
+    const stackEvents = [
+      {
+        id: "s_laser_window",
+        title: "Orbital-Laserfenster // Der Stack",
+        text: "STACKCAST meldet ein kurzes Laser-Blindfenster ueber Kabelwald. Verwertest du es fuer Geocacher oder gibst du es an Retros weiter?",
+        a: "Geocacher pushen",
+        b: "Retros informieren",
+        effectA: { credits: +9, reputation: +2, heat: +6 },
+        effectB: { intel: +8, tech: +5, reputation: +1 },
+        flagA: "geocacher_rush",
+        flagB: "retros_backchannel"
+      },
+      {
+        id: "s_zero_ledger",
+        title: "Zero-Ledger Ping // Glaspforte",
+        text: "Ein Zero-Broker bietet Credits fuer ungefilterte Looper-Metadaten. Verkaufst du den Dump oder scrubbst du alles?",
+        a: "Daten verkaufen",
+        b: "Alles scrubben",
+        effectA: { credits: +12, morale: -4, reputation: -3, heat: +7 },
+        effectB: { reputation: +6, tech: +4, intel: +5 },
+        flagA: "zero_data_sold",
+        flagB: "zero_data_scrubbed"
+      },
+      {
+        id: "s_subchannel_7",
+        title: "StackCast Subchannel 7",
+        text: "Eine Sequenz zeigt moegliche Eingriffsvektoren auf Nullpunkt. Nutzt du sie fuer direkten Profit oder baust du ein Schutz-Patch?",
+        a: "Profit-Route",
+        b: "Schutz-Patch",
+        effectA: { credits: +8, reputation: -2, heat: +5 },
+        effectB: { tech: +7, reputation: +4, morale: +3 }
+      },
+      {
+        id: "s_starlink_drift",
+        title: "Starlink-Relais Drift",
+        text: "Du kannst ein Relais kurz umlenken: Fuer private Steampunk-Auktionen oder fuer oeffentliche Dispatch-Reichweite?",
+        a: "Steampunk-Auktion",
+        b: "Offene Reichweite",
+        effectA: { credits: +11, tech: +2, reputation: -2 },
+        effectB: { reputation: +7, morale: +4, intel: +3 }
+      },
+      {
+        id: "s_sat_feed",
+        title: "Aufklaerungs-Sat Feed",
+        text: "Ein Sat-Fenster zeigt Bewegungen an Messingmarkt 9. Verkaufst du das Tracking oder verschleierst du es?",
+        a: "Tracking verkaufen",
+        b: "Tracking verwischen",
+        effectA: { credits: +10, intel: +3, reputation: -2, heat: +4 },
+        effectB: { reputation: +5, morale: +3, tech: +2 }
+      },
+      {
+        id: "s_nuke_telemetry",
+        title: "Orbital-Nuklear-Telemetrie",
+        text: "Altbestaende senden Testsignaturen. Schuerst du Panik fuer Evak-Deals oder beruhigst du per Faktencheck?",
+        a: "Panik monetarisieren",
+        b: "Faktencheck senden",
+        effectA: { credits: +12, morale: -5, reputation: -4, heat: +8 },
+        effectB: { reputation: +7, intel: +6, credits: +1 }
+      },
+      {
+        id: "s_weather_front",
+        title: "Messstation Wetter/Umwelt",
+        text: "Stack-Messdaten zeigen giftige Fronten vor Pilgerrast. Behaelst du das fuer Vertragskunden oder oeffnest du den Feed?",
+        a: "Nur Vertragskunden",
+        b: "Offener Feed",
+        effectA: { credits: +9, reputation: -2, morale: -2 },
+        effectB: { morale: +6, reputation: +6, intel: +4 }
+      },
+      {
+        id: "s_shadow_channel",
+        title: "Relais-Schattenkanal",
+        text: "Ein Schattenkanal kann Dispatch kurz ueberblenden. Nutzt du ihn fuer Marktpreise oder fuer Notlagen?",
+        a: "Marktpreise pushen",
+        b: "Notlagen priorisieren",
+        effectA: { credits: +8, tech: +2, reputation: -2 },
+        effectB: { reputation: +6, morale: +5, signal: +4 }
+      },
+      {
+        id: "s_loop_signature",
+        title: "Loop-Signatur Anomalie",
+        text: "Ein Muster koennte ein Looper-Erbe markieren. Meldest du es an den Orden oder an einen Zero-Broker?",
+        a: "Orden melden",
+        b: "Broker melden",
+        effectA: { reputation: +7, intel: +6, credits: +1 },
+        effectB: { credits: +12, heat: +7, reputation: -4 }
+      },
+      {
+        id: "s_bot_net",
+        title: "Konsumschlund-Arkaden // Bot-Netz",
+        text: "Ein Bot-Netz kann Ad-Jingles oder Evak-Codes ausstrahlen. Welche Last schaltest du?",
+        a: "Ad-Jingles",
+        b: "Evak-Codes",
+        effectA: { credits: +9, morale: +1, reputation: -2 },
+        effectB: { reputation: +6, morale: +5, intel: +3 }
+      },
+      {
+        id: "s_shaft47",
+        title: "Schacht 47 // Der lange Husten",
+        text: "Toxische Geisterdaten aus Schacht 47 verursachen Aussetzer. Verkaufst du Entstoerprofile oder verteilst du sie frei?",
+        a: "Entstoerprofile verkaufen",
+        b: "Frei verteilen",
+        effectA: { credits: +10, tech: +3, reputation: -2 },
+        effectB: { reputation: +7, signal: +5, credits: +1 }
+      },
+      {
+        id: "s_ash_pulse",
+        title: "Aschepuls // Stack Echo",
+        text: "Ein Echo impft falsche Wegpunkte in das Funknetz. Fuer Profit umlenken oder sofort neutralisieren?",
+        a: "Fuer Profit umlenken",
+        b: "Sofort neutralisieren",
+        effectA: { credits: +8, heat: +6, reputation: -3 },
+        effectB: { tech: +6, reputation: +5, morale: +3 }
+      },
+      {
+        id: "s_stackcast_ghostslot",
+        title: "StackCast // Ghostslot 12",
+        text: "Ein gesperrter Ghostslot oeffnet fuer 40 Sekunden. Injezieren du Geocache-Hinweise oder Notprotokolle fuer Pilgerlinien?",
+        a: "Geocache-Hinweise",
+        b: "Notprotokolle",
+        effectA: { credits: +10, intel: +4, reputation: -2 },
+        effectB: { reputation: +7, morale: +5, signal: +3 }
+      },
+      {
+        id: "s_glassgate_backdoor",
+        title: "Glaspforte // Backdoor-Burst",
+        text: "Maker entdecken eine Backdoor in einem Zero-Relay bei der Glaspforte. Oeffnest du einen stillen Mirror oder loeschst du den Kanal sofort?",
+        a: "Stillen Mirror aufbauen",
+        b: "Kanal sofort loeschen",
+        effectA: { intel: +8, tech: +5, heat: +4 },
+        effectB: { reputation: +6, morale: +4, credits: -1 }
+      },
+      {
+        id: "s_roofarray_overclock",
+        title: "Dacharray // Overclock",
+        text: "Ein Dacharray ueber dem Konsumschlund kann uebertaktet werden. Mehr Reichweite gegen Ausfallrisiko - ziehst du es durch?",
+        a: "Overclock durchziehen",
+        b: "Konservativ fahren",
+        effectA: { signal: +9, credits: +5, heat: +6 },
+        effectB: { reputation: +4, morale: +3, tech: +4 }
+      },
+      {
+        id: "s_cinder_market_mesh",
+        title: "Aschemarkt // Mesh-Riss",
+        text: "Im Mesh-Netz des Aschemarkts entstehen tote Zonen. Verkaufst du Premium-Routen oder oeffnest du ein freies Rettungsmesh?",
+        a: "Premium-Routen",
+        b: "Freies Rettungsmesh",
+        effectA: { credits: +11, intel: +3, reputation: -3 },
+        effectB: { reputation: +7, morale: +5, signal: +2 }
+      },
+      {
+        id: "s_nullbahn_echo",
+        title: "Nullbahn // Echo-Wolke",
+        text: "Eine Echo-Wolke auf der Nullbahn spiegelt alte Milizcodes. Leitest du sie an Hardliner weiter oder an den Orden zur Entschaerfung?",
+        a: "An Hardliner geben",
+        b: "An Orden geben",
+        effectA: { credits: +8, heat: +6, reputation: -4 },
+        effectB: { reputation: +6, morale: +4, intel: +4 }
+      },
+      {
+        id: "s_ironchoir_archive",
+        title: "Eisenchor // Archivsplitter",
+        text: "Ein altes Eisenchor-Archiv enthaelt Stimmen vor der ersten Looper-Welle. Leckst du den Mitschnitt oder sicherst du ihn fuer Maker-Analyse?",
+        a: "Mitschnitt leaken",
+        b: "Fuer Maker sichern",
+        effectA: { reputation: +8, morale: +2, heat: +5 },
+        effectB: { tech: +7, intel: +5, credits: +1 }
+      },
+      {
+        id: "s_zero_hunters",
+        requiresFlags: { zero_data_sold: 1 },
+        title: "Glaspforte // Hunter-Protokoll",
+        text: "Die verkauften Looper-Daten aktivieren Zero-Hunter-Teams. Hilfst du bei Zielkorrekturen oder sabotierst du den Feed?",
+        a: "Zielkorrekturen",
+        b: "Feed sabotieren",
+        effectA: { credits: +12, heat: +8, reputation: -5 },
+        effectB: { tech: +7, reputation: +4, morale: +2 }
+      },
+      {
+        id: "s_retros_payload",
+        requiresFlags: { retros_backchannel: 1 },
+        title: "Retros // Payload-Fenster",
+        text: "Retros bitten um 90 Sekunden Satelliten-Schatten fuer einen Schlag auf ein Zero-Relais. Gibst du das Fenster frei?",
+        a: "Fenster freigeben",
+        b: "Fenster verweigern",
+        effectA: { tech: +8, reputation: +3, heat: +5 },
+        effectB: { reputation: +2, credits: +4, morale: -1 }
+      },
+      {
+        id: "s_geocacher_collapse",
+        requiresFlags: { geocacher_rush: 1 },
+        title: "Koordinaten-Kreuz // Cache-Kollaps",
+        text: "Der Geocacher-Rush aus dem Laserfenster endet im Flaschenhals. Leitetst du um oder laesst du den Markt es regeln?",
+        a: "Umleiten",
+        b: "Markt regelt",
+        effectA: { reputation: +6, morale: +4, credits: +2 },
+        effectB: { credits: +9, reputation: -3, heat: +4 }
+      },
+      {
+        id: "s_scrubbed_consequence",
+        requiresFlags: { zero_data_scrubbed: 1 },
+        title: "StackCast // Missing Profile",
+        text: "Dein Scrub hat einen Suchlauf des Stacks ausgeloest. Tarnst du weitere Signaturen oder lockst du den Suchlauf auf Schrottdaten?",
+        a: "Weitere Tarnung",
+        b: "Schrottdaten locken",
+        effectA: { tech: +6, reputation: +4, signal: +3 },
+        effectB: { intel: +7, credits: +4, heat: +3 }
+      }
+    ];
+
+    const statConfig = [
+      ["reputation", "Reputation"],
+      ["morale", "Moral"],
+      ["tech", "Tech"],
+      ["credits", "Credits"],
+      ["intel", "Intel"],
+      ["signal", "Signal"],
+    ];
+
+    const themes = {
+      field: {
+        "--bg-a": "#111c2a",
+        "--bg-b": "#1e2f43",
+        "--chassis-top": "#637384",
+        "--chassis-mid": "#4d5f73",
+        "--chassis-low": "#3c4c5f",
+        "--bezel-hi": "#3a526d",
+        "--dispatch": "#ffd08a",
+        "--stack": "#a7d5ff",
+        "--scan": "#95edc4",
+        "--lcd-bg": "#101b13",
+        "--lcd-text": "#99e9b2"
+      },
+      military: {
+        "--bg-a": "#1a2218",
+        "--bg-b": "#2f3b2a",
+        "--chassis-top": "#6c735e",
+        "--chassis-mid": "#545f47",
+        "--chassis-low": "#444d39",
+        "--bezel-hi": "#5a6e49",
+        "--dispatch": "#e8d08c",
+        "--stack": "#9cc0a2",
+        "--scan": "#9be0a7",
+        "--lcd-bg": "#12180f",
+        "--lcd-text": "#8fdfa4"
+      },
+      rusty: {
+        "--bg-a": "#2b1b18",
+        "--bg-b": "#493028",
+        "--chassis-top": "#8b6753",
+        "--chassis-mid": "#6f4f3f",
+        "--chassis-low": "#563b31",
+        "--bezel-hi": "#8a664b",
+        "--dispatch": "#f5bf75",
+        "--stack": "#d6b98e",
+        "--scan": "#f0b883",
+        "--lcd-bg": "#1a130f",
+        "--lcd-text": "#f1b37d"
+      }
+    };
+
+    const clamp = (n, min = 0, max = 100) => Math.max(min, Math.min(max, n));
+    const rnd = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+    const frnd = (a, b) => a + Math.random() * (b - a);
+    const runDifficulty = () => clamp(state.block / Math.max(1, state.maxBlocks - 1), 0, 1);
+    const musicPool = {
+      stack: [
+        "./music/electro1.mp3",
+        "./music/electro2.mp3",
+      ],
+      dispatch: [
+        "./music/metal1.mp3",
+        "./music/metal2.mp3",
+        "./music/metal3.mp3",
+      ],
+    };
+
+    const el = {
+      ticker: document.getElementById("ticker"),
+      scope: document.getElementById("scope"),
+      scopeShell: document.querySelector(".scope-shell"),
+      leftDisplay: document.getElementById("leftDisplay"),
+      channelChip: document.getElementById("channelChip"),
+      qualityChip: document.getElementById("qualityChip"),
+      gameChip: document.getElementById("gameChip"),
+      lockDispatchLeds: document.getElementById("lockDispatchLeds"),
+      lockStackLeds: document.getElementById("lockStackLeds"),
+      qualityNeedle: document.getElementById("qualityNeedle"),
+      signalNeedle: document.getElementById("signalNeedle"),
+      fmNeedle: document.getElementById("fmNeedle"),
+      fmReadout: document.getElementById("fmReadout"),
+      sigLed: document.getElementById("sigLed"),
+      dispatchMarker: document.getElementById("dispatchMarker"),
+      stackMarker: document.getElementById("stackMarker"),
+      jammer1Marker: document.getElementById("jammer1Marker"),
+      jammer2Marker: document.getElementById("jammer2Marker"),
+      dial: document.getElementById("dial"),
+      notch: document.getElementById("dialNotch"),
+      fineDial: document.getElementById("fineDial"),
+      fineNotch: document.getElementById("fineDialNotch"),
+      fineReadout: document.getElementById("fineReadout"),
+      freqValue: document.getElementById("freqValue"),
+      nameInput: document.getElementById("nameInput"),
+      factionSelect: document.getElementById("factionSelect"),
+      displayNameSelect: document.getElementById("displayNameSelect"),
+      displayFactionSelect: document.getElementById("displayFactionSelect"),
+      displayThemeSelect: document.getElementById("displayThemeSelect"),
+      startBtn: document.getElementById("startBtn"),
+      powerToggle: document.getElementById("powerToggle"),
+      powerSwitchWrap: document.getElementById("powerSwitchWrap"),
+      nextBtn: document.getElementById("nextBtn"),
+      stabilizeBtn: document.getElementById("stabilizeBtn"),
+      hintBtn: document.getElementById("hintBtn"),
+      nudgeDownBtn: document.getElementById("nudgeDownBtn"),
+      fineCenterBtn: document.getElementById("fineCenterBtn"),
+      nudgeUpBtn: document.getElementById("nudgeUpBtn"),
+      mapBtn: document.getElementById("mapBtn"),
+      themeSelect: document.getElementById("themeSelect"),
+      statusLine: document.getElementById("statusLine"),
+      actionHint: document.getElementById("actionHint"),
+      lcdTitle: document.getElementById("lcdTitle"),
+      lcdFreq: document.getElementById("lcdFreq"),
+      lcdGhost: document.getElementById("lcdGhost"),
+      lcdDisplaySelects: document.querySelector(".lcd .display-selects"),
+      statusLcd: document.querySelector(".lcd"),
+      stats: document.getElementById("stats"),
+      contractText: document.getElementById("contractText"),
+      decisionText: document.getElementById("decisionText"),
+      optA: document.getElementById("optA"),
+      optB: document.getElementById("optB"),
+      optAText: document.getElementById("optAText"),
+      optBText: document.getElementById("optBText"),
+      log: document.getElementById("log"),
+    };
+
+    const ctx = el.scope.getContext("2d");
+    const audio = {
+      ctx: null,
+      master: null,
+      noiseGain: null,
+      jamGain: null,
+      maskGain: null,
+      musicDispatchGain: null,
+      musicStackGain: null,
+      noiseFilter: null,
+      jamFilter: null,
+      maskFilter: null,
+      sourceA: null,
+      sourceB: null,
+      musicDispatchEl: null,
+      musicStackEl: null,
+      musicDispatchSource: null,
+      musicStackSource: null,
+      musicDispatchDirect: false,
+      musicStackDirect: false,
+      scopeDispatchAnalyser: null,
+      scopeStackAnalyser: null,
+      scopeDispatchData: null,
+      scopeStackData: null,
+      scopeDispatchFreqData: null,
+      scopeStackFreqData: null,
+      armed: false
+    };
+    const beatState = {
+      pulse: 0,
+      ema: 0,
+      cooldownMs: 0,
+      lastMs: 0,
+    };
+    const lcdState = {
+      pendingFreq: "FREQ 50.00 MHz",
+      pendingStats: null,
+      hasFrame: false,
+      lastCommit: 0,
+      nextDelay: 180,
+    };
+
+    function createNoiseBuffer(audioCtx, seconds = 2.2) {
+      const len = Math.floor(audioCtx.sampleRate * seconds);
+      const buffer = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < len; i += 1) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      return buffer;
+    }
+
+    function ensureAudio() {
+      if (audio.ctx) return true;
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return false;
+      const audioCtx = new Ctx();
+      const noiseBuffer = createNoiseBuffer(audioCtx);
+
+      const srcA = audioCtx.createBufferSource();
+      srcA.buffer = noiseBuffer;
+      srcA.loop = true;
+      srcA.playbackRate.value = 1.0;
+
+      const srcB = audioCtx.createBufferSource();
+      srcB.buffer = noiseBuffer;
+      srcB.loop = true;
+      srcB.playbackRate.value = 1.35;
+
+      const noiseFilter = audioCtx.createBiquadFilter();
+      noiseFilter.type = "bandpass";
+      noiseFilter.frequency.value = 1450;
+      noiseFilter.Q.value = 0.8;
+
+      const jamFilter = audioCtx.createBiquadFilter();
+      jamFilter.type = "bandpass";
+      jamFilter.frequency.value = 2400;
+      jamFilter.Q.value = 1.4;
+      const maskFilter = audioCtx.createBiquadFilter();
+      maskFilter.type = "highpass";
+      maskFilter.frequency.value = 2900;
+      maskFilter.Q.value = 0.55;
+
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.value = 0.00001;
+      const jamGain = audioCtx.createGain();
+      jamGain.gain.value = 0.00001;
+      const maskGain = audioCtx.createGain();
+      maskGain.gain.value = 0.00001;
+      const musicDispatchGain = audioCtx.createGain();
+      musicDispatchGain.gain.value = 0.00001;
+      const musicStackGain = audioCtx.createGain();
+      musicStackGain.gain.value = 0.00001;
+      const master = audioCtx.createGain();
+      master.gain.value = 0.86;
+
+      srcA.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(master);
+
+      srcB.connect(jamFilter);
+      jamFilter.connect(jamGain);
+      jamGain.connect(master);
+
+      srcA.connect(maskFilter);
+      maskFilter.connect(maskGain);
+      maskGain.connect(master);
+
+      const musicDispatchEl = new Audio();
+      musicDispatchEl.src = musicPool.dispatch[0];
+      musicDispatchEl.loop = true;
+      musicDispatchEl.preload = "auto";
+      musicDispatchEl.playsInline = true;
+      musicDispatchEl.muted = false;
+      musicDispatchEl.volume = 0;
+      musicDispatchEl.load();
+
+      const musicStackEl = new Audio();
+      musicStackEl.src = musicPool.stack[0];
+      musicStackEl.loop = true;
+      musicStackEl.preload = "auto";
+      musicStackEl.playsInline = true;
+      musicStackEl.muted = false;
+      musicStackEl.volume = 0;
+      musicStackEl.load();
+
+      // Prefer true audio-linked analysers; fallback to direct mode on blocked browsers.
+      let musicDispatchSource = null;
+      let musicStackSource = null;
+      let musicDispatchDirect = true;
+      let musicStackDirect = true;
+      let scopeDispatchAnalyser = null;
+      let scopeStackAnalyser = null;
+      try {
+        musicDispatchSource = audioCtx.createMediaElementSource(musicDispatchEl);
+        musicStackSource = audioCtx.createMediaElementSource(musicStackEl);
+        musicDispatchSource.connect(musicDispatchGain);
+        musicStackSource.connect(musicStackGain);
+        musicDispatchGain.connect(master);
+        musicStackGain.connect(master);
+
+        scopeDispatchAnalyser = audioCtx.createAnalyser();
+        scopeDispatchAnalyser.fftSize = 2048;
+        scopeDispatchAnalyser.smoothingTimeConstant = 0.32;
+        scopeStackAnalyser = audioCtx.createAnalyser();
+        scopeStackAnalyser.fftSize = 2048;
+        scopeStackAnalyser.smoothingTimeConstant = 0.32;
+        musicDispatchGain.connect(scopeDispatchAnalyser);
+        musicStackGain.connect(scopeStackAnalyser);
+
+        musicDispatchDirect = false;
+        musicStackDirect = false;
+      } catch (err) {
+        musicDispatchSource = null;
+        musicStackSource = null;
+        musicDispatchDirect = true;
+        musicStackDirect = true;
+        scopeDispatchAnalyser = null;
+        scopeStackAnalyser = null;
+      }
+
+      master.connect(audioCtx.destination);
+
+      srcA.start();
+      srcB.start();
+
+      audio.ctx = audioCtx;
+      audio.master = master;
+      audio.noiseGain = noiseGain;
+      audio.jamGain = jamGain;
+      audio.maskGain = maskGain;
+      audio.musicDispatchGain = musicDispatchGain;
+      audio.musicStackGain = musicStackGain;
+      audio.noiseFilter = noiseFilter;
+      audio.jamFilter = jamFilter;
+      audio.maskFilter = maskFilter;
+      audio.sourceA = srcA;
+      audio.sourceB = srcB;
+      audio.musicDispatchEl = musicDispatchEl;
+      audio.musicStackEl = musicStackEl;
+      audio.musicDispatchSource = musicDispatchSource;
+      audio.musicStackSource = musicStackSource;
+      audio.musicDispatchDirect = musicDispatchDirect;
+      audio.musicStackDirect = musicStackDirect;
+      audio.scopeDispatchAnalyser = scopeDispatchAnalyser;
+      audio.scopeStackAnalyser = scopeStackAnalyser;
+      audio.scopeDispatchData = scopeDispatchAnalyser ? new Uint8Array(scopeDispatchAnalyser.fftSize) : null;
+      audio.scopeStackData = scopeStackAnalyser ? new Uint8Array(scopeStackAnalyser.fftSize) : null;
+      audio.scopeDispatchFreqData = scopeDispatchAnalyser ? new Uint8Array(scopeDispatchAnalyser.frequencyBinCount) : null;
+      audio.scopeStackFreqData = scopeStackAnalyser ? new Uint8Array(scopeStackAnalyser.frequencyBinCount) : null;
+      return true;
+    }
+
+    function sampleBeatPulse(dtMs = 90) {
+      if (!state.powerOn || !state.running) {
+        beatState.pulse = Math.max(0, beatState.pulse - dtMs * 0.004);
+        document.documentElement.style.setProperty("--beat-pulse", beatState.pulse.toFixed(3));
+        return;
+      }
+
+      const rawChannel = state.pending?.channel || state.blockWinner || state.channel;
+      if (rawChannel === "noise") {
+        beatState.pulse = Math.max(0, beatState.pulse - dtMs * 0.01);
+        beatState.ema *= 0.85;
+        beatState.cooldownMs = Math.max(0, beatState.cooldownMs - dtMs);
+        document.documentElement.style.setProperty("--beat-pulse", beatState.pulse.toFixed(3));
+        return;
+      }
+      const active = rawChannel === "stack" ? "stack" : "dispatch";
+      const analyser = active === "dispatch" ? audio.scopeDispatchAnalyser : audio.scopeStackAnalyser;
+      const freqData = active === "dispatch" ? audio.scopeDispatchFreqData : audio.scopeStackFreqData;
+
+      let pulse = beatState.pulse;
+      if (analyser && freqData) {
+        analyser.getByteFrequencyData(freqData);
+        const maxBin = Math.min(30, freqData.length - 1);
+        let bass = 0;
+        let count = 0;
+        for (let i = 2; i <= maxBin; i += 1) {
+          bass += freqData[i];
+          count += 1;
+        }
+        bass = count > 0 ? bass / count : 0;
+        if (beatState.ema <= 0) beatState.ema = bass;
+        beatState.ema = beatState.ema * 0.92 + bass * 0.08;
+        beatState.cooldownMs = Math.max(0, beatState.cooldownMs - dtMs);
+        const threshold = beatState.ema * 1.22 + 6;
+        if (bass > threshold && beatState.cooldownMs <= 0) {
+          pulse = 1;
+          beatState.cooldownMs = 130;
+        } else {
+          pulse = Math.max(0, pulse - dtMs * 0.0055);
+        }
+      } else {
+        const fallbackEl = active === "dispatch" ? audio.musicDispatchEl : audio.musicStackEl;
+        if (fallbackEl && !fallbackEl.paused && state.running) {
+          // Fallback beat when analyser path is unavailable: tempo-like pulse from track time.
+          const t = fallbackEl.currentTime;
+          const bpmLike = active === "dispatch" ? 146 : 132;
+          const beatPhase = (t * bpmLike) / 60;
+          const beatShape = Math.pow(Math.max(0, Math.sin(beatPhase * Math.PI * 2)), 4.6);
+          pulse = Math.max(pulse - dtMs * 0.0045, beatShape * 0.92);
+        } else {
+          pulse = Math.max(0, pulse - dtMs * 0.004);
+        }
+      }
+
+      beatState.pulse = pulse;
+      document.documentElement.style.setProperty("--beat-pulse", beatState.pulse.toFixed(3));
+    }
+
+    function nextTrackForChannel(channel) {
+      const pool = musicPool[channel];
+      if (!Array.isArray(pool) || pool.length === 0) return "";
+      if (pool.length === 1) return pool[0];
+
+      let used = state.musicHistory[channel] || [];
+      let available = pool.filter((src) => !used.includes(src));
+      if (available.length === 0) {
+        used = [];
+        available = pool.slice();
+      }
+
+      const prev = state.musicLast[channel] || "";
+      if (available.length > 1) {
+        const withoutPrev = available.filter((src) => src !== prev);
+        if (withoutPrev.length > 0) available = withoutPrev;
+      }
+
+      const picked = available[rnd(0, available.length - 1)];
+      used.push(picked);
+      state.musicHistory[channel] = used;
+      state.musicLast[channel] = picked;
+      return picked;
+    }
+
+    function assignLevelMusic(resetTime = true) {
+      if (!audio.musicDispatchEl || !audio.musicStackEl) return;
+      const dispatchSrc = nextTrackForChannel("dispatch");
+      const stackSrc = nextTrackForChannel("stack");
+
+      if (dispatchSrc && audio.musicDispatchEl.getAttribute("data-track") !== dispatchSrc) {
+        audio.musicDispatchEl.src = dispatchSrc;
+        audio.musicDispatchEl.setAttribute("data-track", dispatchSrc);
+        audio.musicDispatchEl.load();
+      }
+      if (stackSrc && audio.musicStackEl.getAttribute("data-track") !== stackSrc) {
+        audio.musicStackEl.src = stackSrc;
+        audio.musicStackEl.setAttribute("data-track", stackSrc);
+        audio.musicStackEl.load();
+      }
+      if (resetTime) {
+        audio.musicDispatchEl.currentTime = 0;
+        audio.musicStackEl.currentTime = 0;
+      }
+    }
+
+    function getStationProximity() {
+      const d = Math.abs(state.freq - state.dispatchFreq);
+      const s = Math.abs(state.freq - state.stackFreq);
+      const width = 12;
+      const wD = Math.exp(-(d * d) / (2 * width * width));
+      const wS = Math.exp(-(s * s) / (2 * width * width));
+      const sum = Math.max(0.0001, wD + wS);
+      return {
+        dispatch: wD / sum,
+        stack: wS / sum,
+        strength: Math.max(wD, wS),
+      };
+    }
+
+    function forceStartMusicPlayback() {
+      if (!ensureAudio()) return;
+      if (audio.ctx && audio.ctx.state === "suspended") {
+        audio.ctx.resume().catch(() => {});
+      }
+      const startOne = (elAudio) => {
+        if (!elAudio) return;
+        elAudio.muted = false;
+        elAudio.play().catch(() => {});
+      };
+      startOne(audio.musicDispatchEl);
+      startOne(audio.musicStackEl);
+      // Retry briefly in case first play races before metadata is ready.
+      setTimeout(() => {
+        startOne(audio.musicDispatchEl);
+        startOne(audio.musicStackEl);
+      }, 220);
+    }
+
+    function updateRadioAudio(sig) {
+      const hasCtx = !!(audio.ctx && audio.noiseGain && audio.jamGain && audio.maskGain);
+      const now = hasCtx ? audio.ctx.currentTime : 0;
+      if (audio.ctx && audio.ctx.state === "suspended") {
+        audio.ctx.resume().catch(() => {});
+      }
+      const running = state.running;
+      const noSignal = running && sig.channel === "noise";
+      const clean = running ? clamp(Math.max(0, sig.quality) / 100, 0, 1) : 0;
+      // Any valid reception should be audible (quiet floor), 100% should be loud.
+      const minAudible = 0.18;
+      const musicLevel = running
+        ? clamp(minAudible + (1 - minAudible) * Math.pow(clean, 1.22), 0, 1)
+        : 0;
+
+      const noiseLevel = !running
+        ? 0
+        : sig.channel === "noise"
+          ? clamp((62 - sig.quality) / 82, 0.22, 1)
+          : 0;
+      const jamLevel = running ? clamp(state.jamPenalty / 120, 0, 1) : 0;
+      const burst = jamLevel > 0.72 && Math.random() < 0.08 ? 0.05 : 0;
+      let dispatchTarget = running && sig.channel === "dispatch"
+        ? musicLevel
+        : 0;
+      let stackTarget = running && sig.channel === "stack"
+        ? musicLevel
+        : 0;
+      if (running) {
+        const prox = getStationProximity();
+        const floorMix = 0.14 + prox.strength * 0.28;
+        dispatchTarget = Math.max(dispatchTarget, floorMix * prox.dispatch, 0.06);
+        stackTarget = Math.max(stackTarget, floorMix * prox.stack, 0.06);
+      }
+      const goodSignal = Math.max(dispatchTarget, stackTarget);
+      const noiseDuck = 1 - goodSignal * 0.55;
+      const musicMask = running && !noSignal ? clamp(Math.pow(1 - clean, 0.95), 0, 1) : 0;
+      const maskFlutter = running && !noSignal ? (0.88 + Math.random() * 0.26) : 0;
+
+      if (hasCtx) {
+        audio.noiseGain.gain.setTargetAtTime(noiseLevel * 0.095 * noiseDuck, now, 0.06);
+        audio.jamGain.gain.setTargetAtTime(jamLevel * 0.16 + burst, now, 0.045);
+        audio.maskGain.gain.setTargetAtTime(musicMask * 0.072 * maskFlutter, now, 0.06);
+        if (audio.musicDispatchGain) {
+          audio.musicDispatchGain.gain.setTargetAtTime(audio.musicDispatchDirect ? 0.00001 : dispatchTarget, now, 0.14);
+        }
+        if (audio.musicStackGain) {
+          audio.musicStackGain.gain.setTargetAtTime(audio.musicStackDirect ? 0.00001 : stackTarget, now, 0.14);
+        }
+        audio.noiseFilter.type = noSignal ? "lowpass" : "bandpass";
+        audio.noiseFilter.Q.setTargetAtTime(noSignal ? 0.45 : 0.8, now, 0.1);
+        const noiseFreq = noSignal
+          ? 260 + noiseLevel * 520
+          : 900 + noiseLevel * 2200;
+        audio.noiseFilter.frequency.setTargetAtTime(noiseFreq, now, 0.12);
+        audio.jamFilter.frequency.setTargetAtTime(1300 + jamLevel * 3200 + Math.random() * 120, now, 0.08);
+        audio.jamFilter.Q.setTargetAtTime(1.1 + jamLevel * 2.2, now, 0.08);
+        audio.maskFilter.frequency.setTargetAtTime(1450 + musicMask * 3600, now, 0.08);
+        audio.maskFilter.Q.setTargetAtTime(0.45 + musicMask * 1.3, now, 0.08);
+      }
+
+      if (audio.musicDispatchEl) {
+        audio.musicDispatchEl.muted = false;
+        audio.musicDispatchEl.volume = audio.musicDispatchDirect ? clamp(dispatchTarget * 1.05, 0, 1) : 1;
+        if (running && audio.musicDispatchEl.paused) audio.musicDispatchEl.play().catch(() => {});
+      }
+      if (audio.musicStackEl) {
+        audio.musicStackEl.muted = false;
+        audio.musicStackEl.volume = audio.musicStackDirect ? clamp(stackTarget * 1.05, 0, 1) : 1;
+        if (running && audio.musicStackEl.paused) audio.musicStackEl.play().catch(() => {});
+      }
+    }
+
+    function applyTheme(name) {
+      const themeName = themes[name] ? name : "field";
+      const root = document.documentElement;
+      Object.entries(themes[themeName]).forEach(([k, v]) => root.style.setProperty(k, v));
+      if (el.themeSelect.value !== themeName) {
+        el.themeSelect.value = themeName;
+      }
+      if (el.displayThemeSelect && el.displayThemeSelect.value !== themeName) {
+        el.displayThemeSelect.value = themeName;
+      }
+      localStorage.setItem("freq_theme", themeName);
+    }
+
+    function syncDisplaySelectorsFromControls() {
+      if (el.displayNameSelect && el.nameInput) {
+        const current = (el.nameInput.value || "").trim();
+        const hasOption = [...el.displayNameSelect.options].some((o) => o.value === current);
+        if (hasOption) el.displayNameSelect.value = current;
+      }
+      if (el.displayFactionSelect && el.factionSelect) {
+        el.displayFactionSelect.value = el.factionSelect.value;
+      }
+      if (el.displayThemeSelect && el.themeSelect) {
+        el.displayThemeSelect.value = el.themeSelect.value;
+      }
+    }
+
+    function respawnCarriers() {
+      let d = frnd(5, 95);
+      let s = frnd(5, 95);
+      let guard = 0;
+      while (Math.abs(d - s) < 16 && guard < 40) {
+        d = frnd(5, 95);
+        s = frnd(5, 95);
+        guard += 1;
+      }
+      state.dispatchBase = d;
+      state.stackBase = s;
+      state.dispatchDriftVel = frnd(0.03, 0.09) * (Math.random() < 0.5 ? -1 : 1);
+      state.stackDriftVel = frnd(0.03, 0.09) * (Math.random() < 0.5 ? -1 : 1);
+    }
+
+    function respawnJammers() {
+      let j1 = frnd(8, 92);
+      let j2 = frnd(8, 92);
+      let guard = 0;
+      while (Math.abs(j1 - j2) < 10 && guard < 40) {
+        j2 = frnd(8, 92);
+        guard += 1;
+      }
+      state.jammers = [
+        { base: j1, amp: frnd(7.5, 12), speed: frnd(0.65, 1.15), phase: Math.random() * 6.28, width: frnd(1.3, 1.9), range: frnd(3.6, 5.2), power: frnd(96, 124), freq: j1 },
+        { base: j2, amp: frnd(8.5, 13), speed: frnd(0.7, 1.25), phase: Math.random() * 6.28, width: frnd(1.4, 2.1), range: frnd(3.8, 5.6), power: frnd(100, 130), freq: j2 }
+      ];
+    }
+
+    function log(text, tone = "tone-n") {
+      const p = document.createElement("p");
+      p.className = tone;
+      p.textContent = `[B${state.block} ${String(state.hour).padStart(2, "0")}:00] ${text}`;
+      el.log.prepend(p);
+    }
+
+    function effectLabel(key) {
+      const labels = {
+        reputation: "Reputation",
+        morale: "Moral",
+        tech: "Tech",
+        credits: "Credits",
+        intel: "Intel",
+        signal: "Signal",
+        heat: "Heat"
+      };
+      return labels[key] || key;
+    }
+
+    function formatEffect(effect) {
+      const order = ["reputation", "morale", "tech", "credits", "intel", "signal", "heat"];
+      return order
+        .filter((k) => Object.prototype.hasOwnProperty.call(effect, k))
+        .map((k) => `${effect[k] > 0 ? "+" : ""}${effect[k]} ${effectLabel(k)}`)
+        .join(", ");
+    }
+
+    function loreContinuation(event, option) {
+      const id = event.id || "";
+      const isA = option === "A";
+      const map = {
+        d_leak_messingmarkt: {
+          A: "Drei Stunden nach deinem Open-Leak kippt Messingmarkt 9 in Alarmmodus: Zero-Kuriere verbrennen Transit-Listen, Roamer sichern den Oststeg und ein improvisierter Orden-Checkpoint prueft jede Energiezelle auf falsche Siegel. Dispatch gewinnt Reichweite, aber jeder weitere Funksatz ueber Lieferwege erzeugt sofortige Gegenjagd.",
+          B: "Der verschluesselte Maker-Feed zieht eine unsichtbare Spur durch die Glaspforte: Werkstaetten rotieren Lager nachts, ThermoBot-9 verteilt Tarnprotokolle und nur wenige Pilgerfuehrer kennen den echten Korridor. Oeffentlich bleibt es ruhig, intern entsteht ein exklusives Netz mit langfristigem Einfluss."
+        },
+        d_orden_convoy: {
+          A: "Deine Evak-Routen teilen den Konvoi in kurze, bewegliche Fenster. Pilgerrast meldet nur minimale Ausfaelle, und selbst skeptische Orden-Retros senden danach deine Frequenz als Referenz durch. Die Nullbahn bleibt angespannt, aber deine Stimme wird erstmals als Schutzfaktor gelesen.",
+          B: "Mit der Paywall zerfaellt der Konvoi in zahlende und abgehängte Gruppen. Auf der Nullbahn entstehen Staus, und Retros patchen ein Gegensignal mit dem Label 'Dispatch verkauft Sicherheit'. Kurzfristig klingelt die Kasse, mittelfristig frisst Misstrauen deine Puffer."
+        },
+        d_hillbilly_window: {
+          A: "Das volle Wetterfenster oeffnet die Sumpf-Festung fuer einen massiven Bergungslauf. Innerhalb eines Zyklus tauchen echte Wasserfilter auf dem Basar auf, und mehrere Camps markieren deinen Sender als Lebenslinie statt als Unterhaltung.",
+          B: "Das Teilfenster haelt Reserve fuer spaetere Deals, aber in den Randzonen bleiben Filter knapp. Hillbilly-Scouts liefern dir dafuer exklusive Temperaturdaten, waehrend in den Camps die Frage lauter wird, ob Dispatch Schutz nur in Raten ausgibt."
+        },
+        s_zero_ledger: {
+          A: "Der Verkauf triggert in Minuten ein Hunter-Protokoll. Rund um die Glaspforte steigen anonyme Pings aus toten Kanälen auf, und mehrere Looper-Spuren verschwinden aus offenen Listen. Credits steigen, aber du hast den Jagdmodus im Netz aktiv mitgeschaltet.",
+          B: "Der Scrub loescht harte Profile, hinterlaesst aber charakteristische Lueckenmuster. STACKCAST startet einen stillen Suchlauf, die Noise-Lage nimmt zu, und du kaufst Zeit fuer Zivilknoten, die sonst direkt ins Ledger gefallen waeren."
+        },
+        s_laser_window: {
+          A: "Nach deinem Geocacher-Push wird Kabelwald innerhalb eines Blocks zum Goldrauschkorridor. Killcoin-Runner, Schrottsammler und Hardliner kollidieren an denselben Knoten, und das Laserfenster hinterlaesst eine Route voller offener Rechnungen.",
+          B: "Die Retros nutzen das Blindfenster chirurgisch: ein Zero-Relais geht kurz dunkel, zwei Jagdlisten brechen ab und Dispatch erhaelt ein messbares Reichweitenfenster. Niemand nennt dich offiziell, aber mehrere Relais danken in codierten Sidebands."
+        },
+        d_sponsor_slot: {
+          A: "Der Sponsor-Spot flutet den Aether mit Schrottwerbung und sichert dir Liquiditaet. Gleichzeitig wandern mehrere Hilferufe auf niedrigere Prioritaet, was in den Camps als Signal verstanden wird, dass Reichweite kaeuferlich geworden ist.",
+          B: "Mit ThermoBot-9 im Slot landen belastbare Service-Pings direkt bei defekten Kuehlkreisen. Der Fanshop verliert Minuten, aber dein Kanal gewinnt den Ruf, im Zweifel Funktion ueber Merch zu stellen."
+        },
+        d_chaos_chapel: {
+          A: "Die Live-Moderation zwingt drei verfeindete Stimmen auf denselben Takt. Nicht alle halten sich daran, aber in dieser Nacht fallen zwei geplante Vergeltungszuege aus, weil jede Seite einmal oeffentlich festgenagelt wurde.",
+          B: "Mit der Drosselung kappst du zwei Kanaele und stabilisierst den Pegel sofort. Was du nicht sendest, landet jedoch in Fluesternetzen, und am Morgen kursiert die Version, dass Dispatch entscheidet, wer sprechen darf."
+        },
+        d_warlord_truce: {
+          A: "Der Deal bringt eine echte, aber fragile Waffenruhe entlang der Schrottlinie. Krankenzuege kommen durch, doch der Preis ist sichtbar: dein Sender wird als Teil der Erzaehlung des Warlords zitiert.",
+          B: "Neutralitaet kostet kurzfristig Einfluss, verhindert aber die Vereinnahmung deiner Frequenz. Die Waffenruhe bleibt aus, doch niemand kann deine Stimme als gekauftes Siegel ausschlachten."
+        },
+        d_geocache_raster: {
+          A: "Mit Vollraster wird der Cache in Stunden gefunden, gepluendert und verteidigt. Du erzeugst Kapital und Konflikt in einem Atemzug, und die Rueckroute bleibt fuer Tage unsicher.",
+          B: "Das verrauschte Raster bremst den Run und senkt die Gewaltspitze. Weniger Loot heute, aber du haeltst den Korridor laenger offen und laesst Raum fuer geordnete Bergung."
+        },
+        d_filter_fake: {
+          A: "Die Namensnennung trifft Haendler frontal: einige Stände schließen, zwei fliehen nachts aus dem Basar und echte Filterpreise beruhigen sich. Gleichzeitig baust du dir Feinde mit langen Erinnerungen.",
+          B: "Mit Signaturen statt Namen gibst du Werkzeug statt Pranger. Fakes fallen langsamer, aber saubere Haendler ziehen freiwillig auf deinen Kanal und liefern dir bessere Verifizierungen."
+        },
+        d_maker_shift: {
+          A: "Funkstille verschafft den Makern ein sauberes Umbaufenster. Der Relaisknoten geht stabil online, und du bekommst stillen Zugriff auf Diagnosedaten, die anderen Sendern fehlen.",
+          B: "Durchs Senden waehrend des Umbaus bleibst du sichtbar, verursachst aber Interferenzen im heiklen Moment. Der Knoten lebt, doch die Maker notieren deinen Namen in der Spalte 'unkalkulierbar'."
+        },
+        d_shop_prices: {
+          A: "Der Exklusivverkauf fettet Kassen in der ersten Welle. Danach drehen Trader den Markt enger, und Camps ohne Credits zahlen doppelt fuer dieselbe Ware.",
+          B: "Transparente Preise zerstoeren den Kartellvorteil ueber Nacht. Du verdienst weniger pro Ping, aber die Strecke zwischen Basar und Pilgerrast bleibt fuer mehr Leute bezahlbar."
+        },
+        d_harbor_cells: {
+          A: "Die offene Notfrequenz organisiert eine breite Rettungskette: Taucher, Schlepper und Feldmedics teilen Slots statt sich zu blockieren. Der Frachter wird spaet, aber lebend aus dem Schlick gezogen.",
+          B: "Fraktionspriorisierung beschleunigt Kernlieferungen fuer Verbundpartner. Der Rest bleibt laenger ohne Zellen, und aus den Randcamps kommen erste Boykottaufrufe gegen Dispatch."
+        },
+        d_archive_looper: {
+          A: "Archivierung sichert die Looper-Metadaten gegen Schnellverwertung. Maker und Orden bauen darauf ein gemeinsames Prüfprotokoll, das spaeter mehrere falsche Erben entlarvt.",
+          B: "Der Soforteinsatz pusht Reichweite und Scores, bringt aber rohe Looper-Signaturen in den Markt. Innerhalb eines Tages tauchen drei gefaelschte Herkunftscodes in Broker-Angeboten auf."
+        },
+        d_cracked_monorail: {
+          A: "Mit Notruf-Prioritaet wird Nachtzug 13 in Segmenten entlastet. Die Evak-Linie bleibt langsam, aber kontrolliert, und die Ueberlebenden tragen deinen Callsign in die naechsten Camps.",
+          B: "Der Broker-Call liefert verwertbare Insiderzeiten, waehrend am Monorail-Pfeiler Improvisation ueber Leben entscheidet. Du gewinnst Daten und Credits, verlierst aber Stimmen aus der Evak-Schicht."
+        },
+        d_last_migration: {
+          A: "Der offene Korridor macht die Migration chaotischer, aber fairer. Mehr Menschen kommen durch als prognostiziert, und der Orden wird gezwungen, seine Zugangspolitik oeffentlich zu erklaeren.",
+          B: "Nur markierte Gruppen passieren schnell und geordnet. Der Preis ist sichtbar: Zurueckgelassene Pilger bauen Schattenrouten, die spaeter zu unkontrollierbaren Konfliktadern werden."
+        },
+        d_thermobot_patch: {
+          A: "Offene Patch-Verteilung stabilisiert mehrere Kuehlketten in der Unterstadt. ThermoBot-9 wird zum Folk-Relais, und dein Sender profitiert von jedem funktionierenden Feldgenerator.",
+          B: "Der Sponsor-gebundene Patch bringt Premium-Wartung fuer zahlende Knoten. In den Randbereichen bleiben Ausfaelle hoch, und der Vorwurf 'Pay-to-survive' haftet an deiner Frequenz."
+        },
+        d_roamer_splinter: {
+          A: "Die Moderation zwingt beide Roamer-Zuege in ein geteiltes Ladefenster. Niemand ist zufrieden, aber die Lieferkette reisst nicht, und du kaufst Frieden fuer mindestens einen Block.",
+          B: "Mit einseitigem Push gewinnt ein Zug sofort. Der Verlierer kappt daraufhin zwei Nebenwege, was den Konflikt nur zeitversetzt und teurer zurueckbringt."
+        },
+        d_dispatch_blackbook: {
+          A: "Der Voll-Leak schlaegt wie ein Hammer ein: Namen, Zahlen, alte Schuldpfade. Einige Profiteure tauchen ab, gleichzeitig startet ein Gegenangriff auf deine Glaubwuerdigkeit.",
+          B: "Beweisbasierte Ausspielung wirkt langsamer, aber gerichtsfest im Wasteland-Massstab. Du erzeugst weniger Feuer, dafuer bleibt die Spur belastbar ueber mehrere Zyklen."
+        },
+        d_messingmarkt_embargo: {
+          A: "Das Stoeren des Embargo-Slots verteilt Energiezellen wieder in die Breite. Mehr Camps atmen auf, waehrend die Broker-Seite dich offen als Marktstoerer markiert.",
+          B: "Der Verkauf der Timing-Daten macht dich zum stillen Gewinner eines knappen Marktes. Spaeter erinnern sich alle, wer wusste, wann die Lichter in den Randsektoren ausgingen."
+        },
+        d_zero_counterstrike: {
+          A: "Der offene Gegenschlag zwingt Zero-Broker in die sichtbare Eskalation. Mehr Leute glauben dir, aber die Route wird fuer mehrere Blocks zur aktiven Gefahrenzone.",
+          B: "Schadensbegrenzung stabilisiert Versorgung und senkt die Sichtbarkeit des Konflikts. Zero bleibt im Spiel, kann den Erfolg aber nicht mehr als totalen Sieg rahmen."
+        },
+        d_maker_shadowroute: {
+          A: "Exklusivhaltung macht die Schattenroute effizient und profitabel fuer wenige. Aussenstehende merken nur, dass manche Konvois immer genau rechtzeitig auftauchen.",
+          B: "Teiloeffnung senkt den Vorteil, verbreitert aber den Nutzen. Dispatch-Hoerer gewinnen reale Ausweichwege, und dein Sender wirkt weniger wie ein Clubkanal."
+        },
+        d_orden_backlash: {
+          A: "Verhandlungen am Relaymast enden in einem fragilen Abkommen mit klaren Sendefenstern. Der Orden verliert Gesicht bei Hardlinern, gewinnt aber Versorgungssicherheit.",
+          B: "Die Roamer-Eskorte raeumt den Mast schnell, doch die Bilder gehen durchs Netz. Kurzfristig Kontrolle, langfristig neue Rekrutierung fuer radikale Gegengruppen."
+        },
+        d_public_trust_wave: {
+          A: "Die offenen Warnkarten verdichten verstreute Lagebilder zu echter Orientierung. Camps synchronisieren Evak- und Handelszeiten erstmals ueber denselben Standard.",
+          B: "Contract-Preise monetarisieren Vertrauen sofort. In der naechsten Woche liefern weniger Freiwillige Daten, weil Hilfe als Ausschreibung statt als Solidaritaet wirkt."
+        },
+        s_subchannel_7: {
+          A: "Die Profit-Route oeffnet eine schnelle, schmutzige Schneise durch Nullpunkt. Cash fliesst, aber der Eingriffsvektor wird von Drittakteuren kopiert und gegen Zivilknoten genutzt.",
+          B: "Das Schutz-Patch schliesst den saubersten Angriffspfad, ohne grosse Schlagzeile. Weniger Glamour, dafuer sinken ungeplante Ausfaelle in drei angrenzenden Sektoren messbar."
+        },
+        s_starlink_drift: {
+          A: "Die Auktion frisst das Relaisfenster fuer zahlende Sammler. Du gewinnst Credits und verlierst in derselben Nacht Reichweite fuer Notverkehr.",
+          B: "Offene Reichweite bindet das Fenster an Dispatch-Relais. Kaum Showeffekt, aber mehrere tote Zonen verschwinden fuer einen vollen Zyklus."
+        },
+        s_sat_feed: {
+          A: "Verkauftes Tracking verwandelt Bewegungsdaten in Jagdware. Der Markt liebt es, die Zielgruppen hassen es, und Heat steigt durch jede Folgeverwertung.",
+          B: "Verwischtes Tracking zerstoert die kurzfristige Handelslogik der Broker. Weniger Peak-Profite, mehr Ueberlebensraum fuer Konvois ohne Eskorte."
+        },
+        s_nuke_telemetry: {
+          A: "Die Panik-Erzaehlung zieht Evak-Deals, ueberfrachtet aber die Korridore mit falschen Alarmbewegungen. Reale Notlagen gehen zwischen den Sirenen unter.",
+          B: "Der Faktencheck beruhigt die Hauptachsen und trennt Mythos von Messwert. Weniger Hysterie, mehr planbare Ressourcen fuer echte Hotspots."
+        },
+        s_weather_front: {
+          A: "Vertragskunden erhalten fruehe Warnung und sichern sich die besten Routen. Die offenen Camps zahlen spaeter mit Material und Vertrauen.",
+          B: "Der offene Feed verteilt Risiko-Wissen breit. Du verlierst Exklusivmarge, gewinnst aber einen Ruf als Sender mit oeffentlichem Nutzen."
+        },
+        s_shadow_channel: {
+          A: "Marktpreise im Schattenkanal treiben Arbitrage innerhalb eines Blocks auf Maximum. Danach sind Grundwaren teurer und echte Hilfefenster enger.",
+          B: "Notlagen-Priorisierung nutzt denselben Kanal fuer Evak-Hops und Feldkliniken. Weniger Geld pro Minute, deutlich mehr Wirkung pro Sendeslot."
+        },
+        s_loop_signature: {
+          A: "Die Orden-Meldung startet eine langsame, aber nachvollziehbare Pruefung der Signatur. Falsche Erben verlieren spaeter Marktwert, echte Spuren bleiben erhalten.",
+          B: "Der Broker-Deal bringt sofortige Credits und sofortige Jagd. Das Muster wird zur Ware, und jeder, der ihm entspricht, lebt gefaehrlicher."
+        },
+        s_bot_net: {
+          A: "Ad-Jingles monetarisieren das Bot-Netz stabil, ueberdecken aber relevante Warncodes in Randzeiten. Die Technik laeuft sauber, der Nutzen kippt Richtung Kommerz.",
+          B: "Evak-Codes geben dem Netz eine klare Prioritaet: Leben vor Klicks. Weniger Umsatz, aber deutlich bessere Ankunftsquoten in Krisensektoren."
+        },
+        s_shaft47: {
+          A: "Verkaufte Entstoerprofile schuetzen die zahlenden Knoten und lassen den Rest im statischen Regen stehen. Das erzeugt sofortige Zweiklassen-Reichweite.",
+          B: "Freie Verteilung drueckt die Aussetzer im ganzen Schacht. Dein Einfluss wird breiter statt tiefer, und neue freiwillige Sensorfeeds tauchen auf."
+        },
+        s_ash_pulse: {
+          A: "Das Umlenken bringt schnelle Gewinne, speist aber falsche Wegpunkte in reale Konvoiplane. Ein Teil des Profits kommt als Reparaturbedarf zurueck.",
+          B: "Neutralisierung stoppt die Echo-Infektion, bevor sie sich selbst reproduziert. Das Netz verliert einen lukrativen Trick, gewinnt aber planbare Navigation."
+        },
+        s_stackcast_ghostslot: {
+          A: "Geocache-Hinweise ziehen sofort Runner in den Ghostslot. Hohe Aktivitaet, hohe Treffer, hoher Verschleiss - und neue Konflikte um jede gefundene Koordinate.",
+          B: "Notprotokolle nutzen dieselbe seltene Oeffnung fuer Evak- und Med-Korridore. Weniger Spektakel, dafuer sinken Ausfallmeldungen in den Randknoten."
+        },
+        s_glassgate_backdoor: {
+          A: "Der stille Mirror liefert tiefe Einsicht in Zero-Routing, kostet aber Tarnaufwand in jedem Folgeblock. Ein Schatz fuer Intel, ein Magnet fuer Heat.",
+          B: "Die Sofortloeschung nimmt den Backdoor-Vorteil allen Seiten zugleich. Weniger Datenbeute, dafuer ein klarer Sicherheitsgewinn fuer ungeschuetzte Knoten."
+        },
+        s_roofarray_overclock: {
+          A: "Der Overclock schiebt Signal ueber tote Sektoren und zahlt sich sofort aus. Gleichzeitig steigt das Risiko fuer harte Relais-Drops bei jedem Jammer-Peak.",
+          B: "Konservativer Betrieb haelt die Reichweite kleiner, aber stabil. Weniger Glanzmomente, mehr Verlaesslichkeit ueber laengere Runs."
+        },
+        s_cinder_market_mesh: {
+          A: "Premium-Routen verkaufen Ordnung als Luxusgut. Wer zahlt, kommt durch; wer nicht, bleibt im Paketverlust stecken.",
+          B: "Das freie Rettungsmesh flickt die schlimmsten Loecher ohne Zugangswall. Der Markt verliert Marge, das Netzwerk gewinnt Resilienz."
+        },
+        s_nullbahn_echo: {
+          A: "Hardliner nutzen die Echo-Codes fuer harte Zugriffspunkte entlang der Nullbahn. Kurzfristig Kontrolle, langfristig mehr Vergeltungsschleifen.",
+          B: "Die Orden-Weitergabe entschärft Teile der Codes und blockt eskalative Nutzung. Nicht perfekt, aber genug, um eine neue Jagdwelle abzuschwaechen."
+        },
+        s_ironchoir_archive: {
+          A: "Der Leak macht den Eisenchor wieder zum Thema auf allen Kanaelen. Reichweite steigt, doch jede Fraktion schneidet nur den Teil, der ihr passt.",
+          B: "Die Maker-Analyse konserviert Kontext und entkoppelt Mythos von Messung. Langsamer Effekt, dafuer belastbarer fuer spaetere Entscheidungen."
+        },
+        s_zero_hunters: {
+          A: "Mit Zielkorrekturen wird aus der Jagd ein praeziser Schlag gegen markierte Spuren. Der Reward ist hoch, die Liste deiner Gegner ebenfalls.",
+          B: "Die Feed-Sabotage zerlegt das Hunter-Protokoll in Rauschen und Fehlalarme. Ein Teil entkommt, aber du haelst die Vollstreckung vom Netz fern."
+        },
+        s_retros_payload: {
+          A: "Das freigegebene Fenster trifft das Zero-Relais punktgenau, doch die Antwort kommt in Form neuer Jammer-Routen. Du gewinnst Taktikraum und ziehst Gegenfeuer an.",
+          B: "Die Verweigerung haelt dich aus der direkten Eskalation. Retros suchen andere Wege, und dein Kanal bleibt fuer zivile Lasten freier."
+        },
+        s_geocacher_collapse: {
+          A: "Die Umleitung verteilt den Cache-Druck auf mehrere Achsen. Weniger Spitzengewalt, mehr kontrollierbare Kleinflammen.",
+          B: "Der Markt regelt brutal effizient: schnelle Gewinner, viele Verlierer, und ein ueberhitzter Korridor fuer den Rest des Blocks."
+        },
+        s_scrubbed_consequence: {
+          A: "Weitere Tarnung verdichtet dein Profil als Schutzsender fuer sensible Signaturen. Das kostet Rechenfenster, senkt aber direkte Verwertbarkeit im Stack.",
+          B: "Schrottdaten locken den Suchlauf in Sackgassen und halten echte Ziele frei. Der Trick wirkt, bis jemand das Muster der Fallen erkennt."
+        }
+      };
+      if (map[id]) return isA ? map[id].A : map[id].B;
+      if (id.startsWith("d_")) {
+        return isA
+          ? "Dispatch-Folge: Dein aktiver Eingriff verschiebt Macht offen auf den Aether. Gewinne sind sofort sichtbar, Gegenfeuer baut sich bereits im Hintergrund auf."
+          : "Dispatch-Folge: Du waehlst die kontrollierte Linie. Weniger Peak-Effekt jetzt, dafuer stabilere Routen und mehr Handlungsraum im naechsten Sendezyklus.";
+      }
+      if (id.startsWith("s_")) {
+        return isA
+          ? "Stack-Folge: Du nutzt den technischen Hebel aggressiv. Datenfluss, Profit und Risiko steigen gleichzeitig und formen die naechste Konfliktlage."
+          : "Stack-Folge: Du priorisierst Stabilitaet und Netzgesundheit. Kurzfristig weniger Glanz, langfristig bessere Resilienz gegen Jagd und Jammer.";
+      }
+      return "Folge: Die Entscheidung veraendert Signalwege, Loyalitaeten und Risikoachsen. Ihr voller Preis zeigt sich ueber mehrere Blocks.";
+    }
+
+    function canTriggerEvent(event) {
+      if (!event.requiresFlags) return true;
+      return Object.entries(event.requiresFlags).every(([flag, min]) => (state.storyFlags[flag] || 0) >= min);
+    }
+
+    function pickEvent(list) {
+      const eligible = list.filter(canTriggerEvent);
+      const weighted = (eligible.length > 0 ? eligible : list).filter((e) => {
+        const id = e.id || e.title;
+        return (state.storySeen[id] || 0) < 3;
+      });
+      const pool = weighted.length > 0 ? weighted : (eligible.length > 0 ? eligible : list);
+      return pool[rnd(0, pool.length - 1)];
+    }
+
+    function randomContract() {
+      const target = Math.random() < 0.5 ? "dispatch" : "stack";
+      const required = rnd(2, 3);
+      const reward = target === "dispatch"
+        ? { reputation: 6, morale: 5, credits: 4 }
+        : { tech: 7, intel: 6, credits: 5 };
+      state.contract = {
+        target,
+        required,
+        progress: 0,
+        reward
+      };
+    }
+
+    function renderContract() {
+      if (!state.contract) {
+        el.contractText.textContent = "Kein Vertrag aktiv.";
+        return;
+      }
+      const t = state.contract.target === "dispatch" ? "Dispatch Locks" : "STACKCAST Locks";
+      el.contractText.textContent = `${t}: ${state.contract.progress}/${state.contract.required}. Bonus bei Abschluss: +${Object.entries(state.contract.reward).map(([k,v])=>`${v} ${k}`).join(", ")}.`;
+    }
+
+    function nudgeSignals() {
+      const diff = runDifficulty();
+      state.t += 0.09;
+      const t = state.t;
+      const driftScale = 0.78 + diff * 0.78;
+      const jitterD = (Math.random() - 0.5) * (0.08 + diff * 0.18);
+      const jitterS = (Math.random() - 0.5) * (0.08 + diff * 0.18);
+      const accel = 0.008 + diff * 0.014;
+      const vmax = 0.18 + diff * 0.16;
+
+      // Inertia drift: keeps moving in one direction longer, only occasional turns.
+      state.dispatchDriftVel = clamp(state.dispatchDriftVel * 0.985 + frnd(-accel, accel), -vmax, vmax);
+      state.stackDriftVel = clamp(state.stackDriftVel * 0.985 + frnd(-accel, accel), -vmax, vmax);
+
+      // Rare turning impulses instead of frequent direction flips.
+      if (Math.random() < 0.004 + diff * 0.006) state.dispatchDriftVel *= -0.55;
+      if (Math.random() < 0.004 + diff * 0.006) state.stackDriftVel *= -0.55;
+
+      // Rare larger reroute nudges.
+      if (Math.random() < 0.0015 + diff * 0.006) state.dispatchDriftVel += frnd(-0.14, 0.14);
+      if (Math.random() < 0.0015 + diff * 0.006) state.stackDriftVel += frnd(-0.15, 0.15);
+      state.dispatchDriftVel = clamp(state.dispatchDriftVel, -vmax, vmax);
+      state.stackDriftVel = clamp(state.stackDriftVel, -vmax, vmax);
+
+      state.dispatchBase += state.dispatchDriftVel;
+      state.stackBase += state.stackDriftVel;
+
+      // Soft bounce at range edges.
+      if (state.dispatchBase < 8 || state.dispatchBase > 42) {
+        state.dispatchBase = clamp(state.dispatchBase, 8, 42);
+        state.dispatchDriftVel *= -0.62;
+      }
+      if (state.stackBase < 58 || state.stackBase > 92) {
+        state.stackBase = clamp(state.stackBase, 58, 92);
+        state.stackDriftVel *= -0.62;
+      }
+      if (Math.abs(state.dispatchBase - state.stackBase) < 14) {
+        if (state.dispatchBase < state.stackBase) {
+          state.dispatchBase = clamp(state.dispatchBase - 0.9, 8, 42);
+          state.dispatchDriftVel = Math.min(state.dispatchDriftVel, -0.02);
+        } else {
+          state.stackBase = clamp(state.stackBase + 0.9, 58, 92);
+          state.stackDriftVel = Math.max(state.stackDriftVel, 0.02);
+        }
+      }
+
+      state.dispatchFreq = clamp(
+        state.dispatchBase + Math.sin(t * 0.56) * (6.2 * driftScale) + Math.sin(t * 1.28) * (1.1 * driftScale) + jitterD,
+        6, 45
+      );
+      state.stackFreq = clamp(
+        state.stackBase + Math.sin(t * 0.62 + 1.2) * (6.9 * driftScale) + Math.sin(t * 1.34 + 0.4) * (1.2 * driftScale) + jitterS,
+        55, 94
+      );
+      state.jammers.forEach((j, i) => {
+        const micro = (Math.random() - 0.5) * 0.32;
+        if (Math.random() < 0.02) j.base = clamp(j.base + frnd(-2.4, 2.4), 6, 94);
+        const swing = Math.sin(t * j.speed + j.phase + i) * j.amp;
+        j.freq = clamp(j.base + swing + micro, 4, 96);
+      });
+      state.mapReveal = Math.max(0, state.mapReveal - 0.09);
+    }
+
+    function mapVisible() {
+      return state.mapReveal > 0;
+    }
+
+    function meterClass(v) {
+      if (v >= 66) return "good";
+      if (v >= 34) return "warn";
+      return "bad";
+    }
+
+    function setCta(btn, cls) {
+      if (!btn) return;
+      btn.classList.remove("cta-focus", "cta-focus-alt");
+      if (cls) btn.classList.add(cls);
+    }
+    function setBlink(btn, on) {
+      if (!btn) return;
+      btn.classList.toggle("blink-hint", !!on);
+    }
+    function setPowerBlink(on) {
+      if (!el.powerSwitchWrap) return;
+      el.powerSwitchWrap.classList.toggle("blink-hint", !!on);
+    }
+    function isAdvanceGateActive() {
+      if (!state.running || state.pending) return false;
+      const locksInBlock = (state.locksThisBlock.dispatch || 0) + (state.locksThisBlock.stack || 0);
+      return locksInBlock >= 1;
+    }
+
+    function updateActionHints() {
+      setCta(el.startBtn, null);
+      setCta(el.nextBtn, null);
+      setCta(el.optA, null);
+      setCta(el.optB, null);
+      setCta(el.mapBtn, null);
+      setBlink(el.startBtn, false);
+      setPowerBlink(false);
+      setBlink(el.nextBtn, false);
+      setBlink(el.optA, false);
+      setBlink(el.optB, false);
+      setBlink(el.mapBtn, false);
+
+      if (!state.powerOn) {
+        setPowerBlink(true);
+        el.actionHint.textContent = "Power auf I schalten.";
+        return;
+      }
+
+      if (!state.running) {
+        el.actionHint.textContent = "Run beendet. Fuer neuen Run: auf O und wieder auf I.";
+        return;
+      }
+
+      if (state.pending) {
+        el.stabilizeBtn.disabled = true;
+        el.hintBtn.disabled = true;
+        el.mapBtn.disabled = true;
+        el.nudgeDownBtn.disabled = true;
+        el.fineCenterBtn.disabled = true;
+        el.nudgeUpBtn.disabled = true;
+        setCta(el.optA, "cta-focus");
+        setCta(el.optB, "cta-focus");
+        setBlink(el.optA, true);
+        setBlink(el.optB, true);
+        el.actionHint.textContent = "Entscheidung offen: Option A oder B waehlen.";
+        return;
+      }
+
+      el.stabilizeBtn.disabled = false;
+      el.hintBtn.disabled = false;
+      el.mapBtn.disabled = false;
+      el.nudgeDownBtn.disabled = false;
+      el.fineCenterBtn.disabled = false;
+      el.nudgeUpBtn.disabled = false;
+
+      if (isAdvanceGateActive()) {
+        el.stabilizeBtn.disabled = true;
+        el.hintBtn.disabled = true;
+        el.mapBtn.disabled = true;
+        el.nudgeDownBtn.disabled = true;
+        el.fineCenterBtn.disabled = true;
+        el.nudgeUpBtn.disabled = true;
+        setCta(el.nextBtn, "cta-focus-alt");
+        setBlink(el.nextBtn, true);
+        const left = Math.max(0, (5200 - state.autoNextMs) / 1000);
+        el.actionHint.textContent = `Block bereit: nur Naechster Block. Auto-advance in ${left.toFixed(1)}s.`;
+      } else {
+        setCta(el.mapBtn, "cta-focus-alt");
+        setBlink(el.mapBtn, true);
+        el.actionHint.textContent = "Jetzt tunen und ersten Lock holen (optional: Map Ping fuer kurze Hilfe).";
+      }
+    }
+
+    function renderStats() {
+      queueLcdFrame();
+    }
+
+    function renderHeader() {
+      if (el.scopeShell) el.scopeShell.classList.toggle("power-off", !state.powerOn);
+      if (el.leftDisplay) el.leftDisplay.classList.toggle("power-off", !state.powerOn);
+      if (el.statusLcd) el.statusLcd.classList.toggle("power-off", !state.powerOn);
+      if (!state.powerOn) {
+        el.ticker.textContent = "POWER O · OFFLINE";
+      } else {
+        el.ticker.textContent = `Block ${state.block}/${state.maxBlocks} · Tag ${state.day} ${String(state.hour).padStart(2, "0")}:00 · ${state.name} · Score ${Math.round(state.score)}`;
+      }
+      el.freqValue.textContent = `${state.freq.toFixed(2)} MHz`;
+      el.dial.setAttribute("aria-valuenow", (state.fineMode ? state.fineAnchor : state.freq).toFixed(2));
+      el.fineDial.setAttribute("aria-valuenow", state.fineAccel.toFixed(2));
+      const drivePct = Math.round((state.fineAccel / 6) * 100);
+      el.fineReadout.textContent = `SPEED ${drivePct >= 0 ? "+" : ""}${drivePct}%`;
+      el.fineCenterBtn.classList.toggle("mode-fine", state.fineMode);
+      el.fineCenterBtn.classList.toggle("mode-coarse", !state.fineMode);
+
+      const a = mapFreqToAngle(state.fineMode ? state.fineAnchor : state.freq);
+      el.notch.style.transform = `translateX(-50%) rotate(${a}deg)`;
+      const finePos = mapFineAccelToPos(state.fineAccel);
+      el.fineNotch.style.left = `${finePos}%`;
+      el.fineNotch.style.transform = "translateX(-50%)";
+
+      const channelName = state.channel === "dispatch" ? "Dispatch" : state.channel === "stack" ? "STACKCAST" : "Noise";
+      el.channelChip.textContent = `Kanal: ${channelName}`;
+      el.qualityChip.textContent = `Qualitaet: ${Math.round(state.quality)}% · Jam ${Math.round(state.jamPenalty)}%`;
+      el.gameChip.textContent = `Combo ${state.combo} · Heat ${Math.round(state.heat)} · Mode ${state.fineMode ? "FEIN" : "GROB"} · Map ${mapVisible() ? "ON" : "OFF"}`;
+      const snow = clamp((state.jamPenalty - 10) / 120, 0, 1);
+      document.documentElement.style.setProperty("--snow-opacity", (snow * 0.62).toFixed(3));
+      document.documentElement.style.setProperty("--snow-strength", snow.toFixed(3));
+
+      renderLockLeds(el.lockDispatchLeds, state.lock.dispatch, "dispatch");
+      renderLockLeds(el.lockStackLeds, state.lock.stack, "stack");
+      setDashNeedle(el.qualityNeedle, clamp(state.quality, 0, 100));
+      setDashNeedle(el.signalNeedle, state.stats.signal);
+      const level = clamp(state.quality + (state.running ? rnd(-2, 2) : 0), 0, 100);
+      const ledLevel = clamp((level + 12) / 112, 0, 1) * (1 - clamp(state.jamPenalty / 220, 0, 0.42));
+      const r = Math.round(28 + ledLevel * 60);
+      const g = Math.round(112 + ledLevel * 143);
+      const b = Math.round(52 + ledLevel * 82);
+      el.sigLed.style.opacity = (0.24 + ledLevel * 0.76).toFixed(2);
+      el.sigLed.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+      el.sigLed.style.boxShadow = `0 0 ${3 + ledLevel * 10}px rgba(132,255,182,${0.16 + ledLevel * 0.52}), inset 0 0 8px rgba(167,255,205,${0.2 + ledLevel * 0.5})`;
+      const tunePos = state.fineMode ? 50 : state.freq;
+      el.fmNeedle.style.bottom = `${tunePos}%`;
+      el.fmNeedle.classList.toggle("good", state.quality > 70);
+      el.fmReadout.textContent = (88 + state.freq * 0.2).toFixed(1);
+
+      const dPos = mapNeedlePosition(state.dispatchFreq);
+      const sPos = mapNeedlePosition(state.stackFreq);
+      const j1Pos = mapNeedlePosition(state.jammers[0].freq);
+      const j2Pos = mapNeedlePosition(state.jammers[1].freq);
+      const inFineView = (p) => !state.fineMode || (p >= 0 && p <= 100);
+      const reveal = mapVisible();
+
+      el.dispatchMarker.style.bottom = `${clamp(dPos, 0, 100)}%`;
+      el.stackMarker.style.bottom = `${clamp(sPos, 0, 100)}%`;
+      el.jammer1Marker.style.bottom = `${clamp(j1Pos, 0, 100)}%`;
+      el.jammer2Marker.style.bottom = `${clamp(j2Pos, 0, 100)}%`;
+      el.dispatchMarker.classList.toggle("show", reveal && inFineView(dPos));
+      el.stackMarker.classList.toggle("show", reveal && inFineView(sPos));
+      el.jammer1Marker.classList.toggle("show", reveal && inFineView(j1Pos));
+      el.jammer2Marker.classList.toggle("show", reveal && inFineView(j2Pos));
+
+      const css = getComputedStyle(document.documentElement);
+      if (state.channel === "dispatch") el.channelChip.style.color = css.getPropertyValue("--dispatch").trim() || "#ffcf84";
+      else if (state.channel === "stack") el.channelChip.style.color = css.getPropertyValue("--stack").trim() || "#9ed0ff";
+      else el.channelChip.style.color = "#c7d8e8";
+
+      renderContract();
+      updateActionHints();
+      queueLcdFrame();
+    }
+
+    function queueLcdFrame() {
+      lcdState.pendingFreq = `FREQ ${state.freq.toFixed(2)} MHz`;
+      lcdState.pendingStats = statConfig.map(([key, label]) => ({ key, label, v: Math.round(state.stats[key]) }));
+      const now = (window.performance && performance.now) ? performance.now() : Date.now();
+      if (!lcdState.hasFrame || now - lcdState.lastCommit >= lcdState.nextDelay) {
+        commitLcdFrame(now);
+      }
+    }
+
+    function commitLcdFrame(now) {
+      if (!el.lcdFreq || !el.stats) return;
+      const rows = lcdState.pendingStats || statConfig.map(([key, label]) => ({ key, label, v: Math.round(state.stats[key]) }));
+      if (el.lcdGhost && lcdState.hasFrame) {
+        const prevTitle = el.lcdTitle ? el.lcdTitle.textContent : "LCD STATUS";
+        const prevFreq = el.lcdFreq.textContent;
+        const prevStats = el.stats.innerHTML;
+        const prevSelects = el.lcdDisplaySelects ? el.lcdDisplaySelects.outerHTML : "";
+        el.lcdGhost.innerHTML = `<div class="lcd-title">${prevTitle}</div>${prevSelects}<div class="lcd-readout">${prevFreq}</div><div class="lcd-ghost-stats">${prevStats}</div>`;
+        el.lcdGhost.classList.remove("show");
+        void el.lcdGhost.offsetWidth;
+        el.lcdGhost.classList.add("show");
+      }
+
+      el.lcdFreq.textContent = lcdState.pendingFreq;
+      el.stats.innerHTML = "";
+      rows.forEach(({ label, v }) => {
+        const row = document.createElement("div");
+        row.className = "stat-row";
+        row.innerHTML = `<div>${label}</div><div class=\"track\"><div class=\"fill ${meterClass(v)}\" style=\"width:${v}%\"></div></div><div>${v}</div>`;
+        el.stats.appendChild(row);
+      });
+
+      lcdState.hasFrame = true;
+      lcdState.lastCommit = now;
+      lcdState.nextDelay = 190 + Math.random() * 320;
+    }
+
+    function mapFreqToAngle(freq) {
+      return -140 + (freq / 100) * 280;
+    }
+
+    function mapAngleToFreq(angle) {
+      const clamped = Math.max(-140, Math.min(140, angle));
+      return ((clamped + 140) / 280) * 100;
+    }
+    function mapPosToFineAccel(pos) {
+      const p = clamp(pos, 0, 100);
+      return -6 + (p / 100) * 12;
+    }
+    function mapFineAccelToPos(accel) {
+      const v = clamp(accel, -6, 6);
+      return ((v + 6) / 12) * 100;
+    }
+    function setCoarseFreq(freq) {
+      state.fineMode = false;
+      state.fineAccel = 0;
+      state.fineVelocity = 0;
+      const snapped = Math.round(freq / 0.25) * 0.25;
+      state.freq = clamp(snapped, 0, 100);
+      state.fineAnchor = state.freq;
+    }
+    function setFineAccel(accel) {
+      state.fineMode = true;
+      state.fineAccel = clamp(accel, -6, 6);
+      if (Math.abs(state.fineAccel) < 0.06) {
+        state.fineVelocity = 0;
+      }
+    }
+
+    function applyFineDrive(dt) {
+      if (!state.fineMode) return;
+      const control = clamp(state.fineAccel / 6, -1, 1);
+      state.fineVelocity = Math.abs(control) < 0.02 ? 0 : control * 2.9;
+      const next = clamp(state.freq + state.fineVelocity * dt, 0, 100);
+      state.freq = clamp(Math.round(next / 0.01) * 0.01, 0, 100);
+      state.fineAnchor = state.freq;
+      if (state.freq <= 0.01 || state.freq >= 99.99) {
+        state.fineVelocity = 0;
+      }
+    }
+
+    function applyTuneResolution(freq) {
+      const step = state.fineMode ? 0.01 : 0.25;
+      const snapped = Math.round(freq / step) * step;
+      if (!state.fineMode) return clamp(snapped, 0, 100);
+      const halfWindow = 6;
+      const min = clamp(state.fineAnchor - halfWindow, 0, 100);
+      const max = clamp(state.fineAnchor + halfWindow, 0, 100);
+      return clamp(snapped, min, max);
+    }
+
+    function mapNeedlePosition(freq) {
+      if (!state.fineMode) return clamp(freq, 0, 100);
+      const halfWindow = 6;
+      return 50 + ((freq - state.freq) / halfWindow) * 50;
+    }
+
+    function setDashNeedle(node, value) {
+      if (!node) return;
+      const v = clamp(value, 0, 100);
+      const deg = -88 + (v / 100) * 176;
+      node.style.transform = `translateX(-50%) rotate(${deg}deg)`;
+    }
+
+    function initLockLeds() {
+      const bars = [el.lockDispatchLeds, el.lockStackLeds];
+      bars.forEach((bar) => {
+        if (!bar) return;
+        bar.innerHTML = "";
+        for (let i = 0; i < 20; i += 1) {
+          const led = document.createElement("span");
+          led.className = "led";
+          bar.appendChild(led);
+        }
+      });
+    }
+
+    function renderLockLeds(bar, value, type) {
+      if (!bar) return;
+      const leds = bar.children;
+      const total = leds.length || 20;
+      const lit = Math.round(clamp(value, 0, 100) / 100 * total);
+      const fullLock = value >= 99.5;
+      const jam = clamp(state.jamPenalty / 170, 0, 1);
+      const beatMul = 1 + beatState.pulse * 0.3;
+      for (let i = 0; i < total; i += 1) {
+        const node = leds[i];
+        if (!node) continue;
+        node.classList.remove("on", "dispatch", "dispatch-yellow", "dispatch-red", "stack");
+        if (i < lit) {
+          const weakChance = fullLock ? 0 : (0.2 + jam * 0.35);
+          const weak = Math.random() < weakChance;
+          const rawIntensity = fullLock ? 1 : (weak ? (0.2 + Math.random() * 0.28) : (0.72 + Math.random() * 0.34));
+          const intensity = clamp(rawIntensity * beatMul, 0, 1);
+          if (type === "dispatch") {
+            const p = i / Math.max(1, total - 1);
+            const cls = p < 0.55 ? "dispatch" : p < 0.82 ? "dispatch-yellow" : "dispatch-red";
+            node.classList.add("on", cls);
+          } else {
+            node.classList.add("on", type);
+          }
+          node.style.opacity = intensity.toFixed(2);
+        } else {
+          const ghost = (Math.random() < 0.04 ? 0.18 : 0.09) * (0.88 + beatState.pulse * 0.24);
+          node.style.opacity = ghost.toFixed(2);
+        }
+      }
+    }
+
+    function getSignal() {
+      const diff = runDifficulty();
+      const d = Math.abs(state.freq - state.dispatchFreq);
+      const s = Math.abs(state.freq - state.stackFreq);
+      const widthScale = 1.35 - diff * 0.73;
+      const coreScale = 1.28 - diff * 0.72;
+      const shoulderD = (5.9 + state.heat * 0.02) * widthScale;
+      const shoulderS = (5.5 + state.heat * 0.018) * widthScale;
+      const coreD = (0.085 + state.heat * 0.0005) * coreScale;
+      const coreS = (0.08 + state.heat * 0.0005) * coreScale;
+      const qDShoulder = 68 * Math.exp(-(d * d) / (2 * shoulderD * shoulderD));
+      const qSShoulder = 68 * Math.exp(-(s * s) / (2 * shoulderS * shoulderS));
+      const qDCore = 34 * Math.exp(-(d * d) / (2 * coreD * coreD));
+      const qSCore = 34 * Math.exp(-(s * s) / (2 * coreS * coreS));
+      const qD = clamp(qDShoulder + qDCore, 0, 100);
+      const qS = clamp(qSShoulder + qSCore, 0, 100);
+      let jam = 0;
+      state.jammers.forEach((j) => {
+        const dist = Math.abs(state.freq - j.freq);
+        if (dist > j.range) return;
+        const qJ = j.power * Math.exp(-(dist * dist) / (2 * j.width * j.width));
+        jam += qJ * (0.82 + diff * 0.58);
+      });
+      state.jamPenalty = clamp(jam, 0, 170);
+
+      const baseChannel = qD >= qS ? "dispatch" : "stack";
+      const baseQuality = baseChannel === "dispatch" ? qD : qS;
+      const effective = Math.round(baseQuality - state.jamPenalty * 1.08);
+
+      if (effective <= -8) {
+        return { channel: "noise", quality: effective };
+      }
+      if (baseChannel === "dispatch" && baseQuality > 12) {
+        return { channel: "dispatch", quality: effective };
+      }
+      if (baseChannel === "stack" && baseQuality > 12) {
+        return { channel: "stack", quality: effective };
+      }
+      return { channel: "noise", quality: Math.round(Math.max(qD, qS) * 0.4 - state.jamPenalty * 0.95) };
+    }
+
+    function onLiveSample() {
+      sampleBeatPulse(90);
+      if (!state.running) return;
+      if (state.pending) {
+        const winner = state.pending.channel || state.blockWinner || "dispatch";
+        state.channel = winner;
+        state.quality = 100;
+        state.jamPenalty = 0;
+        state.lock.dispatch = winner === "dispatch" ? 100 : 0;
+        state.lock.stack = winner === "stack" ? 100 : 0;
+        updateRadioAudio({ channel: winner, quality: 100 });
+        renderHeader();
+        return;
+      }
+      if (isAdvanceGateActive()) {
+        const winner = state.blockWinner === "stack" ? "stack" : "dispatch";
+        state.channel = winner;
+        state.quality = 100;
+        state.jamPenalty = 0;
+        state.lock.dispatch = winner === "dispatch" ? 100 : 0;
+        state.lock.stack = winner === "stack" ? 100 : 0;
+        updateRadioAudio({ channel: winner, quality: 100 });
+        state.autoNextMs += 90;
+        if (state.autoNextMs >= 5200) {
+          nextBlock();
+          return;
+        }
+        renderHeader();
+        return;
+      }
+      const diff = runDifficulty();
+      applyFineDrive(0.09);
+      nudgeSignals();
+
+      const sig = getSignal();
+      state.channel = sig.channel;
+      state.quality = sig.quality;
+      const lockGain = sig.quality >= 84
+        ? 2.5 + (sig.quality - 84) * 0.11
+        : sig.quality >= 66
+          ? 0.9 + (sig.quality - 66) * 0.035
+          : sig.quality >= 52
+            ? 0.16 + (sig.quality - 52) * 0.02
+            : sig.quality < 0
+              ? -4.9
+              : -2.1;
+      const otherDecay = 1.65 + diff * 1.25;
+      const tunePressure = (1 - diff) * 0.9 - diff * 0.5;
+      const channelGain = lockGain + tunePressure - state.jamPenalty * (0.008 + diff * 0.006);
+
+      if (sig.channel === "dispatch") {
+        state.lock.dispatch = clamp(state.lock.dispatch + channelGain, 0, 100);
+        state.lock.stack = clamp(state.lock.stack - otherDecay, 0, 100);
+      } else if (sig.channel === "stack") {
+        state.lock.stack = clamp(state.lock.stack + channelGain, 0, 100);
+        state.lock.dispatch = clamp(state.lock.dispatch - otherDecay, 0, 100);
+      } else {
+        state.lock.dispatch = clamp(state.lock.dispatch - (1.8 + state.jamPenalty * 0.02), 0, 100);
+        state.lock.stack = clamp(state.lock.stack - (1.8 + state.jamPenalty * 0.02), 0, 100);
+      }
+
+      if (sig.channel === "dispatch") state.stats.signal = clamp(state.stats.signal + 0.14 - state.jamPenalty * 0.006);
+      else if (sig.channel === "stack") state.stats.signal = clamp(state.stats.signal + 0.1 - state.jamPenalty * 0.006);
+      else state.stats.signal = clamp(state.stats.signal - (sig.quality < 0 ? 0.55 : 0.18));
+
+      if (sig.quality < 0) {
+        state.heat = clamp(state.heat + 0.16, 0, 100);
+        state.stats.morale = clamp(state.stats.morale - 0.1);
+      }
+
+      if (sig.channel !== state.lastChannel) {
+        state.combo = Math.max(0, state.combo - 1);
+      }
+      state.lastChannel = sig.channel;
+      updateRadioAudio(sig);
+
+      if (state.lock.dispatch >= 100) spawnDecision("dispatch");
+      else if (state.lock.stack >= 100) spawnDecision("stack");
+
+      state.autoNextMs = 0;
+
+      renderHeader();
+      renderStats();
+    }
+
+    function spawnDecision(channel) {
+      const list = channel === "dispatch" ? dispatchEvents : stackEvents;
+      const event = pickEvent(list);
+      state.pending = { channel, event };
+      state.channel = channel;
+      state.quality = 100;
+      state.jamPenalty = 0;
+      state.lock.dispatch = channel === "dispatch" ? 100 : 0;
+      state.lock.stack = channel === "stack" ? 100 : 0;
+      updateRadioAudio({ channel, quality: 100 });
+      if (!state.blockWinner) state.blockWinner = channel;
+      state.locksThisBlock[channel] += 1;
+      state.score += 6 + Math.round(state.quality * 0.08);
+
+      el.decisionText.textContent = `${event.title}: ${event.text}`;
+      el.optA.textContent = `A: ${event.a}`;
+      el.optB.textContent = `B: ${event.b}`;
+      el.optAText.textContent = "Konsequenz A: unklar vor Ausfuehrung.";
+      el.optBText.textContent = "Konsequenz B: unklar vor Ausfuehrung.";
+      el.optA.disabled = false;
+      el.optB.disabled = false;
+      el.statusLine.textContent = channel === "dispatch"
+        ? "Dispatch lock erreicht. Entscheidung offen."
+        : "STACKCAST lock erreicht. Entscheidung offen.";
+      log(`${channel === "dispatch" ? "Dispatch" : "STACKCAST"} lock: ${event.title}`, channel === "dispatch" ? "tone-d" : "tone-s");
+    }
+
+    function applyEffect(effect) {
+      if (!effect || typeof effect !== "object") return;
+      for (const [k, v] of Object.entries(effect)) {
+        if (k === "heat") {
+          state.heat = clamp(state.heat + v, 0, 100);
+          continue;
+        }
+        state.stats[k] = clamp(state.stats[k] + v);
+      }
+      if (state.faction === "maker") state.stats.tech = clamp(state.stats.tech + 1);
+      if (state.faction === "roamer") state.stats.credits = clamp(state.stats.credits + 1);
+      if (state.faction === "orden") state.stats.morale = clamp(state.stats.morale + 1);
+    }
+
+    function choose(option) {
+      if (!state.pending) return;
+      const pending = state.pending;
+      state.pending = null;
+      const ev = pending.event;
+      const ch = pending.channel;
+      try {
+        const fx = option === "A" ? ev.effectA : ev.effectB;
+        applyEffect(fx);
+        const chosenFlag = option === "A" ? ev.flagA : ev.flagB;
+        if (chosenFlag) {
+          state.storyFlags[chosenFlag] = (state.storyFlags[chosenFlag] || 0) + 1;
+        }
+        const eventId = ev.id || ev.title;
+        state.storySeen[eventId] = (state.storySeen[eventId] || 0) + 1;
+        log(`${ev.title}: Option ${option} ausgefuehrt.`, ch === "dispatch" ? "tone-d" : "tone-s");
+        log(`Effekte: ${formatEffect(fx || {})}`, ch === "dispatch" ? "tone-d" : "tone-s");
+        const continuation = loreContinuation(ev, option);
+        log(`Folge: ${continuation}`, ch === "dispatch" ? "tone-d" : "tone-s");
+        state.combo += 1;
+        state.score += 10 + state.combo * 2;
+
+        if (state.contract && state.contract.target === ch) {
+          state.contract.progress += 1;
+          if (state.contract.progress >= state.contract.required) {
+            applyEffect(state.contract.reward);
+            state.score += 24;
+            log(`Contract abgeschlossen: ${state.contract.target.toUpperCase()} bounty kassiert.`, "tone-d");
+            randomContract();
+          }
+        }
+
+        el.decisionText.textContent = `Folge: ${continuation}`;
+        el.optAText.textContent = option === "A" ? `Ausgefuehrt A: ${formatEffect(fx || {})}` : "Ausgefuehrt A: -";
+        el.optBText.textContent = option === "B" ? `Ausgefuehrt B: ${formatEffect(fx || {})}` : "Ausgefuehrt B: -";
+        el.statusLine.textContent = "Live-Abtastung aktiv. Halte die Frequenz stabil fuer den naechsten lock.";
+      } catch (err) {
+        console.error("Decision handling error", err);
+        log("Entscheidung verarbeitet, aber ein Event-Fehler wurde abgefangen.", "tone-n");
+        el.statusLine.textContent = "Event-Fehler abgefangen. Run laeuft weiter.";
+      }
+      el.optA.disabled = true;
+      el.optB.disabled = true;
+      renderHeader();
+      renderStats();
+    }
+
+    function nextBlock() {
+      if (!state.running || state.pending) return;
+      state.autoNextMs = 0;
+      state.blockWinner = null;
+      state.block += 1;
+      state.hour += 2;
+      if (state.hour >= 24) {
+        state.hour -= 24;
+        state.day += 1;
+      }
+
+      respawnCarriers();
+      if (Math.random() < 0.4) {
+        respawnJammers();
+      }
+      state.locksThisBlock.dispatch = 0;
+      state.locksThisBlock.stack = 0;
+      state.combo = Math.max(0, state.combo - 1);
+      state.heat = clamp(state.heat - 6, 0, 100);
+
+      state.stats.morale = clamp(state.stats.morale - rnd(1, 3));
+      state.stats.credits = clamp(state.stats.credits - rnd(0, 2));
+      state.stats.intel = clamp(state.stats.intel - rnd(0, 2));
+      state.stats.signal = clamp(state.stats.signal - rnd(1, 3));
+      state.score += 4;
+
+      if (state.faction === "orden") state.stats.morale = clamp(state.stats.morale + 2);
+
+      if (state.stats.morale <= 0 || state.stats.reputation <= 0) {
+        state.stats.morale = clamp(state.stats.morale + 18);
+        state.stats.reputation = clamp(state.stats.reputation + 15);
+        log("Community-Boost holt dich zurueck ins Spiel.", "tone-d");
+      }
+
+      if (state.block >= state.maxBlocks) {
+        finishRun();
+      } else {
+        assignLevelMusic(true);
+        if (audio.musicDispatchEl && audio.musicDispatchEl.paused) audio.musicDispatchEl.play().catch(() => {});
+        if (audio.musicStackEl && audio.musicStackEl.paused) audio.musicStackEl.play().catch(() => {});
+        randomContract();
+        el.statusLine.textContent = "Neuer Block: Frequenzen driften live, Bounty aktualisiert.";
+        log("Blockwechsel: neue Signalrouten + neuer Bounty Contract.", "tone-n");
+      }
+
+      renderHeader();
+      renderStats();
+    }
+
+    function stabilizeSignal() {
+      if (!state.running || state.pending || isAdvanceGateActive()) return;
+      if (state.stats.credits < 5 || state.creditsSpendCooldown > 0) {
+        el.statusLine.textContent = "Stabilizer braucht 5 Credits und ist kurz auf Cooldown.";
+        return;
+      }
+      state.stats.credits = clamp(state.stats.credits - 5);
+      state.creditsSpendCooldown = 2;
+      state.lock.dispatch = clamp(state.lock.dispatch + 18);
+      state.lock.stack = clamp(state.lock.stack + 18);
+      state.stats.signal = clamp(state.stats.signal + 8);
+      state.score += 6;
+      el.statusLine.textContent = "Stabilizer aktiv: lock-Aufbau beschleunigt.";
+      log("Signal Stabilizer gezuendet.", "tone-d");
+      renderStats();
+    }
+
+    function hintPing() {
+      if (!state.running || state.pending || isAdvanceGateActive()) return;
+      if (state.stats.intel < 6) {
+        el.statusLine.textContent = "Hint Ping braucht 6 Intel.";
+        return;
+      }
+      state.stats.intel = clamp(state.stats.intel - 6);
+      const dispatchHint = state.dispatchFreq.toFixed(1);
+      const stackHint = state.stackFreq.toFixed(1);
+      const contractHint = state.contract ? (state.contract.target === "dispatch" ? "Prioritaet: Dispatch" : "Prioritaet: STACKCAST") : "Kein Contract";
+      el.statusLine.textContent = `Hint: D ${dispatchHint} / S ${stackHint} · ${contractHint}.`;
+      log(`Hint Ping -> D ${dispatchHint} / S ${stackHint}`, "tone-s");
+      renderStats();
+    }
+
+    function mapPing() {
+      if (!state.running || state.pending || isAdvanceGateActive()) return;
+      if (state.stats.intel < 4) {
+        el.statusLine.textContent = "Map Ping braucht 4 Intel.";
+        return;
+      }
+      state.stats.intel = clamp(state.stats.intel - 4);
+      state.mapReveal = 8.5;
+      el.statusLine.textContent = "Map Overlay aktiv: Signale und Jammer kurz sichtbar.";
+      log("Map Ping aktiviert. Overlay fuer kurze Zeit offen.", "tone-s");
+      renderHeader();
+      renderStats();
+    }
+
+    function finishRun() {
+      state.running = false;
+      el.nextBtn.disabled = true;
+      el.stabilizeBtn.disabled = true;
+      el.hintBtn.disabled = true;
+      el.mapBtn.disabled = true;
+      updateRadioAudio({ channel: "noise", quality: -18 });
+      if (audio.musicDispatchEl && !audio.musicDispatchEl.paused) audio.musicDispatchEl.pause();
+      if (audio.musicStackEl && !audio.musicStackEl.paused) audio.musicStackEl.pause();
+
+      const score = Math.round(
+        state.score * 0.35 +
+        state.stats.reputation * 0.24 +
+        state.stats.morale * 0.2 +
+        state.stats.tech * 0.16 +
+        state.stats.credits * 0.15 +
+        state.stats.intel * 0.15 +
+        state.stats.signal * 0.1
+      );
+
+      if (score >= 72) {
+        el.statusLine.textContent = `Run Ende. Score ${score}: Dispatch-Legende.`;
+        log(`Finalscore ${score}. Die Wasteland funkt deinen Namen.`, "tone-d");
+      } else if (score >= 52) {
+        el.statusLine.textContent = `Run Ende. Score ${score}: starke Schicht.`;
+        log(`Finalscore ${score}. Solider Operator-Run.`, "tone-n");
+      } else {
+        el.statusLine.textContent = `Run Ende. Score ${score}: naechster Run wird besser.`;
+        log(`Finalscore ${score}. Mehr Locks, mehr Punkte.`, "tone-n");
+      }
+    }
+
+    function startRun() {
+      state.powerOn = true;
+      ensureAudio();
+      if (audio.ctx && audio.ctx.state === "suspended") audio.ctx.resume();
+      state.musicLast = { dispatch: "", stack: "" };
+      state.musicHistory = { dispatch: [], stack: [] };
+      assignLevelMusic(true);
+      forceStartMusicPlayback();
+      if (audio.musicDispatchEl) {
+        audio.musicDispatchEl.muted = false;
+        audio.musicDispatchEl.volume = 0.14;
+        audio.musicDispatchEl.play().catch(() => {});
+      }
+      if (audio.musicStackEl) {
+        audio.musicStackEl.muted = false;
+        audio.musicStackEl.volume = 0.14;
+        audio.musicStackEl.play().catch(() => {});
+      }
+      state.running = true;
+      state.block = 0;
+      state.day = 1;
+      state.hour = 6;
+      state.score = 0;
+      state.combo = 0;
+      state.heat = 0;
+      state.t = 0;
+      state.name = el.nameInput.value.trim().slice(0, 18) || "Wavefox";
+      state.faction = el.factionSelect.value;
+      state.fineMode = false;
+      state.fineAnchor = state.freq;
+      state.fineAccel = 0;
+      state.fineVelocity = 0;
+      state.freq = applyTuneResolution(state.freq);
+      respawnCarriers();
+      state.dispatchFreq = state.dispatchBase;
+      state.stackFreq = state.stackBase;
+      state.mapReveal = 0;
+      state.autoNextMs = 0;
+      state.blockWinner = null;
+      state.jamPenalty = 0;
+      state.lastChannel = "noise";
+      state.pending = null;
+      state.lock.dispatch = 0;
+      state.lock.stack = 0;
+      state.locksThisBlock = { dispatch: 0, stack: 0 };
+      state.storyFlags = {};
+      state.storySeen = {};
+      respawnJammers();
+      state.creditsSpendCooldown = 0;
+      state.stats = {
+        reputation: 54,
+        morale: state.faction === "orden" ? 63 : 57,
+        tech: state.faction === "maker" ? 57 : 50,
+        credits: state.faction === "roamer" ? 26 : 22,
+        intel: 28,
+        signal: 58,
+      };
+      randomContract();
+
+      el.log.innerHTML = "";
+      el.optA.disabled = true;
+      el.optB.disabled = true;
+      el.optAText.textContent = "Konsequenz A: -";
+      el.optBText.textContent = "Konsequenz B: -";
+      el.decisionText.textContent = "Lore-Intel ist live. Halte Frequenzen stabil, loese Locks aus und spiel die Bounty-Board Contracts.";
+      el.nextBtn.disabled = false;
+      el.stabilizeBtn.disabled = false;
+      el.hintBtn.disabled = false;
+      el.mapBtn.disabled = false;
+      el.statusLine.textContent = "Run aktiv. Signale driften permanent, Map-Infos nur per Map Ping.";
+
+      log(`Run gestartet: ${state.name} (${state.faction}).`, "tone-d");
+      log("Drehregler bewegen oder halten fuer stabilen lock.", "tone-n");
+
+      renderHeader();
+      renderStats();
+    }
+
+    function powerOff() {
+      state.powerOn = false;
+      state.running = false;
+      state.pending = null;
+      state.blockWinner = null;
+      state.autoNextMs = 0;
+      state.lock.dispatch = 0;
+      state.lock.stack = 0;
+      state.locksThisBlock.dispatch = 0;
+      state.locksThisBlock.stack = 0;
+      state.channel = "noise";
+      state.quality = 0;
+      state.jamPenalty = 0;
+      state.fineAccel = 0;
+      state.fineVelocity = 0;
+      state.mapReveal = 0;
+      state.heat = 0;
+      el.optA.disabled = true;
+      el.optB.disabled = true;
+      el.stabilizeBtn.disabled = true;
+      el.hintBtn.disabled = true;
+      el.mapBtn.disabled = true;
+      el.nudgeDownBtn.disabled = true;
+      el.fineCenterBtn.disabled = true;
+      el.nudgeUpBtn.disabled = true;
+      el.nextBtn.disabled = true;
+      el.decisionText.textContent = "SYSTEM OFFLINE.";
+      el.statusLine.textContent = "Power O: Alle Systeme aus.";
+      if (audio.musicDispatchEl) {
+        audio.musicDispatchEl.pause();
+        audio.musicDispatchEl.currentTime = 0;
+        audio.musicDispatchEl.volume = 0;
+      }
+      if (audio.musicStackEl) {
+        audio.musicStackEl.pause();
+        audio.musicStackEl.currentTime = 0;
+        audio.musicStackEl.volume = 0;
+      }
+      if (audio.noiseGain && audio.ctx) audio.noiseGain.gain.setTargetAtTime(0.00001, audio.ctx.currentTime, 0.04);
+      if (audio.jamGain && audio.ctx) audio.jamGain.gain.setTargetAtTime(0.00001, audio.ctx.currentTime, 0.04);
+      if (audio.maskGain && audio.ctx) audio.maskGain.gain.setTargetAtTime(0.00001, audio.ctx.currentTime, 0.04);
+      beatState.pulse = 0;
+      beatState.ema = 0;
+      beatState.cooldownMs = 0;
+      document.documentElement.style.setProperty("--beat-pulse", "0");
+      renderHeader();
+      renderStats();
+    }
+
+    function setupDial() {
+      const dial = el.dial;
+      const fineDial = el.fineDial;
+      let dragging = false;
+      let fineDragging = false;
+
+      function updateFromPointer(clientX, clientY) {
+        if (isAdvanceGateActive()) return;
+        const rect = dial.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = clientX - cx;
+        const dy = clientY - cy;
+        let deg = (Math.atan2(dy, dx) * 180) / Math.PI + 90;
+        if (deg > 180) deg -= 360;
+        if (deg < -180) deg += 360;
+        deg = Math.max(-140, Math.min(140, deg));
+        const target = mapAngleToFreq(deg);
+        setCoarseFreq(target);
+        renderHeader();
+      }
+
+      function updateFineFromPointer(clientX, clientY) {
+        if (isAdvanceGateActive()) return;
+        void clientY;
+        const rect = fineDial.getBoundingClientRect();
+        const rel = ((clientX - rect.left) / Math.max(1, rect.width)) * 100;
+        setFineAccel(mapPosToFineAccel(rel));
+        renderHeader();
+      }
+
+      dial.addEventListener("pointerdown", (e) => {
+        dragging = true;
+        dial.setPointerCapture(e.pointerId);
+        updateFromPointer(e.clientX, e.clientY);
+      });
+
+      dial.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        updateFromPointer(e.clientX, e.clientY);
+      });
+
+      dial.addEventListener("pointerup", (e) => {
+        dragging = false;
+        dial.releasePointerCapture(e.pointerId);
+      });
+
+      dial.addEventListener("keydown", (e) => {
+        if (isAdvanceGateActive()) return;
+        const baseStep = 0.25;
+        const step = e.shiftKey ? baseStep * 10 : baseStep;
+        if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+          setCoarseFreq((state.fineMode ? state.fineAnchor : state.freq) + step);
+          renderHeader();
+          e.preventDefault();
+        }
+        if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+          setCoarseFreq((state.fineMode ? state.fineAnchor : state.freq) - step);
+          renderHeader();
+          e.preventDefault();
+        }
+      });
+
+      dial.addEventListener("wheel", (e) => {
+        if (isAdvanceGateActive()) return;
+        e.preventDefault();
+        const baseStep = 0.25;
+        const dir = e.deltaY > 0 ? -1 : 1;
+        setCoarseFreq((state.fineMode ? state.fineAnchor : state.freq) + dir * baseStep);
+        renderHeader();
+      }, { passive: false });
+
+      fineDial.addEventListener("pointerdown", (e) => {
+        fineDragging = true;
+        fineDial.setPointerCapture(e.pointerId);
+        updateFineFromPointer(e.clientX, e.clientY);
+      });
+
+      fineDial.addEventListener("pointermove", (e) => {
+        if (!fineDragging) return;
+        updateFineFromPointer(e.clientX, e.clientY);
+      });
+
+      fineDial.addEventListener("pointerup", (e) => {
+        fineDragging = false;
+        fineDial.releasePointerCapture(e.pointerId);
+      });
+
+      fineDial.addEventListener("keydown", (e) => {
+        if (isAdvanceGateActive()) return;
+        const baseStep = 0.22;
+        const step = e.shiftKey ? baseStep * 2 : baseStep;
+        if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+          setFineAccel(state.fineAccel + step);
+          renderHeader();
+          e.preventDefault();
+        }
+        if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+          setFineAccel(state.fineAccel - step);
+          renderHeader();
+          e.preventDefault();
+        }
+      });
+
+      fineDial.addEventListener("wheel", (e) => {
+        if (isAdvanceGateActive()) return;
+        e.preventDefault();
+        const dir = e.deltaY > 0 ? -1 : 1;
+        setFineAccel(state.fineAccel + dir * 0.2);
+        renderHeader();
+      }, { passive: false });
+    }
+
+    function drawScope(t) {
+      const w = el.scope.width;
+      const h = el.scope.height;
+      if (!state.powerOn) {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "#050608";
+        ctx.fillRect(0, 0, w, h);
+        requestAnimationFrame(drawScope);
+        return;
+      }
+
+      // Phosphor persistence
+      ctx.fillStyle = "rgba(118, 128, 140, 0.18)";
+      ctx.fillRect(0, 0, w, h);
+
+      const winnerHold = !!state.pending || isAdvanceGateActive();
+      const winnerChannel = state.pending?.channel || state.blockWinner || state.channel;
+      const sig = winnerHold
+        ? { channel: winnerChannel === "stack" ? "stack" : "dispatch", quality: 100 }
+        : getSignal();
+      const now = t * 0.001;
+      const scopeQuality = sig.quality;
+      const ampBase = Math.max(18, 42 + scopeQuality * 1.12);
+      const jamNoise = winnerHold ? 0 : Math.max(0, state.jamPenalty * 0.28);
+      const noise = winnerHold ? 0 : ((sig.channel === "noise" ? 24 : sig.channel === "stack" ? 11 : 8) + jamNoise);
+      const cycles = sig.channel === "dispatch" ? 16 : sig.channel === "stack" ? 27 : 8;
+      const speed = sig.channel === "dispatch" ? 2.2 : sig.channel === "stack" ? 3.6 : 1.6;
+      const q = clamp(scopeQuality, 0, 100) / 100;
+      let mp3Wave = null;
+      let waveChannel = "noise";
+      const dVol = audio.musicDispatchEl ? audio.musicDispatchEl.volume : 0;
+      const sVol = audio.musicStackEl ? audio.musicStackEl.volume : 0;
+      if (Math.max(dVol, sVol) > 0.004) {
+        waveChannel = dVol >= sVol ? "dispatch" : "stack";
+      } else {
+        waveChannel = sig.channel;
+        if (waveChannel === "noise") {
+          const prox = getStationProximity();
+          waveChannel = prox.dispatch >= prox.stack ? "dispatch" : "stack";
+        }
+      }
+      if (waveChannel !== "noise") {
+        const analyser = waveChannel === "dispatch" ? audio.scopeDispatchAnalyser : audio.scopeStackAnalyser;
+        const data = waveChannel === "dispatch" ? audio.scopeDispatchData : audio.scopeStackData;
+        if (analyser && data) {
+          analyser.getByteTimeDomainData(data);
+          mp3Wave = data;
+        }
+      }
+      let r;
+      let g;
+      let b;
+      if (q < 0.5) {
+        const t = q / 0.5; // red -> yellow
+        r = 255;
+        g = Math.round(72 + t * 160);
+        b = Math.round(72 - t * 40);
+      } else {
+        const t = (q - 0.5) / 0.5; // yellow -> green
+        r = Math.round(255 - t * 152);
+        g = Math.round(232 + t * 16);
+        b = Math.round(32 + t * 84);
+      }
+      const color = `rgb(${r}, ${g}, ${b})`;
+
+      const envFreq = sig.channel === "stack" ? 3.5 : 2.4;
+      const envDepth = sig.channel === "noise" ? 0.25 : 0.65;
+      const timeBase = now;
+      const scanY = ((now * 120) % h);
+      ctx.strokeStyle = "rgba(147,240,191,0.09)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, scanY);
+      ctx.lineTo(w, scanY);
+      ctx.stroke();
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+
+      for (let x = 0; x <= w; x += 1) {
+        const p = x / w;
+        let y;
+        if (mp3Wave) {
+          const i = Math.floor(p * (mp3Wave.length - 1));
+          const sample = (mp3Wave[i] - 128) / 128;
+          const amp = 34 + q * 112;
+          y = h / 2 + sample * amp + (Math.random() - 0.5) * noise * 0.22;
+        } else {
+          const fallbackEl = waveChannel === "dispatch" ? audio.musicDispatchEl : audio.musicStackEl;
+          if (waveChannel !== "noise" && fallbackEl && !fallbackEl.paused) {
+            const tt = fallbackEl.currentTime * 3.4;
+            const sample = Math.sin(p * 42 + tt) * 0.72 + Math.sin(p * 77 + tt * 1.9) * 0.28;
+            const amp = 30 + q * 88;
+            y = h / 2 + sample * amp + (Math.random() - 0.5) * noise * 0.16;
+          } else {
+          const env = 0.45 + envDepth * (0.5 + 0.5 * Math.sin((p * envFreq * Math.PI * 2) + timeBase * 1.15));
+          const fm = Math.sin((p * 4.2) + timeBase * 2.1) * (scopeQuality / 140);
+          const carrier = Math.sin((p * cycles * Math.PI * 2) + timeBase * speed + fm);
+          y = h / 2 + carrier * ampBase * env + (Math.random() - 0.5) * noise;
+          }
+        }
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Ghost trace
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.35)`;
+      ctx.beginPath();
+      for (let x = 0; x <= w; x += 2) {
+        const p = x / w;
+        let y;
+        if (mp3Wave) {
+          const i = Math.floor(p * (mp3Wave.length - 1));
+          const i2 = Math.min(mp3Wave.length - 1, i + 18);
+          const sample = (mp3Wave[i2] - 128) / 128;
+          y = h / 2 + sample * (26 + q * 78);
+        } else {
+          const fallbackEl = waveChannel === "dispatch" ? audio.musicDispatchEl : audio.musicStackEl;
+          if (waveChannel !== "noise" && fallbackEl && !fallbackEl.paused) {
+            const tt = fallbackEl.currentTime * 2.7;
+            const sample = Math.sin(p * 36 + tt) * 0.68 + Math.sin(p * 66 + tt * 1.7) * 0.22;
+            y = h / 2 + sample * (22 + q * 56);
+          } else {
+          const env = 0.45 + envDepth * (0.5 + 0.5 * Math.sin((p * envFreq * Math.PI * 2) + timeBase * 1.15 + 0.7));
+          const carrier = Math.sin((p * cycles * Math.PI * 2) + timeBase * speed + 0.9);
+          y = h / 2 + carrier * (ampBase * 0.86) * env;
+          }
+        }
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      ctx.strokeStyle = "rgba(147,240,191,0.18)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, h / 2);
+      ctx.lineTo(w, h / 2);
+      ctx.stroke();
+
+      if (!winnerHold && state.jamPenalty > 12) {
+        const snowStrength = clamp((state.jamPenalty - 12) / 140, 0, 1);
+        const dots = Math.floor(160 + snowStrength * 820);
+        for (let i = 0; i < dots; i += 1) {
+          const x = Math.random() * w;
+          const y = Math.random() * h;
+          const alpha = 0.07 + Math.random() * (0.18 + snowStrength * 0.22);
+          ctx.fillStyle = `rgba(235,245,255,${alpha})`;
+          ctx.fillRect(x, y, 1.2, 1.2);
+        }
+        const bands = Math.floor(1 + snowStrength * 5);
+        for (let i = 0; i < bands; i += 1) {
+          const y = Math.random() * h;
+          const height = 1 + Math.random() * (3 + snowStrength * 4);
+          const alpha = 0.05 + snowStrength * 0.18;
+          ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+          ctx.fillRect(0, y, w, height);
+        }
+      }
+
+      if (!winnerHold && state.jamPenalty > 25) {
+        const alpha = Math.min(0.34, state.jamPenalty / 220);
+        ctx.fillStyle = `rgba(255,96,96,${alpha})`;
+        const burstX = ((now * 180) % w);
+        ctx.fillRect(burstX - 4, 0, 8, h);
+      }
+
+      requestAnimationFrame(drawScope);
+    }
+
+    function boot() {
+      initLockLeds();
+      setupDial();
+
+      const storedTheme = localStorage.getItem("freq_theme") || "field";
+      applyTheme(storedTheme);
+      syncDisplaySelectorsFromControls();
+
+      if (el.powerToggle) {
+        el.powerToggle.checked = false;
+        el.powerToggle.addEventListener("change", () => {
+          if (el.powerToggle.checked) {
+            forceStartMusicPlayback();
+            startRun();
+          }
+          else powerOff();
+        });
+      }
+      el.nextBtn.addEventListener("click", nextBlock);
+      el.stabilizeBtn.addEventListener("click", stabilizeSignal);
+      el.hintBtn.addEventListener("click", hintPing);
+      el.nudgeDownBtn.addEventListener("click", () => {
+        if (isAdvanceGateActive()) return;
+        setCoarseFreq((state.fineMode ? state.fineAnchor : state.freq) - 0.25);
+        renderHeader();
+      });
+      el.fineCenterBtn.addEventListener("click", () => {
+        if (isAdvanceGateActive()) return;
+        setFineAccel(0);
+        el.statusLine.textContent = `Fine reset auf ${state.fineAnchor.toFixed(2)} MHz.`;
+        renderHeader();
+      });
+      el.nudgeUpBtn.addEventListener("click", () => {
+        if (isAdvanceGateActive()) return;
+        setCoarseFreq((state.fineMode ? state.fineAnchor : state.freq) + 0.25);
+        renderHeader();
+      });
+      el.mapBtn.addEventListener("click", mapPing);
+      el.themeSelect.addEventListener("change", () => {
+        applyTheme(el.themeSelect.value);
+        syncDisplaySelectorsFromControls();
+      });
+      if (el.displayNameSelect) {
+        el.displayNameSelect.addEventListener("change", () => {
+          if (!el.nameInput) return;
+          el.nameInput.value = el.displayNameSelect.value;
+          if (state.running) {
+            state.name = el.nameInput.value.trim().slice(0, 18) || "Wavefox";
+            renderHeader();
+          }
+        });
+      }
+      if (el.displayFactionSelect) {
+        el.displayFactionSelect.addEventListener("change", () => {
+          if (!el.factionSelect) return;
+          el.factionSelect.value = el.displayFactionSelect.value;
+        });
+      }
+      if (el.displayThemeSelect) {
+        el.displayThemeSelect.addEventListener("change", () => {
+          if (el.themeSelect) el.themeSelect.value = el.displayThemeSelect.value;
+          applyTheme(el.displayThemeSelect.value);
+        });
+      }
+      el.optA.addEventListener("click", () => choose("A"));
+      el.optB.addEventListener("click", () => choose("B"));
+
+      const armAudio = () => {
+        if (audio.armed) return;
+        if (!ensureAudio()) return;
+        audio.armed = true;
+        if (audio.ctx && audio.ctx.state === "suspended") audio.ctx.resume();
+        if (audio.musicDispatchEl) {
+          audio.musicDispatchEl.play()
+            .then(() => { audio.musicDispatchEl.pause(); audio.musicDispatchEl.currentTime = 0; })
+            .catch(() => {});
+        }
+        if (audio.musicStackEl) {
+          audio.musicStackEl.play()
+            .then(() => { audio.musicStackEl.pause(); audio.musicStackEl.currentTime = 0; })
+            .catch(() => {});
+        }
+      };
+      window.addEventListener("pointerdown", armAudio, { once: true });
+      window.addEventListener("keydown", armAudio, { once: true });
+      if (el.powerSwitchWrap) {
+        el.powerSwitchWrap.addEventListener("pointerdown", armAudio);
+      }
+
+      powerOff();
+      el.nextBtn.disabled = true;
+      el.stabilizeBtn.disabled = true;
+      el.hintBtn.disabled = true;
+      el.mapBtn.disabled = true;
+
+      setInterval(onLiveSample, 90);
+
+      setInterval(() => {
+        if (!state.running) return;
+        if (state.creditsSpendCooldown > 0) state.creditsSpendCooldown -= 1;
+      }, 3000);
+
+      setInterval(() => {
+        if (!state.running || !state.powerOn) return;
+        if (audio.musicDispatchEl && audio.musicDispatchEl.paused) audio.musicDispatchEl.play().catch(() => {});
+        if (audio.musicStackEl && audio.musicStackEl.paused) audio.musicStackEl.play().catch(() => {});
+      }, 1200);
+
+      renderHeader();
+      renderStats();
+      requestAnimationFrame(drawScope);
+    }
+
+    boot();
+  </script>
+</body>
+</html>
