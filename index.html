@@ -5347,7 +5347,7 @@
         : getSignal();
       const now = t * 0.001;
       const scopeQuality = sig.quality;
-      const ampBase = Math.max(36, 84 + scopeQuality * 1.9);
+      const ampBase = Math.max(48, 104 + scopeQuality * 2.3);
       const q = clamp(scopeQuality, 0, 100) / 100;
       const staticWarp = (!winnerHold ? Math.abs(interferenceState.noiseDrift) + Math.abs(interferenceState.jamWarp) : 0);
       let mp3Wave = null;
@@ -5371,8 +5371,8 @@
           mp3Wave = data;
         }
       }
-      const waveAmpBoost = waveChannel === "stack" ? 1.72 : 1;
-      const ghostAmpBoost = waveChannel === "stack" ? 1.58 : 1;
+      const waveAmpBoost = waveChannel === "stack" ? 2.35 : 1.28;
+      const ghostAmpBoost = waveChannel === "stack" ? 2.05 : 1.22;
       const jamNoise = winnerHold ? 0 : Math.max(0, state.jamPenalty * 0.28);
       const noise = winnerHold ? 0 : ((sig.channel === "noise" ? 24 : sig.channel === "stack" ? 11 : 8) + jamNoise);
       const cycles = sig.channel === "dispatch" ? 16 : sig.channel === "stack" ? 27 : 8;
@@ -5414,14 +5414,14 @@
         if (mp3Wave) {
           const i = Math.floor(p * (mp3Wave.length - 1));
           const sample = (mp3Wave[i] - 128) / 128;
-          const amp = (72 + q * 182) * waveAmpBoost;
+          const amp = (92 + q * 218) * waveAmpBoost;
           y = h / 2 + sample * amp + (Math.random() - 0.5) * noise * 0.22;
         } else {
           const fallbackEl = waveChannel === "dispatch" ? audio.musicDispatchEl : audio.musicStackEl;
           if (waveChannel !== "noise" && fallbackEl && !fallbackEl.paused) {
             const tt = fallbackEl.currentTime * 3.4;
             const sample = Math.sin(p * 42 + tt) * 0.72 + Math.sin(p * 77 + tt * 1.9) * 0.28;
-            const amp = (62 + q * 150) * waveAmpBoost;
+            const amp = (82 + q * 180) * waveAmpBoost;
             y = h / 2 + sample * amp + (Math.random() - 0.5) * noise * 0.16;
           } else {
           const env = 0.45 + envDepth * (0.5 + 0.5 * Math.sin((p * envFreq * Math.PI * 2) + timeBase * 1.15));
@@ -5449,13 +5449,13 @@
           const i = Math.floor(p * (mp3Wave.length - 1));
           const i2 = Math.min(mp3Wave.length - 1, i + 18);
           const sample = (mp3Wave[i2] - 128) / 128;
-          y = h / 2 + sample * ((26 + q * 78) * ghostAmpBoost);
+          y = h / 2 + sample * ((34 + q * 94) * ghostAmpBoost);
         } else {
           const fallbackEl = waveChannel === "dispatch" ? audio.musicDispatchEl : audio.musicStackEl;
           if (waveChannel !== "noise" && fallbackEl && !fallbackEl.paused) {
             const tt = fallbackEl.currentTime * 2.7;
             const sample = Math.sin(p * 36 + tt) * 0.68 + Math.sin(p * 66 + tt * 1.7) * 0.22;
-            y = h / 2 + sample * ((22 + q * 56) * ghostAmpBoost);
+            y = h / 2 + sample * ((30 + q * 70) * ghostAmpBoost);
           } else {
           const env = 0.45 + envDepth * (0.5 + 0.5 * Math.sin((p * envFreq * Math.PI * 2) + timeBase * 1.15 + 0.7));
           const carrier = Math.sin((p * cycles * Math.PI * 2) + timeBase * speed + 0.9 + staticWarp * 0.8);
