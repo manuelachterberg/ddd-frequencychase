@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Frequenzjaeger // Radio Deck</title>
+  <title>Frequency Chase // Radio Deck</title>
   <style>
     :root {
       --bg-a: #353b43;
       --bg-b: #525c68;
 
-      --chassis-top: #7f8893;
-      --chassis-mid: #6a737e;
-      --chassis-low: #585f68;
+      --chassis-top: #9aa4af;
+      --chassis-mid: #78838e;
+      --chassis-low: #5f6975;
 
       --bezel: #253547;
       --bezel-hi: #3a526d;
 
       --screen: #09111a;
-      --lcd-bg: #0b140d;
-      --lcd-text: #86e8a6;
+      --lcd-bg: #b9cca1;
+      --lcd-text: #5f7350;
 
       --dispatch: #ffd166;
       --stack: #8ec8ff;
@@ -44,13 +44,37 @@
     body {
       margin: 0;
       min-height: 100vh;
+      position: relative;
       color: var(--text);
       font-family: var(--sans);
       background:
-        radial-gradient(1200px 560px at -10% -10%, rgba(255, 208, 138, 0.2), transparent 65%),
-        radial-gradient(1000px 560px at 110% 120%, rgba(141, 240, 202, 0.16), transparent 65%),
+        url("./pictures/everytexture.com-stock-nature-dirt-texture-00062-rotated.jpg") center/420px auto repeat,
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,.08) 0 2px, transparent 3px) 0 0 / 96px 96px,
+        radial-gradient(circle at 74% 62%, rgba(0,0,0,.14) 0 3px, transparent 4px) 0 0 / 132px 132px,
+        repeating-linear-gradient(115deg, rgba(255,255,255,.03) 0 2px, transparent 2px 8px),
+        repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 1px, transparent 1px 3px),
+        radial-gradient(1200px 560px at -10% -10%, rgba(218, 228, 238, 0.03), transparent 65%),
+        radial-gradient(1000px 560px at 110% 120%, rgba(184, 206, 214, 0.025), transparent 65%),
+        radial-gradient(circle at 18% 26%, rgba(18, 20, 24, .1), transparent 24%),
+        radial-gradient(circle at 82% 74%, rgba(255, 255, 255, .015), transparent 20%),
         linear-gradient(160deg, var(--bg-b) 0%, var(--bg-a) 75%);
+      background-blend-mode: normal, normal, multiply, normal, multiply, screen, screen, multiply, screen, normal;
       padding: 16px;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .18;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(255,255,255,.03) 0 1px, transparent 2px) 0 0 / 36px 36px,
+        radial-gradient(circle at 72% 64%, rgba(0,0,0,.06) 0 1.5px, transparent 2.5px) 0 0 / 42px 42px,
+        repeating-linear-gradient(90deg, rgba(255,255,255,.008) 0 1px, rgba(0,0,0,.014) 1px 2px, transparent 2px 6px),
+        linear-gradient(180deg, rgba(26, 24, 20, .01), rgba(10, 12, 16, 0));
+      mix-blend-mode: soft-light;
+      filter: contrast(1.08) brightness(1.01);
     }
 
     .radio {
@@ -60,16 +84,21 @@
       padding: 16px;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.18);
       background:
-        linear-gradient(180deg, var(--chassis-top), var(--chassis-mid) 52%, var(--chassis-low)),
-        radial-gradient(circle at 14% 18%, rgba(255,255,255,.2), transparent 32%),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.02) 1px, transparent 1px, transparent 4px),
-        repeating-linear-gradient(0deg, rgba(0,0,0,.03), rgba(0,0,0,.03) 1px, transparent 1px, transparent 3px);
+        linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0) 14%, rgba(0,0,0,.08) 78%, rgba(0,0,0,.18)),
+        linear-gradient(180deg, var(--chassis-top), var(--chassis-mid) 48%, var(--chassis-low)),
+        radial-gradient(circle at 14% 16%, rgba(255,255,255,.32), transparent 26%),
+        radial-gradient(circle at 84% 82%, rgba(0,0,0,.18), transparent 28%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.07), rgba(255,255,255,.07) 1px, rgba(0,0,0,.025) 1px, rgba(0,0,0,.025) 3px, transparent 3px, transparent 7px),
+        repeating-linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,.015) 1px, rgba(0,0,0,.03) 1px, rgba(0,0,0,.03) 2px, transparent 2px, transparent 5px);
       box-shadow:
-        0 28px 60px rgba(0,0,0,.42),
-        inset 0 1px 0 rgba(255,255,255,.26),
-        inset 0 -3px 0 rgba(0,0,0,.22);
+        0 30px 68px rgba(0,0,0,.44),
+        0 10px 22px rgba(0,0,0,.2),
+        inset 0 1px 0 rgba(255,255,255,.38),
+        inset 0 10px 18px rgba(255,255,255,.08),
+        inset 0 -6px 10px rgba(0,0,0,.24),
+        inset 0 -26px 34px rgba(28,36,46,.18);
     }
 
     .radio::before {
@@ -77,10 +106,12 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      opacity: .22;
+      opacity: .28;
       background:
-        radial-gradient(circle at 18% 18%, rgba(255,255,255,.25) 0 2px, transparent 3px) 0 0 / 36px 36px,
-        radial-gradient(circle at 62% 68%, rgba(0,0,0,.25) 0 2px, transparent 3px) 0 0 / 44px 44px;
+        linear-gradient(105deg, rgba(255,255,255,.22), rgba(255,255,255,0) 32%, rgba(255,255,255,.08) 48%, rgba(0,0,0,0) 62%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.05) 1px, rgba(0,0,0,.02) 1px, rgba(0,0,0,.02) 2px, transparent 2px, transparent 6px),
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.22) 0 2px, transparent 3px) 0 0 / 36px 36px,
+        radial-gradient(circle at 62% 68%, rgba(0,0,0,.22) 0 2px, transparent 3px) 0 0 / 44px 44px;
       mix-blend-mode: soft-light;
     }
 
@@ -90,8 +121,10 @@
       inset: 10px;
       border-radius: 22px;
       pointer-events: none;
-      border: 1px solid rgba(255,255,255,.08);
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow:
+        inset 0 0 0 1px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .top {
@@ -104,6 +137,39 @@
       flex-wrap: wrap;
       margin-bottom: 12px;
       padding: 2px 4px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .brand-logo {
+      width: 84px;
+      height: 84px;
+      flex: 0 0 auto;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,0) 24%, rgba(0,0,0,.18)),
+        linear-gradient(180deg, rgba(59, 70, 81, .94), rgba(33, 40, 49, .96));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.2),
+        inset 0 -10px 16px rgba(0,0,0,.24),
+        0 8px 18px rgba(0,0,0,.18);
+      padding: 8px;
+      display: grid;
+      place-items: center;
+    }
+    .brand-logo img {
+      display: block;
+      width: 118%;
+      height: 118%;
+      object-fit: contain;
+      filter: drop-shadow(0 1px 0 rgba(255,255,255,.18)) drop-shadow(0 3px 5px rgba(0,0,0,.28));
+    }
+    .brand-copy {
+      min-width: 0;
     }
 
     h1 {
@@ -142,6 +208,11 @@
 
     @media (max-width: 980px) {
       .face { grid-template-columns: 1fr; }
+      .brand-logo {
+        width: 68px;
+        height: 68px;
+        padding: 7px;
+      }
     }
 
     .module {
@@ -189,10 +260,18 @@
         inset 0 -22px 30px rgba(0,0,0,.42);
     }
     .lcd.power-off {
-      background: inherit;
-      border-color: inherit;
-      box-shadow: inherit;
-      filter: none;
+      border-color: rgba(109, 132, 63, .74);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(245, 252, 222, .14), transparent 40%),
+        linear-gradient(180deg, color-mix(in srgb, var(--lcd-bg) 92%, white 8%), color-mix(in srgb, var(--lcd-bg) 86%, #7f9465 14%) 58%, color-mix(in srgb, var(--lcd-bg) 78%, #6d8154 22%));
+      box-shadow:
+        inset 0 0 0 1px rgba(199,217,133,.12),
+        inset 0 0 0 2px rgba(48, 64, 24, .16),
+        inset 0 10px 14px rgba(255,255,255,.04),
+        inset 0 -12px 18px rgba(47,64,23,.12),
+        inset 0 -20px 26px rgba(28, 39, 14, .12),
+        inset 0 16px 20px rgba(255,255,255,.03);
+      filter: saturate(.82) brightness(.97);
     }
     .lcd.power-off::before,
     .lcd.power-off::after {
@@ -203,64 +282,17 @@
       opacity: 0;
       pointer-events: none;
     }
-    .display-selects {
-      margin-top: 8px;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      position: relative;
-      z-index: 1;
+    .lcd.power-off.game-over .lcd-title,
+    .lcd.power-off.game-over .lcd-readout {
+      opacity: 1;
+      pointer-events: none;
     }
-    .display-select {
-      border-radius: 8px;
-      border: 1px solid rgba(132, 178, 132, .24);
-      background: linear-gradient(180deg, rgba(78, 108, 56, .34), rgba(56, 82, 40, .36));
-      box-shadow: none;
-      padding: 6px 7px;
-      display: grid;
-      gap: 5px;
+    .lcd.power-off.game-over #stats,
+    .lcd.power-off.game-over .lcd-shop,
+    .lcd.power-off.game-over .lcd-ghost {
+      opacity: 0;
+      pointer-events: none;
     }
-    .display-select label {
-      font: 700 9px/1 "Press Start 2P", "VT323", "Lucida Console", monospace;
-      letter-spacing: .4px;
-      color: #a4bf86;
-      text-transform: uppercase;
-      text-shadow: none;
-    }
-    .display-select select {
-      width: 100%;
-      min-height: 34px;
-      border-radius: 3px;
-      border: 1px solid rgba(138, 176, 114, .36);
-      background: linear-gradient(180deg, rgba(122, 153, 84, .46), rgba(94, 121, 64, .48));
-      color: #d0e0a8;
-      font: 700 13px/1.2 "Press Start 2P", "VT323", "Lucida Console", monospace;
-      text-transform: uppercase;
-      letter-spacing: .25px;
-      padding: 8px 26px 8px 10px;
-      box-shadow: none;
-      appearance: none;
-      background-image:
-        linear-gradient(45deg, transparent 50%, #c3d39b 50%),
-        linear-gradient(135deg, #c3d39b 50%, transparent 50%),
-        linear-gradient(180deg, rgba(122, 153, 84, .46), rgba(94, 121, 64, .48));
-      background-position:
-        calc(100% - 12px) 11px,
-        calc(100% - 7px) 11px,
-        0 0;
-      background-size: 5px 5px, 5px 5px, auto;
-      background-repeat: no-repeat;
-      outline: none;
-    }
-    .display-select select:focus {
-      border-color: rgba(182, 208, 132, .58);
-      box-shadow: none;
-    }
-    .lcd .display-selects {
-      margin-top: 2px;
-      margin-bottom: 8px;
-    }
-
     .scope-shell::before {
       content: "";
       position: absolute;
@@ -323,16 +355,31 @@
     }
     @media (max-width: 760px) {
       .screen-readouts { grid-template-columns: 1fr; }
-      .display-selects { grid-template-columns: 1fr; }
     }
 
     .chip {
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22);
-      color: #c9d9e8;
-      padding: 8px;
-      font: 700 12px/1 var(--mono);
+      border-radius: 0;
+      border: 1px solid rgba(109, 132, 63, .68);
+      background:
+        repeating-linear-gradient(0deg,
+          rgba(56, 82, 28, .07) 0 1px,
+          rgba(197, 217, 138, .02) 1px 3px,
+          transparent 3px 5px),
+        linear-gradient(180deg,
+          color-mix(in srgb, var(--lcd-bg) 95%, white 5%),
+          color-mix(in srgb, var(--lcd-bg) 88%, #82975f 12%) 58%,
+          color-mix(in srgb, var(--lcd-bg) 81%, #6f8351 19%));
+      color: var(--lcd-text);
+      padding: 9px 8px 8px;
+      font: 700 12px/1.15 "Press Start 2P", "VT323", monospace;
+      letter-spacing: .18px;
+      text-transform: uppercase;
+      box-shadow:
+        inset 0 0 0 1px rgba(199,217,133,.12),
+        inset 0 -1px 0 rgba(48, 64, 24, .28),
+        1px 1px 0 rgba(48, 64, 24, .34);
+      clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+      text-shadow: 0 1px 0 rgba(239, 247, 204, .16);
     }
 
     .meters {
@@ -356,6 +403,11 @@
       display: grid;
       gap: 6px;
     }
+    .battery-meter {
+      grid-column: 1 / -1;
+      display: grid;
+      gap: 6px;
+    }
     .dash-label {
       color: #d5dbe2;
       letter-spacing: .2px;
@@ -364,10 +416,13 @@
       position: relative;
       height: 50px;
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
       background:
-        linear-gradient(180deg, rgba(104,112,122,.82), rgba(84,92,101,.86)),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.16), rgba(255,255,255,.16) 1px, transparent 1px, transparent 12px);
+        linear-gradient(180deg, rgba(182, 188, 196, .94), rgba(146, 154, 164, .96)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,.22) 1px, transparent 1px, transparent 12px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.28),
+        inset 0 -10px 14px rgba(60, 66, 74, .18);
       overflow: hidden;
     }
     .led-lock {
@@ -408,6 +463,61 @@
       background: #ff6767;
       box-shadow: 0 0 7px rgba(255,103,103,.45), inset 0 0 2px rgba(255,222,222,.62);
     }
+    .battery-track {
+      position: relative;
+      height: 28px;
+      border-radius: 0;
+      border: 1px solid rgba(109, 132, 63, .68);
+      background:
+        repeating-linear-gradient(0deg,
+          rgba(56, 82, 28, .06) 0 1px,
+          rgba(197, 217, 138, .02) 1px 3px,
+          transparent 3px 5px),
+        linear-gradient(180deg,
+          color-mix(in srgb, var(--lcd-bg) 95%, white 5%),
+          color-mix(in srgb, var(--lcd-bg) 88%, #82975f 12%) 58%,
+          color-mix(in srgb, var(--lcd-bg) 81%, #6f8351 19%));
+      box-shadow:
+        inset 0 0 0 1px rgba(199,217,133,.12),
+        inset 0 -1px 0 rgba(48, 64, 24, .28),
+        1px 1px 0 rgba(48, 64, 24, .34);
+      clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+      overflow: hidden;
+    }
+    .battery-track::after {
+      content: "";
+      position: absolute;
+      right: -5px;
+      top: 7px;
+      width: 4px;
+      height: 14px;
+      border-radius: 0 2px 2px 0;
+      background: rgba(129, 145, 99, .9);
+      box-shadow: inset 0 0 0 1px rgba(70, 84, 48, .3);
+    }
+    .battery-fill {
+      position: absolute;
+      inset: 4px 6px;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 3px;
+      align-items: stretch;
+    }
+    .battery-cell {
+      background:
+        linear-gradient(180deg, rgba(86, 104, 63, .18), rgba(48, 61, 36, .28));
+      box-shadow: inset 0 0 0 1px rgba(67, 82, 49, .14);
+      transition: opacity .12s steps(2, end), background .12s steps(2, end), box-shadow .12s steps(2, end);
+      opacity: .28;
+    }
+    .battery-cell.on {
+      background:
+        linear-gradient(180deg, rgba(78, 98, 57, .92), rgba(46, 60, 34, .96));
+      box-shadow:
+        inset 0 0 0 1px rgba(188, 204, 131, .08),
+        0 0 4px rgba(114, 146, 76, .08);
+      opacity: .96;
+    }
     .dash-face::before {
       content: "";
       position: absolute;
@@ -421,14 +531,16 @@
       position: absolute;
       left: 50%;
       bottom: 10px;
-      width: 1px;
-      height: 58px;
+      width: 2px;
+      height: 68px;
       border-radius: 2px;
-      background: #eceff3;
+      background: #11161b;
       transform-origin: 50% calc(100% - 1px);
       transform: translateX(-50%) rotate(-88deg);
       transition: transform .11s linear;
-      box-shadow: 0 0 6px rgba(236,239,243,.32);
+      box-shadow:
+        0 0 2px rgba(0,0,0,.24),
+        0 0 6px rgba(0,0,0,.18);
     }
     .dash-cap {
       position: absolute;
@@ -439,10 +551,14 @@
       border-radius: 99px;
       transform: translateX(-50%);
       background: #e2e6eb;
-      box-shadow: 0 0 0 1px rgba(255,255,255,.3);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.3),
+        0 0 calc(2px + var(--beat-pulse) * 6px) rgba(230, 238, 247, calc(.12 + var(--beat-pulse) * .28));
+      filter: brightness(calc(1 + var(--beat-pulse) * .3));
+      transform: translateX(-50%) scale(calc(1 + var(--beat-pulse) * .08));
     }
-    .meter.dispatch .dash-needle { background: #eceff3; box-shadow: 0 0 6px rgba(236,239,243,.32); }
-    .meter.stack .dash-needle { background: #eceff3; box-shadow: 0 0 6px rgba(236,239,243,.32); }
+    .meter.dispatch .dash-needle { background: #11161b; box-shadow: 0 0 2px rgba(0,0,0,.24), 0 0 6px rgba(0,0,0,.18); }
+    .meter.stack .dash-needle { background: #11161b; box-shadow: 0 0 2px rgba(0,0,0,.24), 0 0 6px rgba(0,0,0,.18); }
 
     .lower {
       margin-top: 12px;
@@ -513,6 +629,15 @@
       grid-template-columns: 1fr 54px;
       gap: 10px;
       align-items: center;
+    }
+    .regler-label {
+      margin-bottom: 6px;
+      text-align: center;
+      color: #d8e3ee;
+      font: 800 10px/1 var(--mono);
+      letter-spacing: .7px;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(0,0,0,.24);
     }
     .fine-rig {
       margin-top: 8px;
@@ -624,12 +749,15 @@
       height: 14px;
       border-radius: 3px;
       border: 1px solid rgba(245, 248, 252, .55);
-      background: rgb(36, 108, 55);
-      box-shadow: 0 0 4px rgba(127,255,170,.22), inset 0 0 6px rgba(142,255,190,.2);
+      background: rgb(72, 164, 104);
+      box-shadow:
+        0 0 8px rgba(127,255,170,.34),
+        0 0 16px rgba(127,255,170,.16),
+        inset 0 0 8px rgba(210,255,228,.34);
       transition: opacity .1s linear, background-color .1s linear, box-shadow .1s linear, transform .08s linear, filter .08s linear;
-      opacity: .45;
-      transform: scale(calc(1 + var(--beat-pulse) * 0.22));
-      filter: brightness(calc(1 + var(--beat-pulse) * 0.36));
+      opacity: .62;
+      transform: scale(calc(1 + var(--beat-pulse) * 0.28));
+      filter: brightness(calc(1.12 + var(--beat-pulse) * 0.52));
     }
     .fm-track {
       position: relative;
@@ -748,6 +876,169 @@
       display: grid;
       gap: 8px;
     }
+    .config-knobs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+      padding: 7px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.1);
+      background:
+        linear-gradient(180deg, rgba(12, 16, 21, .82), rgba(21, 28, 36, .78)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.03), rgba(255,255,255,.03) 1px, transparent 1px, transparent 6px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        inset 0 -10px 16px rgba(0,0,0,.34);
+    }
+    .config-knob {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+    .config-knob-label {
+      font: 700 9px/1 var(--mono);
+      letter-spacing: .45px;
+      text-transform: uppercase;
+      color: #d4e0ec;
+      text-align: center;
+    }
+    .config-dial {
+      width: 56px;
+      height: 56px;
+      padding: 0;
+      border-radius: 50%;
+      position: relative;
+      border: 1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 30% 26%, rgba(255,255,255,.14), transparent 24%),
+        radial-gradient(circle at 68% 76%, rgba(0,0,0,.42), transparent 30%),
+        linear-gradient(165deg, #4d535c, #101419 58%, #06090d);
+      box-shadow:
+        0 10px 18px rgba(0,0,0,.42),
+        inset 0 1px 1px rgba(255,255,255,.1),
+        inset 0 -10px 14px rgba(0,0,0,.52);
+      cursor: pointer;
+      user-select: none;
+      touch-action: none;
+      appearance: none;
+      transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+    }
+    .config-dial::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.08), transparent 26%),
+        repeating-conic-gradient(from 0deg, rgba(255,255,255,.06) 0deg 4deg, transparent 4deg 12deg),
+        linear-gradient(160deg, #171d24, #030507 72%);
+      box-shadow:
+        inset 0 2px 3px rgba(255,255,255,.06),
+        inset 0 -8px 12px rgba(0,0,0,.55);
+    }
+    .config-dial::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background:
+        repeating-conic-gradient(from -130deg, rgba(220, 226, 233, .72) 0deg 1.5deg, transparent 1.5deg 16deg);
+      -webkit-mask: radial-gradient(circle, transparent 0 23px, #000 23px 28px, transparent 28px);
+      mask: radial-gradient(circle, transparent 0 23px, #000 23px 28px, transparent 28px);
+      filter: drop-shadow(0 2px 1px rgba(0,0,0,.45));
+      pointer-events: none;
+    }
+    .config-dial:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 12px 22px rgba(0,0,0,.48),
+        inset 0 1px 1px rgba(255,255,255,.12),
+        inset 0 -10px 14px rgba(0,0,0,.56);
+    }
+    .config-dial:focus-visible {
+      outline: none;
+      border-color: rgba(236, 242, 249, .44);
+      box-shadow:
+        0 0 0 2px rgba(235, 241, 249, .16),
+        0 12px 22px rgba(0,0,0,.5),
+        inset 0 1px 1px rgba(255,255,255,.12),
+        inset 0 -10px 14px rgba(0,0,0,.56);
+    }
+    .config-dial-indicator {
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      width: 4px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #f4f7fa, #b9c2cc);
+      box-shadow: 0 0 9px rgba(255,255,255,.14);
+      transform: translateX(-50%) rotate(0deg);
+      transform-origin: 50% 21px;
+      z-index: 2;
+    }
+    .config-knob-state {
+      width: 100%;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      padding: 5px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(0,0,0,.34), rgba(255,255,255,.04));
+      color: #f0f4f8;
+      font: 700 9px/1.2 var(--mono);
+      letter-spacing: .28px;
+      text-transform: uppercase;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .config-knob-state.lcd-mini {
+      position: relative;
+      overflow: hidden;
+      border-color: rgba(109, 132, 63, .56);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(185, 204, 124, .18), transparent 40%),
+        linear-gradient(180deg, #879d53, #738847 58%, #62763c);
+      color: #203816;
+      font: 700 8px/1 "Press Start 2P", "VT323", monospace;
+      text-shadow: 0 1px 0 rgba(220,236,154,.25);
+      box-shadow:
+        inset 0 0 0 1px rgba(199,217,133,.15),
+        inset 0 -8px 12px rgba(28, 39, 14, .18);
+      letter-spacing: .18px;
+      padding: 4px 5px;
+    }
+    .config-knob-state.lcd-mini::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(0deg, rgba(45,67,20,.12), rgba(45,67,20,.12) 1px, transparent 1px, transparent 3px),
+        repeating-linear-gradient(90deg, rgba(45,67,20,.05), rgba(45,67,20,.05) 1px, transparent 1px, transparent 4px);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+    .config-knob-state.lcd-mini.lagging {
+      opacity: .78;
+      filter: blur(.4px);
+    }
+    #displayNameKnobState,
+    #displayFactionKnobState,
+    #displayThemeKnobState {
+      font-size: 10px;
+      letter-spacing: .24px;
+    }
+    @media (max-width: 740px) {
+      .config-knobs {
+        grid-template-columns: 1fr;
+      }
+    }
     .hidden-config {
       display: none;
     }
@@ -759,6 +1050,9 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
+    }
+    .row3.dual {
+      grid-template-columns: repeat(2, 1fr);
     }
     .row3.io-row {
       grid-template-columns: 1fr;
@@ -779,6 +1073,23 @@
       user-select: none;
       min-height: 78px;
       align-content: center;
+    }
+    .io-alert-led {
+      position: absolute;
+      right: -14px;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 214, 214, .26);
+      background: #2b0b0b;
+      box-shadow:
+        inset 0 0 4px rgba(0,0,0,.58),
+        0 0 0 rgba(0,0,0,0);
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: .96;
+      filter: brightness(.52) saturate(.7);
     }
     .io-switch input {
       position: absolute;
@@ -805,6 +1116,7 @@
       position: relative;
       transition: box-shadow .16s ease, background .16s ease;
       overflow: hidden;
+      filter: none;
     }
     .io-track::before {
       content: "";
@@ -828,6 +1140,8 @@
       background: linear-gradient(90deg, rgba(0,0,0,.28) 0 50%, rgba(0,0,0,.04) 50% 100%);
       pointer-events: none;
       transition: background .16s ease;
+      box-shadow: inset 0 0 3px rgba(220, 230, 244, .04);
+      filter: none;
     }
     .io-knob {
       display: none;
@@ -866,11 +1180,45 @@
       background: linear-gradient(90deg, rgba(0,0,0,.04) 0 50%, rgba(0,0,0,.28) 50% 100%);
     }
     .io-switch.blink-hint .io-track {
-      animation: buttonLedBlink 1.05s steps(2, end) infinite;
+      filter: none;
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.1),
         inset 0 -9px 12px rgba(0,0,0,.26),
-        0 0 8px rgba(170,182,198,.16);
+        0 4px 8px rgba(0,0,0,.28);
+    }
+    .io-switch.blink-hint .io-alert-led {
+      background: #ff4b3a;
+      animation: ioAlertBlink .9s steps(2, end) infinite;
+      box-shadow:
+        inset 0 0 4px rgba(255,255,255,.24),
+        0 0 calc(10px + var(--beat-pulse) * 18px) rgba(255, 88, 72, calc(.34 + var(--beat-pulse) * .48));
+      transform: translateY(-50%) scale(calc(1.05 + var(--beat-pulse) * .28));
+      filter: brightness(calc(1.22 + var(--beat-pulse) * .82)) saturate(1.3);
+    }
+    .io-switch input:checked ~ .io-alert-led {
+      animation: none;
+      background: #220909;
+      box-shadow:
+        inset 0 0 4px rgba(0,0,0,.6),
+        0 0 0 rgba(0,0,0,0);
+      transform: translateY(-50%) scale(1);
+      filter: brightness(.42) saturate(.48);
+    }
+    @keyframes ioAlertBlink {
+      0%, 42% {
+        opacity: .28;
+        box-shadow:
+          inset 0 0 1px rgba(255,255,255,.08),
+          0 0 0 rgba(255, 88, 72, 0);
+        filter: brightness(.74) saturate(.92);
+      }
+      52%, 100% {
+        opacity: 1;
+        box-shadow:
+          inset 0 0 4px rgba(255,255,255,.24),
+          0 0 14px rgba(255, 88, 72, .68);
+        filter: brightness(1.48) saturate(1.28);
+      }
     }
 
     @media (max-width: 560px) {
@@ -888,6 +1236,8 @@
     }
 
     button {
+      --led-color: #ff9b47;
+      --led-off: color-mix(in srgb, var(--led-color) 48%, #141920 52%);
       position: relative;
       cursor: pointer;
       padding-right: 26px;
@@ -910,11 +1260,14 @@
       width: 8px;
       height: 8px;
       border-radius: 2px;
-      border: 1px solid rgba(225,235,246,.35);
-      background: #273241;
-      opacity: .35;
-      box-shadow: inset 0 0 3px rgba(0,0,0,.4);
+      border: 1px solid color-mix(in srgb, var(--led-color) 30%, rgba(225,235,246,.2) 70%);
+      background: var(--led-off);
+      opacity: .94;
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--led-color) 14%, rgba(0,0,0,.58) 86%);
       pointer-events: none;
+      transform: scale(1);
+      filter: brightness(.72) saturate(.9);
     }
     button:hover:not(:disabled) {
       background: #556174;
@@ -932,41 +1285,58 @@
         0 4px 7px rgba(0,0,0,.2),
         inset 0 -2px 5px rgba(0,0,0,.28);
     }
-    button:disabled { opacity: .45; cursor: not-allowed; }
-    button:disabled::after { opacity: .14; }
+    button:disabled {
+      cursor: not-allowed;
+      color: rgba(242,248,255,.52);
+      background: #404954;
+      border-color: rgba(196,206,219,.18);
+      box-shadow:
+        0 2px 0 rgba(22,32,44,.42),
+        0 6px 10px rgba(0,0,0,.14),
+        inset 0 -2px 4px rgba(0,0,0,.16);
+    }
+    button:disabled::after {
+      opacity: .96;
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--led-color) 12%, rgba(0,0,0,.62) 88%);
+      filter: brightness(.56) saturate(.82);
+    }
     button.blink-hint:not(:disabled)::after {
       background: var(--led-color, #ffd27a);
-      animation: buttonLedBlink 1.05s steps(2, end) infinite;
+      opacity: calc(.62 + var(--beat-pulse) * .38);
+      box-shadow:
+        inset 0 0 4px rgba(255,255,255,.16),
+        0 0 calc(10px + var(--beat-pulse) * 16px) color-mix(in srgb, var(--led-color, #ffd27a) 82%, white 18%);
+      transform: scale(calc(1.08 + var(--beat-pulse) * .26));
+      filter: brightness(calc(1.34 + var(--beat-pulse) * .7)) saturate(1.22);
     }
-    @keyframes buttonLedBlink {
-      0%, 100% { opacity: .28; box-shadow: inset 0 0 3px rgba(0,0,0,.4), 0 0 0 rgba(0,0,0,0); }
-      50% { opacity: 1; box-shadow: inset 0 0 2px rgba(255,255,255,.45), 0 0 8px color-mix(in oklab, var(--led-color, #ffd27a) 70%, white 30%); }
+    #nextBtn,
+    #mapBtn,
+    #displayThemeKnob,
+    #overlayOptionalBtn {
+      --led-color: #ff9b47;
+    }
+    #stabilizeBtn,
+    #optA,
+    #optB {
+      --led-color: #ffd84a;
+    }
+    #hintBtn,
+    #displayNameKnob {
+      --led-color: #52e07c;
+    }
+    #nudgeDownBtn,
+    #nudgeUpBtn,
+    #displayFactionKnob {
+      --led-color: #ff5252;
     }
     button.cta-focus {
-      --led-color: #ffd27a;
+      --led-color: #ffd84a;
     }
     button.cta-focus-alt {
-      --led-color: #8dd6ff;
+      --led-color: #ff9b47;
     }
 
-    #fineCenterBtn {
-      font-family: var(--mono);
-      letter-spacing: .5px;
-      border-width: 2px;
-      text-transform: uppercase;
-    }
-    #fineCenterBtn.mode-coarse {
-      border-color: rgba(255, 194, 118, .75);
-      background: rgba(86, 55, 18, .95);
-      color: #ffe4b1;
-      box-shadow: inset 0 -2px 5px rgba(0,0,0,.2), 0 0 8px rgba(255, 163, 63, .16);
-    }
-    #fineCenterBtn.mode-fine {
-      border-color: rgba(122, 210, 255, .75);
-      background: rgba(14, 52, 76, .95);
-      color: #c9edff;
-      box-shadow: inset 0 -2px 5px rgba(0,0,0,.22), 0 0 8px rgba(89, 188, 255, .18);
-    }
     .status-line {
       min-height: 35px;
       border-radius: 12px;
@@ -1059,8 +1429,8 @@
       border-radius: 14px;
       border: 1px solid rgba(109, 132, 63, .74);
       background:
-        radial-gradient(circle at 18% 12%, rgba(185, 204, 124, .24), transparent 40%),
-        linear-gradient(180deg, #8ea35a, #7b9150 58%, #6b8046);
+        radial-gradient(circle at 18% 12%, rgba(245, 252, 222, .2), transparent 40%),
+        linear-gradient(180deg, color-mix(in srgb, var(--lcd-bg) 93%, white 7%), color-mix(in srgb, var(--lcd-bg) 87%, #7f9465 13%) 58%, color-mix(in srgb, var(--lcd-bg) 79%, #6d8154 21%));
       box-shadow:
         inset 0 0 0 1px rgba(199,217,133,.2),
         inset 0 0 0 2px rgba(48, 64, 24, .28),
@@ -1071,7 +1441,7 @@
       padding: 10px;
       position: relative;
       overflow: hidden;
-      filter: contrast(calc(1 + var(--snow-strength) * 0.14)) saturate(calc(1 + var(--snow-strength) * 0.1)) brightness(calc(1 + var(--beat-pulse) * 0.08));
+      filter: contrast(calc(1 + var(--snow-strength) * 0.1)) saturate(calc(1 + var(--snow-strength) * 0.06)) brightness(calc(.995 + var(--beat-pulse) * .015));
       transform: none;
     }
     .lcd::before {
@@ -1080,12 +1450,18 @@
       inset: 0;
       pointer-events: none;
       z-index: 1;
-      opacity: calc(.18 + var(--snow-strength) * 0.92);
+      opacity: calc(.04 + var(--snow-strength) * 0.38 + var(--beat-pulse) * .0005);
       background:
         linear-gradient(90deg,
           rgba(255, 66, 66, calc(var(--snow-strength) * .22)) 0%,
           rgba(255, 66, 66, calc(var(--snow-strength) * .1)) 38%,
           rgba(114, 190, 255, calc(var(--snow-strength) * .18)) 100%),
+        linear-gradient(180deg,
+          transparent 0 18%,
+          rgba(245, 255, 190, calc(var(--snow-strength) * .22)) 18% 21%,
+          transparent 21% 46%,
+          rgba(255, 120, 120, calc(var(--snow-strength) * .12)) 46% 49%,
+          transparent 49% 100%),
         radial-gradient(circle at 84% 18%, rgba(238, 250, 170, .16), transparent 32%),
         repeating-linear-gradient(90deg,
           rgba(56, 86, 24, .06) 0 1px,
@@ -1096,7 +1472,7 @@
           rgba(189, 215, 86, .03) 1px 3px,
           transparent 3px 5px);
       mix-blend-mode: screen;
-      animation: lcdInterference 95ms steps(2, end) infinite, lcdJitter 86ms steps(2, end) infinite;
+      animation: none;
     }
     .lcd::after {
       content: "";
@@ -1104,7 +1480,7 @@
       inset: 0;
       pointer-events: none;
       z-index: 3;
-      opacity: calc(var(--snow-opacity) * 1.15 + var(--snow-strength) * 0.1);
+      opacity: calc(var(--snow-opacity) * 0.42 + var(--snow-strength) * 0.035 + var(--beat-pulse) * .0004);
       background:
         linear-gradient(0deg,
           transparent 0 24%,
@@ -1112,6 +1488,12 @@
           transparent 28% 56%,
           rgba(188, 220, 106, calc(var(--snow-strength) * .26)) 56% 60%,
           transparent 60% 100%),
+        linear-gradient(90deg,
+          transparent 0 14%,
+          rgba(255,255,255, calc(var(--snow-strength) * .09)) 14% 16%,
+          transparent 16% 68%,
+          rgba(255,255,255, calc(var(--snow-strength) * .07)) 68% 71%,
+          transparent 71% 100%),
         repeating-linear-gradient(0deg,
           transparent 0 10px,
           rgba(255,255,255, calc(var(--snow-strength) * .14)) 10px 11px,
@@ -1119,16 +1501,38 @@
         radial-gradient(circle, rgba(205, 226, 130, .36) 0 1px, transparent 1px 100%) 0 0 / 6px 6px,
         repeating-linear-gradient(0deg, rgba(56, 78, 24, .09), rgba(56, 78, 24, .09) 1px, transparent 1px, transparent 3px);
       mix-blend-mode: screen;
-      animation: lcdSnow 110ms steps(2, end) infinite, lcdJitter 72ms steps(2, end) infinite, lcdFaultBars 130ms steps(2, end) infinite;
+      animation: none;
     }
-    .lcd > *:not(.lcd-ghost) {
+    .lcd .lcd-title,
+    .lcd .lcd-readout,
+    .lcd .stat-row > :first-child,
+    .lcd .stat-row > :last-child {
       position: relative;
       z-index: 3;
       animation: none;
+      filter: brightness(calc(.999 + var(--beat-pulse) * .008));
+    }
+    .lcd.lcd-change-flash,
+    .decision-screen.lcd-change-flash,
+    .config-knob-state.lcd-mini.lcd-change-flash {
+      animation: lcdChangeFlash .34s steps(2, end);
+    }
+    @keyframes lcdContentWarp {
+      0%, 100% { transform: translateX(0) skewX(0deg); }
+      28% { transform: translateX(calc(var(--snow-strength) * .45px)) skewX(calc(var(--snow-strength) * .18deg)); }
+      52% { transform: translateX(calc(var(--snow-strength) * -.7px)) skewX(calc(var(--snow-strength) * -.24deg)); }
+      76% { transform: translateX(calc(var(--snow-strength) * .32px)) skewX(calc(var(--snow-strength) * .12deg)); }
+    }
+    @keyframes lcdChangeFlash {
+      0% { filter: brightness(1) contrast(1); opacity: 1; }
+      24% { filter: brightness(1.22) contrast(1.14); opacity: .92; }
+      52% { filter: brightness(.95) contrast(1.08); opacity: .98; }
+      76% { filter: brightness(1.08) contrast(1.04); opacity: .96; }
+      100% { filter: brightness(1) contrast(1); opacity: 1; }
     }
 
     .lcd-title {
-      color: #29471b;
+      color: var(--lcd-text);
       font: 700 13px/1.15 "Press Start 2P", "VT323", "Lucida Console", monospace;
       letter-spacing: .4px;
       text-transform: uppercase;
@@ -1137,11 +1541,12 @@
     }
     .lcd-readout {
       margin: 0 0 8px;
-      color: #203b16;
+      color: var(--lcd-text);
       font: 700 22px/1.2 "Press Start 2P", "VT323", "Lucida Console", monospace;
       letter-spacing: .35px;
       text-transform: uppercase;
       text-shadow: 0 1px 0 rgba(224,241,153,.3);
+      transition: opacity .24s ease, transform .24s ease, filter .24s ease;
     }
     .lcd-ghost {
       position: absolute;
@@ -1158,7 +1563,7 @@
       gap: 8px;
     }
     .lcd-ghost.show {
-      animation: lcdGhostFade .62s ease-out;
+      animation: lcdGhostFade .42s ease-out;
     }
     .lcd-ghost .lcd-readout,
     .lcd-ghost .stat-row,
@@ -1167,13 +1572,135 @@
       transform: none !important;
     }
     @keyframes lcdGhostFade {
-      0% { opacity: .42; }
+      0% { opacity: .18; filter: blur(.25px); }
       100% { opacity: 0; }
     }
 
     #stats {
       display: grid;
       gap: 8px;
+      transition: opacity .24s ease, transform .24s ease, filter .24s ease;
+    }
+    .lcd-shop {
+      display: none;
+      gap: 7px;
+      margin-top: 10px;
+      padding-top: 2px;
+      position: relative;
+      z-index: 3;
+    }
+    .lcd.shop-open #stats {
+      display: none;
+    }
+    .lcd.shop-open .lcd-shop {
+      display: grid;
+    }
+    .lcd-shop-title {
+      color: var(--lcd-text);
+      font: 700 11px/1.3 "Press Start 2P", "VT323", monospace;
+      text-transform: uppercase;
+      letter-spacing: .22px;
+      padding: 0 0 3px;
+      border-bottom: 1px solid rgba(78, 98, 55, .45);
+      text-shadow: 0 1px 0 rgba(239, 247, 204, .18);
+    }
+    .lcd-shop-meta {
+      color: color-mix(in srgb, var(--lcd-text) 88%, #73885c 12%);
+      font: 700 10px/1.35 "Press Start 2P", "VT323", monospace;
+      letter-spacing: .12px;
+      text-transform: uppercase;
+      opacity: .92;
+      padding: 0 1px 2px;
+    }
+    .lcd-shop button {
+      min-height: 38px;
+      border-radius: 0;
+      border: 1px solid rgba(74, 95, 48, .72);
+      padding: 8px 10px 8px 10px;
+      font: 700 12px/1.15 "Press Start 2P", "VT323", monospace;
+      letter-spacing: .18px;
+      text-align: left;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--lcd-text) 94%, #324224 6%);
+      background:
+        repeating-linear-gradient(0deg,
+          rgba(61, 86, 34, .06) 0 1px,
+          rgba(201, 219, 141, .02) 1px 3px,
+          transparent 3px 5px),
+        linear-gradient(180deg,
+          color-mix(in srgb, var(--lcd-bg) 96%, white 4%),
+          color-mix(in srgb, var(--lcd-bg) 88%, #81975f 12%) 56%,
+          color-mix(in srgb, var(--lcd-bg) 82%, #708652 18%));
+      box-shadow:
+        inset 0 0 0 1px rgba(205, 219, 152, .12),
+        inset 0 -1px 0 rgba(74, 95, 48, .42),
+        1px 1px 0 rgba(74, 95, 48, .72);
+      clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+      transition: filter .1s steps(2, end), transform .1s steps(2, end), background .1s steps(2, end), color .1s steps(2, end);
+      text-shadow: 0 1px 0 rgba(238, 245, 202, .12);
+    }
+    .lcd-shop button::after {
+      content: none;
+    }
+    .lcd-shop button:hover:not(:disabled) {
+      transform: translate(1px, 1px);
+      background:
+        repeating-linear-gradient(0deg,
+          rgba(61, 86, 34, .08) 0 1px,
+          rgba(201, 219, 141, .024) 1px 3px,
+          transparent 3px 5px),
+        linear-gradient(180deg,
+          color-mix(in srgb, var(--lcd-bg) 94%, #dbe7b1 6%),
+          color-mix(in srgb, var(--lcd-bg) 86%, #7b9258 14%) 56%,
+          color-mix(in srgb, var(--lcd-bg) 80%, #697d4d 20%));
+      box-shadow:
+        inset 0 0 0 1px rgba(205, 219, 152, .14),
+        inset 0 -1px 0 rgba(74, 95, 48, .4),
+        0 0 0 rgba(0,0,0,0);
+      filter: brightness(1.01);
+    }
+    .lcd-shop button:active:not(:disabled) {
+      transform: translate(1px, 1px);
+      box-shadow:
+        inset 0 0 0 1px rgba(205, 219, 152, .1),
+        inset 0 1px 0 rgba(74, 95, 48, .26);
+    }
+    .lcd-shop button:disabled {
+      color: color-mix(in srgb, var(--lcd-text) 58%, #83946d 42%);
+      border-color: rgba(79, 92, 61, .44);
+      background:
+        repeating-linear-gradient(0deg,
+          rgba(52, 68, 32, .045) 0 1px,
+          rgba(180, 196, 128, .012) 1px 3px,
+          transparent 3px 5px),
+        linear-gradient(180deg,
+          color-mix(in srgb, var(--lcd-bg) 90%, #8d9d74 10%),
+          color-mix(in srgb, var(--lcd-bg) 84%, #77885f 16%) 56%,
+          color-mix(in srgb, var(--lcd-bg) 80%, #687752 20%));
+      box-shadow:
+        inset 0 0 0 1px rgba(179, 193, 129, .08),
+        inset 0 -1px 0 rgba(68, 81, 49, .24);
+      clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+      filter: saturate(.82) brightness(.98);
+    }
+    .lcd.block-announce .lcd-title,
+    .lcd.block-announce #stats {
+      opacity: 0;
+      transform: translateY(-8px);
+      filter: blur(3px);
+      pointer-events: none;
+    }
+    .lcd.block-announce .lcd-readout {
+      margin: 20px 0 12px;
+      min-height: 126px;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      letter-spacing: .8px;
+      text-align: center;
+      text-shadow:
+        0 1px 0 rgba(224,241,153,.3),
+        0 0 18px rgba(164, 194, 92, .18);
     }
 
     .stat-row {
@@ -1192,20 +1719,36 @@
 
     .stat-row .track {
       height: 14px;
-      border-radius: 999px;
+      border-radius: 0;
       background: rgba(55, 80, 23, .22);
       overflow: hidden;
     }
 
     .stat-row .fill {
       height: 100%;
-      border-radius: inherit;
+      border-radius: 0;
       transition: width .2s ease;
+      background-blend-mode: multiply;
     }
 
-    .fill.good { background: linear-gradient(90deg, #29491e, #365e29); }
-    .fill.warn { background: linear-gradient(90deg, #355426, #466f31); }
-    .fill.bad { background: linear-gradient(90deg, #4b6c34, #5f8843); }
+    .fill.good {
+      background:
+        repeating-linear-gradient(135deg, rgba(226, 239, 184, .16) 0 2px, transparent 2px 5px),
+        repeating-linear-gradient(0deg, rgba(34, 56, 20, .18) 0 1px, transparent 1px 3px),
+        #335226;
+    }
+    .fill.warn {
+      background:
+        repeating-linear-gradient(135deg, rgba(226, 239, 184, .16) 0 2px, transparent 2px 5px),
+        repeating-linear-gradient(0deg, rgba(34, 56, 20, .18) 0 1px, transparent 1px 3px),
+        #446a31;
+    }
+    .fill.bad {
+      background:
+        repeating-linear-gradient(135deg, rgba(226, 239, 184, .16) 0 2px, transparent 2px 5px),
+        repeating-linear-gradient(0deg, rgba(34, 56, 20, .18) 0 1px, transparent 1px 3px),
+        #5b8441;
+    }
 
     .decision {
       border-radius: 14px;
@@ -1217,6 +1760,30 @@
     .mission {
       background: linear-gradient(180deg, rgba(17, 28, 41, .86), rgba(8, 15, 24, .8));
       border: 1px solid rgba(255, 209, 102, .24);
+    }
+    .contract-progress {
+      margin-top: 10px;
+      display: grid;
+      gap: 6px;
+    }
+    .contract-track {
+      height: 12px;
+      border: 1px solid rgba(255, 209, 102, .24);
+      background: rgba(255, 209, 102, .08);
+      overflow: hidden;
+    }
+    .contract-fill {
+      height: 100%;
+      width: 0%;
+      background:
+        repeating-linear-gradient(135deg, rgba(255, 232, 169, .2) 0 2px, transparent 2px 5px),
+        #9a7b2c;
+      transition: width .24s ease;
+    }
+    .contract-meta {
+      font: 700 11px/1.35 var(--mono);
+      color: #f0d79a;
+      min-height: 30px;
     }
 
     .decision h3 {
@@ -1267,6 +1834,12 @@
       padding: 10px;
       display: grid;
       gap: 8px;
+      position: relative;
+      transition:
+        transform .28s ease,
+        box-shadow .28s ease,
+        border-color .28s ease,
+        filter .28s ease;
     }
     .decision-screen {
       border-radius: 10px;
@@ -1365,6 +1938,56 @@
       text-transform: uppercase;
       letter-spacing: .35px;
     }
+    .decision-deck {
+      position: relative;
+      z-index: 1;
+      transition: filter .28s ease, opacity .28s ease;
+    }
+    .radio.full-lock-active .top,
+    .radio.full-lock-active .face,
+    .radio.full-lock-active .lower > .deck:first-child,
+    .radio.full-lock-active .decision-deck .receipt-log {
+      filter: brightness(.38) saturate(.72);
+    }
+    .radio.full-lock-active .decision-focus {
+      transform: scale(1.08);
+      border-color: rgba(214, 236, 146, .9);
+      box-shadow:
+        0 26px 50px rgba(0, 0, 0, .5),
+        0 0 0 1px rgba(220, 240, 164, .24),
+        0 0 42px rgba(175, 209, 104, .18),
+        inset 0 0 0 1px rgba(170, 190, 108, .24);
+      filter: brightness(1.06);
+      z-index: 5;
+    }
+    .radio.full-lock-active .decision-focus::before {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border-radius: 24px;
+      background: radial-gradient(circle, rgba(215, 240, 146, .14), transparent 72%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .radio.full-lock-active .decision-focus .decision-screen {
+      transform: scale(1.04);
+      box-shadow:
+        inset 0 0 0 1px rgba(196,216,132,.24),
+        inset 0 -10px 16px rgba(44,60,21,.24),
+        0 14px 28px rgba(23, 33, 10, .28);
+    }
+    .radio.full-lock-active .decision-focus .decision-hw {
+      transform: scale(1.03);
+      transform-origin: top center;
+    }
+    @media (max-width: 980px) {
+      .radio.full-lock-active .decision-focus {
+        transform: scale(1.03);
+      }
+      .radio.full-lock-active .decision-focus .decision-screen {
+        transform: scale(1.015);
+      }
+    }
 
     .log {
       border-radius: 14px;
@@ -1395,23 +2018,28 @@
       100% { transform: translate(1px, 0); }
     }
     @keyframes lcdInterference {
-      0%, 100% { opacity: calc(.16 + var(--snow-strength) * .78); background-position: 0 0, 0 0, 0 0, 0 0; }
-      50% { opacity: calc(.12 + var(--snow-strength) * .9); background-position: 0 0, 0 0, 0 0, 0 0; }
+      0%, 100% { opacity: calc(.16 + var(--snow-strength) * .78); background-position: 0 0, 0 0, 0 0, 0 0; transform: translateX(0) scaleX(1); }
+      25% { opacity: calc(.18 + var(--snow-strength) * .9); background-position: 2px 0, -1px 0, 0 1px, 0 0; transform: translateX(calc(var(--snow-strength) * 1.8px)) scaleX(calc(1 + var(--snow-strength) * .018)); }
+      50% { opacity: calc(.12 + var(--snow-strength) * .96); background-position: -2px 0, 1px 0, 0 -1px, 0 0; transform: translateX(calc(var(--snow-strength) * -2.2px)) scaleX(calc(1 - var(--snow-strength) * .024)); }
+      75% { opacity: calc(.15 + var(--snow-strength) * .88); background-position: 1px 0, -2px 0, 0 2px, 0 0; transform: translateX(calc(var(--snow-strength) * 1.1px)) scaleX(calc(1 + var(--snow-strength) * .012)); }
     }
     @keyframes lcdSnow {
       0%, 100% { opacity: calc(var(--snow-opacity) * 1.15 + var(--snow-strength) * 0.1); background-position: 0 0, 0 0; }
       50% { opacity: calc(var(--snow-opacity) * 1.28 + var(--snow-strength) * 0.14); background-position: 0 0, 0 0; }
     }
     @keyframes lcdJitter {
-      0%, 100% { transform: translate(0, 0); }
-      22% { transform: translate(calc(var(--snow-strength) * .9px), calc(var(--snow-strength) * -.55px)); }
-      48% { transform: translate(calc(var(--snow-strength) * -1.4px), calc(var(--snow-strength) * .75px)); }
-      74% { transform: translate(calc(var(--snow-strength) * .6px), calc(var(--snow-strength) * .45px)); }
+      0%, 100% { transform: translate(0, 0) skewX(0deg); }
+      16% { transform: translate(calc(var(--snow-strength) * .9px), calc(var(--snow-strength) * -.55px)) skewX(calc(var(--snow-strength) * -.5deg)); }
+      34% { transform: translate(calc(var(--snow-strength) * -2.2px), calc(var(--snow-strength) * .4px)) skewX(calc(var(--snow-strength) * 1.2deg)); }
+      48% { transform: translate(calc(var(--snow-strength) * -1.4px), calc(var(--snow-strength) * .75px)) skewX(calc(var(--snow-strength) * -.8deg)); }
+      72% { transform: translate(calc(var(--snow-strength) * 1.8px), calc(var(--snow-strength) * -.3px)) skewX(calc(var(--snow-strength) * .9deg)); }
+      84% { transform: translate(calc(var(--snow-strength) * .6px), calc(var(--snow-strength) * .45px)) skewX(calc(var(--snow-strength) * -.35deg)); }
     }
     @keyframes lcdFaultBars {
-      0%, 100% { background-position: 0 0, 0 0, 0 0, 0 0; opacity: calc(var(--snow-opacity) * 1.15 + var(--snow-strength) * 0.1); }
-      33% { background-position: 0 1px, 0 -2px, 1px 0, 0 0; opacity: calc(var(--snow-opacity) * 1.24 + var(--snow-strength) * 0.18); }
-      66% { background-position: 0 -2px, 0 2px, -1px 1px, 0 1px; opacity: calc(var(--snow-opacity) * 1.2 + var(--snow-strength) * 0.16); }
+      0%, 100% { background-position: 0 0, 0 0, 0 0, 0 0; opacity: calc(var(--snow-opacity) * 1.15 + var(--snow-strength) * 0.1); transform: translateX(0) scaleY(1); }
+      24% { background-position: 0 2px, 0 -4px, 2px 0, 0 0; opacity: calc(var(--snow-opacity) * 1.28 + var(--snow-strength) * 0.26); transform: translateX(calc(var(--snow-strength) * -1.2px)) scaleY(calc(1 + var(--snow-strength) * .02)); }
+      52% { background-position: 0 -3px, 0 3px, -2px 1px, 0 2px; opacity: calc(var(--snow-opacity) * 1.22 + var(--snow-strength) * 0.22); transform: translateX(calc(var(--snow-strength) * 2px)) scaleY(calc(1 - var(--snow-strength) * .03)); }
+      78% { background-position: 0 4px, 0 -1px, 1px -1px, 0 -2px; opacity: calc(var(--snow-opacity) * 1.3 + var(--snow-strength) * 0.3); transform: translateX(calc(var(--snow-strength) * -.8px)) scaleY(calc(1 + var(--snow-strength) * .018)); }
     }
     @keyframes rightShader {
       0%, 100% { background-position: 0 0, 0 0, 0 0, 0 0; opacity: calc(.04 + var(--snow-strength) * .86); }
@@ -1462,8 +2090,8 @@
     .lcd {
       border-color: rgba(109, 132, 63, .74);
       background:
-        radial-gradient(circle at 18% 12%, rgba(185, 204, 124, .24), transparent 40%),
-        linear-gradient(180deg, #8ea35a, #7b9150 58%, #6b8046);
+        radial-gradient(circle at 18% 12%, rgba(245, 252, 222, .2), transparent 40%),
+        linear-gradient(180deg, #c9d9b2, #bccda4 58%, #aebf97);
       box-shadow:
         inset 0 0 0 1px rgba(199,217,133,.2),
         inset 0 0 0 2px rgba(48, 64, 24, .28),
@@ -1475,18 +2103,22 @@
   </style>
 </head>
 <body>
-  <main class="radio">
+  <main class="radio" id="radioRoot">
     <header class="top">
-      <div>
-        <h1>Frequenzjaeger</h1>
-        <p class="sub">Live-Tuning, locken, entscheiden. Bunter Funk, gleiche Core-Mechanik.</p>
-        <div class="stickers">
-          <span class="sticker s1">Dispatch Vibes</span>
-          <span class="sticker s2">Stack Hunter</span>
-          <span class="sticker s3">Noisy but Lucky</span>
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="./pictures/ddd_radio_logo.png" alt="Doomsday Radio Logo" />
+        </div>
+        <div class="brand-copy">
+          <h1>Frequency Chase</h1>
+          <div class="stickers">
+            <span class="sticker s1">Dispatch Vibes</span>
+            <span class="sticker s2">Stack Hunter</span>
+            <span class="sticker s3">Noisy but Lucky</span>
+          </div>
         </div>
       </div>
-      <div class="ticker" id="ticker">Block 0/12 · Offline</div>
+      <div class="ticker" id="ticker">Level 0/12 · Offline</div>
     </header>
 
     <section class="face">
@@ -1504,7 +2136,8 @@
           <div class="meter dispatch dash-meter"><div class="dash-label">Dispatch Lock</div><div id="lockDispatchLeds" class="led-lock" aria-label="Dispatch lock LEDs"></div></div>
           <div class="meter stack dash-meter"><div class="dash-label">STACK Lock</div><div id="lockStackLeds" class="led-lock" aria-label="Stack lock LEDs"></div></div>
           <div class="meter dash-meter"><div class="dash-label">Empfang</div><div class="dash-face"><div id="qualityNeedle" class="dash-needle"></div><div class="dash-cap"></div></div></div>
-          <div class="meter dash-meter"><div class="dash-label">Signalpegel</div><div class="dash-face"><div id="signalNeedle" class="dash-needle"></div><div class="dash-cap"></div></div></div>
+          <div class="meter dash-meter"><div class="dash-label">Energie</div><div class="dash-face"><div id="signalNeedle" class="dash-needle"></div><div class="dash-cap"></div></div></div>
+          <div class="meter battery-meter"><div class="dash-label">Batterie-Reserve</div><div class="battery-track"><div id="batteryFill" class="battery-fill"></div></div></div>
         </div>
       </div>
 
@@ -1514,6 +2147,7 @@
             <div class="knob-top"><span>VFO Tuning</span><span class="freq" id="freqValue">50.0 MHz</span></div>
             <div class="knob-area">
               <div>
+                <div class="regler-label">Hauptregler // Frequenzsuche</div>
                 <div class="dial-rig">
                   <div id="dial" class="dial" role="slider" tabindex="0" aria-label="Drehregler" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
                     <div id="dialNotch" class="dial-notch"></div>
@@ -1536,6 +2170,7 @@
                   </div>
                 </div>
                 <div class="fine-rig">
+                  <div class="regler-label">Feinregler // Drift</div>
                   <div id="fineDial" class="fine-dial" role="slider" tabindex="0" aria-label="Fein-Regler" aria-valuemin="-6" aria-valuemax="6" aria-valuenow="0">
                     <div id="fineDialNotch" class="fine-notch"></div>
                   </div>
@@ -1553,22 +2188,46 @@
                       <span class="io-label">RUN I/O</span>
                       <input id="powerToggle" type="checkbox" aria-label="Power I/O" />
                       <span class="io-track"><span class="io-knob"></span><span class="io-marks"><span class="io-off">O</span><span class="io-on">I</span></span></span>
+                      <span class="io-alert-led" aria-hidden="true"></span>
                     </label>
                   </div>
                 </div>
                 <div class="row3">
-                  <button id="nextBtn">Naechster Block</button>
+                  <button id="nextBtn">Naechstes Level</button>
                   <button id="stabilizeBtn">Signal Stabilizer</button>
                   <button id="hintBtn">Hint Ping</button>
                 </div>
-                <div class="row3">
+                <div class="row3 dual">
                   <button id="nudgeDownBtn">- Grob</button>
-                  <button id="fineCenterBtn">Fine Reset</button>
                   <button id="nudgeUpBtn">+ Grob</button>
                 </div>
                 <div class="row3">
                   <button id="mapBtn">Map Ping</button>
-                  <button type="button" disabled>Overlay optional</button>
+                  <button id="overlayOptionalBtn" type="button" disabled>Overlay optional</button>
+                </div>
+                <div class="config-knobs" aria-label="Display Konfiguration">
+                  <div class="regler-label" style="grid-column: 1 / -1; margin-bottom: 2px;">Preset-Regler // Display Setup</div>
+                  <div class="config-knob">
+                    <div class="config-knob-label">Handle</div>
+                    <button id="displayNameKnob" class="config-dial" type="button" aria-label="Handle waehlen" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" aria-valuetext="Wavefox">
+                      <span id="displayNameKnobIndicator" class="config-dial-indicator" aria-hidden="true"></span>
+                    </button>
+                    <div id="displayNameKnobState" class="config-knob-state lcd-mini">Wavefox</div>
+                  </div>
+                  <div class="config-knob">
+                    <div class="config-knob-label">Faction</div>
+                    <button id="displayFactionKnob" class="config-dial" type="button" aria-label="Faction waehlen" aria-valuemin="0" aria-valuemax="2" aria-valuenow="0" aria-valuetext="Maker">
+                      <span id="displayFactionKnobIndicator" class="config-dial-indicator" aria-hidden="true"></span>
+                    </button>
+                    <div id="displayFactionKnobState" class="config-knob-state lcd-mini">Maker</div>
+                  </div>
+                  <div class="config-knob">
+                    <div class="config-knob-label">Theme</div>
+                    <button id="displayThemeKnob" class="config-dial" type="button" aria-label="Theme waehlen" aria-valuemin="0" aria-valuemax="2" aria-valuenow="0" aria-valuetext="Field Unit">
+                      <span id="displayThemeKnobIndicator" class="config-dial-indicator" aria-hidden="true"></span>
+                    </button>
+                    <div id="displayThemeKnobState" class="config-knob-state lcd-mini">Field Unit</div>
+                  </div>
                 </div>
                 <div class="status-line" id="statusLine">Starte einen Run und tune live auf klare Signale.</div>
                 <div class="action-hint" id="actionHint">Naechster Schritt: Run Start.</div>
@@ -1597,46 +2256,33 @@
       <div class="deck">
         <div class="lcd">
           <div id="lcdTitle" class="lcd-title">LCD Status</div>
-          <div class="display-selects">
-            <div class="display-select">
-              <label for="displayNameSelect">Handle</label>
-              <select id="displayNameSelect" aria-label="Display Handle">
-                <option value="Wavefox">Wavefox</option>
-                <option value="Mad Dog">Mad Dog</option>
-                <option value="Loop Rider">Loop Rider</option>
-                <option value="Signal Saint">Signal Saint</option>
-                <option value="Zero Trace">Zero Trace</option>
-              </select>
-            </div>
-            <div class="display-select">
-              <label for="displayFactionSelect">Faction</label>
-              <select id="displayFactionSelect" aria-label="Display Fraktion">
-                <option value="maker">Maker</option>
-                <option value="orden">Orden</option>
-                <option value="roamer">Roamer</option>
-              </select>
-            </div>
-            <div class="display-select">
-              <label for="displayThemeSelect">Theme</label>
-              <select id="displayThemeSelect" aria-label="Display Theme">
-                <option value="field">Field Unit</option>
-                <option value="military">Military Green</option>
-                <option value="rusty">Rusty Amber</option>
-              </select>
-            </div>
-          </div>
           <div id="lcdGhost" class="lcd-ghost" aria-hidden="true"></div>
           <div id="lcdFreq" class="lcd-readout">FREQ 50.00 MHz</div>
           <div id="stats"></div>
+          <div id="lcdShop" class="lcd-shop">
+            <div class="lcd-shop-title">Zwischenrunde // Utility Shop</div>
+            <div id="lcdShopMeta" class="lcd-shop-meta">Scrip 0 · Intel 0 · Energie 0 · Moral 0 · Reputation 0</div>
+            <button id="lcdBuyStabilizer" type="button">Stabilizer +1</button>
+            <button id="lcdBuyHint" type="button">Hint Ping +1</button>
+            <button id="lcdBuyMap" type="button">Map Ping +1</button>
+            <button id="lcdBuyEnergy" type="button">Energiezelle</button>
+            <button id="lcdBuySolar" type="button">Solarstation Mk II</button>
+            <button id="lcdBuyRep" type="button">Field Rumor Packet</button>
+            <button id="lcdBuyMorale" type="button">Camp Care Crate</button>
+          </div>
         </div>
         <div class="decision mission">
           <h3>Bounty Board</h3>
           <p id="contractText">Kein Vertrag aktiv.</p>
+          <div class="contract-progress" aria-hidden="true">
+            <div class="contract-track"><div id="contractFill" class="contract-fill"></div></div>
+            <div id="contractMeta" class="contract-meta">Kein Fortschritt.</div>
+          </div>
         </div>
       </div>
 
-      <div class="deck">
-        <div class="decision-lcd">
+      <div class="deck decision-deck">
+        <div class="decision-lcd decision-focus">
           <div class="decision-screen">
             <div class="lcd-title">Aktive Entscheidung</div>
             <p id="decisionText">Kein Event aktiv. Tune den Regler, bis ein Kanal lockt.</p>
@@ -1676,6 +2322,8 @@
       t: 0,
       dispatchBase: 29,
       stackBase: 72,
+      dispatchBand: { min: 8, max: 42 },
+      stackBand: { min: 58, max: 92 },
       dispatchDriftVel: 0.06,
       stackDriftVel: -0.05,
       dispatchFreq: 29,
@@ -1687,6 +2335,9 @@
       blockWinner: null,
       musicLast: { dispatch: "", stack: "" },
       musicHistory: { dispatch: [], stack: [] },
+      utilityStock: { stabilizer: 1, hint: 1, map: 1 },
+      shopPurchases: { energy: 0, solar: 0, reputation: 0, morale: 0 },
+      solarUpgrade: 0,
       lock: { dispatch: 0, stack: 0 },
       locksThisBlock: { dispatch: 0, stack: 0 },
       mapReveal: 0,
@@ -1698,12 +2349,14 @@
         { base: 63, amp: 11, speed: 1.05, phase: 1.6, width: 1.9, range: 4.8, power: 112, freq: 63 }
       ],
       contract: null,
+      lastContractTarget: null,
       pending: null,
+      gameOverReason: null,
       creditsSpendCooldown: 0,
       stats: {
-        reputation: 54,
-        morale: 57,
-        tech: 57,
+        reputation: 0,
+        morale: 0,
+        tech: 0,
         credits: 22,
         intel: 28,
         signal: 58,
@@ -2136,10 +2789,51 @@
       ["reputation", "Reputation"],
       ["morale", "Moral"],
       ["tech", "Tech"],
-      ["credits", "Credits"],
+      ["credits", "Scrip"],
       ["intel", "Intel"],
-      ["signal", "Signal"],
+      ["signal", "Energie"],
     ];
+    const utilityShopConfig = {
+      stabilizer: { stockKey: "stabilizer", stat: "credits", cost: 3, baseLabel: "Signal Stabilizer", buyLabel: "Stabilizer +1 [3S]" },
+      hint: { stockKey: "hint", stat: "intel", cost: 3, baseLabel: "Hint Ping", buyLabel: "Hint Ping +1 [3I]" },
+      map: { stockKey: "map", stat: "credits", cost: 2, baseLabel: "Map Ping", buyLabel: "Map Ping +1 [2S]" },
+    };
+    const lcdShopItemConfig = {
+      energy: {
+        stat: "credits",
+        cost: 4,
+        gain: { signal: 6 },
+        baseLabel: "Energiezelle",
+        buyLabel: "Energiezelle [4S]",
+        limit: 3
+      },
+      solar: {
+        stat: "credits",
+        cost: 5,
+        gain: { solarUpgrade: 1 },
+        baseLabel: "Solarstation Mk II",
+        buyLabel: "Solarstation [5S]",
+        gainLabel: "Solarregen +1",
+        limit: 2
+      },
+      reputation: {
+        stat: "credits",
+        cost: 4,
+        gain: { reputation: 2 },
+        baseLabel: "Field Rumor Packet",
+        buyLabel: "Rumor Packet [4S]",
+        limit: 2
+      },
+      morale: {
+        stat: "intel",
+        cost: 4,
+        gain: { morale: 2 },
+        baseLabel: "Camp Care Crate",
+        buyLabel: "Care Crate [4I]",
+        limit: 2
+      }
+    };
+    const utilityStockCap = 4;
 
     const themes = {
       field: {
@@ -2152,8 +2846,8 @@
         "--dispatch": "#ffd08a",
         "--stack": "#a7d5ff",
         "--scan": "#95edc4",
-        "--lcd-bg": "#101b13",
-        "--lcd-text": "#99e9b2"
+        "--lcd-bg": "#b9cca1",
+        "--lcd-text": "#5f7350"
       },
       military: {
         "--bg-a": "#1a2218",
@@ -2165,8 +2859,8 @@
         "--dispatch": "#e8d08c",
         "--stack": "#9cc0a2",
         "--scan": "#9be0a7",
-        "--lcd-bg": "#12180f",
-        "--lcd-text": "#8fdfa4"
+        "--lcd-bg": "#b9cca1",
+        "--lcd-text": "#5f7350"
       },
       rusty: {
         "--bg-a": "#2b1b18",
@@ -2178,8 +2872,8 @@
         "--dispatch": "#f5bf75",
         "--stack": "#d6b98e",
         "--scan": "#f0b883",
-        "--lcd-bg": "#1a130f",
-        "--lcd-text": "#f1b37d"
+        "--lcd-bg": "#b9cca1",
+        "--lcd-text": "#5f7350"
       }
     };
 
@@ -2191,15 +2885,38 @@
       stack: [
         "./music/electro1.mp3",
         "./music/electro2.mp3",
+        "./music/electro3.mp3",
+        "./music/electro4.mp3",
+        "./music/electro5.mp3",
       ],
       dispatch: [
         "./music/metal1.mp3",
         "./music/metal2.mp3",
         "./music/metal3.mp3",
+        "./music/metal4.mp3",
+        "./music/metal5.mp3",
       ],
     };
+    const displayNameOptions = [
+      { value: "Wavefox", label: "Wavefox" },
+      { value: "Mad Dog", label: "Mad Dog" },
+      { value: "Loop Rider", label: "Loop Rider" },
+      { value: "Signal Saint", label: "Signal Saint" },
+      { value: "Zero Trace", label: "Zero Trace" },
+    ];
+    const displayFactionOptions = [
+      { value: "maker", label: "Maker" },
+      { value: "orden", label: "Orden" },
+      { value: "roamer", label: "Roamer" },
+    ];
+    const displayThemeOptions = [
+      { value: "field", label: "Field Unit" },
+      { value: "military", label: "Military Green" },
+      { value: "rusty", label: "Rusty Amber" },
+    ];
 
     const el = {
+      radioRoot: document.getElementById("radioRoot"),
       ticker: document.getElementById("ticker"),
       scope: document.getElementById("scope"),
       scopeShell: document.querySelector(".scope-shell"),
@@ -2211,6 +2928,7 @@
       lockStackLeds: document.getElementById("lockStackLeds"),
       qualityNeedle: document.getElementById("qualityNeedle"),
       signalNeedle: document.getElementById("signalNeedle"),
+      batteryFill: document.getElementById("batteryFill"),
       fmNeedle: document.getElementById("fmNeedle"),
       fmReadout: document.getElementById("fmReadout"),
       sigLed: document.getElementById("sigLed"),
@@ -2226,9 +2944,15 @@
       freqValue: document.getElementById("freqValue"),
       nameInput: document.getElementById("nameInput"),
       factionSelect: document.getElementById("factionSelect"),
-      displayNameSelect: document.getElementById("displayNameSelect"),
-      displayFactionSelect: document.getElementById("displayFactionSelect"),
-      displayThemeSelect: document.getElementById("displayThemeSelect"),
+      displayNameKnob: document.getElementById("displayNameKnob"),
+      displayNameKnobIndicator: document.getElementById("displayNameKnobIndicator"),
+      displayNameKnobState: document.getElementById("displayNameKnobState"),
+      displayFactionKnob: document.getElementById("displayFactionKnob"),
+      displayFactionKnobIndicator: document.getElementById("displayFactionKnobIndicator"),
+      displayFactionKnobState: document.getElementById("displayFactionKnobState"),
+      displayThemeKnob: document.getElementById("displayThemeKnob"),
+      displayThemeKnobIndicator: document.getElementById("displayThemeKnobIndicator"),
+      displayThemeKnobState: document.getElementById("displayThemeKnobState"),
       startBtn: document.getElementById("startBtn"),
       powerToggle: document.getElementById("powerToggle"),
       powerSwitchWrap: document.getElementById("powerSwitchWrap"),
@@ -2236,7 +2960,6 @@
       stabilizeBtn: document.getElementById("stabilizeBtn"),
       hintBtn: document.getElementById("hintBtn"),
       nudgeDownBtn: document.getElementById("nudgeDownBtn"),
-      fineCenterBtn: document.getElementById("fineCenterBtn"),
       nudgeUpBtn: document.getElementById("nudgeUpBtn"),
       mapBtn: document.getElementById("mapBtn"),
       themeSelect: document.getElementById("themeSelect"),
@@ -2245,10 +2968,21 @@
       lcdTitle: document.getElementById("lcdTitle"),
       lcdFreq: document.getElementById("lcdFreq"),
       lcdGhost: document.getElementById("lcdGhost"),
-      lcdDisplaySelects: document.querySelector(".lcd .display-selects"),
       statusLcd: document.querySelector(".lcd"),
+      lcdShop: document.getElementById("lcdShop"),
+      lcdShopMeta: document.getElementById("lcdShopMeta"),
+      lcdBuyStabilizer: document.getElementById("lcdBuyStabilizer"),
+      lcdBuyHint: document.getElementById("lcdBuyHint"),
+      lcdBuyMap: document.getElementById("lcdBuyMap"),
+      lcdBuyEnergy: document.getElementById("lcdBuyEnergy"),
+      lcdBuySolar: document.getElementById("lcdBuySolar"),
+      lcdBuyRep: document.getElementById("lcdBuyRep"),
+      lcdBuyMorale: document.getElementById("lcdBuyMorale"),
+      decisionScreen: document.querySelector(".decision-screen"),
       stats: document.getElementById("stats"),
       contractText: document.getElementById("contractText"),
+      contractFill: document.getElementById("contractFill"),
+      contractMeta: document.getElementById("contractMeta"),
       decisionText: document.getElementById("decisionText"),
       optA: document.getElementById("optA"),
       optB: document.getElementById("optB"),
@@ -2264,6 +2998,7 @@
       noiseGain: null,
       jamGain: null,
       maskGain: null,
+      geigerGain: null,
       musicDispatchGain: null,
       musicStackGain: null,
       noiseFilter: null,
@@ -2273,10 +3008,13 @@
       sourceB: null,
       musicDispatchEl: null,
       musicStackEl: null,
+      geigerEl: null,
       musicDispatchSource: null,
       musicStackSource: null,
+      geigerSource: null,
       musicDispatchDirect: false,
       musicStackDirect: false,
+      geigerDirect: false,
       scopeDispatchAnalyser: null,
       scopeStackAnalyser: null,
       scopeDispatchData: null,
@@ -2287,9 +3025,18 @@
     };
     const beatState = {
       pulse: 0,
+      target: 0,
       ema: 0,
       cooldownMs: 0,
       lastMs: 0,
+    };
+    const interferenceState = {
+      noiseDrift: 0,
+      jamWarp: 0,
+      burstHold: 0,
+      hissPhase: 0,
+      clickBurst: 0,
+      geigerPulse: 0,
     };
     const lcdState = {
       pendingFreq: "FREQ 50.00 MHz",
@@ -2297,7 +3044,28 @@
       hasFrame: false,
       lastCommit: 0,
       nextDelay: 180,
+      announcementText: "",
+      announcementUntil: 0,
     };
+
+    function isBlockAnnouncementActive(now = (window.performance && performance.now) ? performance.now() : Date.now()) {
+      return lcdState.announcementUntil > now;
+    }
+
+    function announceBlockOnLcd(blockNumber) {
+      const now = (window.performance && performance.now) ? performance.now() : Date.now();
+      lcdState.announcementText = `LEVEL ${blockNumber}`;
+      lcdState.announcementUntil = now + 1400;
+      lcdState.lastCommit = 0;
+      commitLcdFrame(now);
+    }
+
+    function triggerLcdChangeEffect(node) {
+      if (!node) return;
+      node.classList.remove("lcd-change-flash");
+      void node.offsetWidth;
+      node.classList.add("lcd-change-flash");
+    }
 
     function createNoiseBuffer(audioCtx, seconds = 2.2) {
       const len = Math.floor(audioCtx.sampleRate * seconds);
@@ -2346,6 +3114,8 @@
       jamGain.gain.value = 0.00001;
       const maskGain = audioCtx.createGain();
       maskGain.gain.value = 0.00001;
+      const geigerGain = audioCtx.createGain();
+      geigerGain.gain.value = 0.00001;
       const musicDispatchGain = audioCtx.createGain();
       musicDispatchGain.gain.value = 0.00001;
       const musicStackGain = audioCtx.createGain();
@@ -2365,8 +3135,12 @@
       maskFilter.connect(maskGain);
       maskGain.connect(master);
 
+      geigerGain.connect(master);
+
       const musicDispatchEl = new Audio();
-      musicDispatchEl.src = musicPool.dispatch[0];
+      const initialDispatchSrc = nextTrackForChannel("dispatch");
+      musicDispatchEl.src = initialDispatchSrc || musicPool.dispatch[0];
+      musicDispatchEl.setAttribute("data-track", musicDispatchEl.src);
       musicDispatchEl.loop = true;
       musicDispatchEl.preload = "auto";
       musicDispatchEl.playsInline = true;
@@ -2375,7 +3149,9 @@
       musicDispatchEl.load();
 
       const musicStackEl = new Audio();
-      musicStackEl.src = musicPool.stack[0];
+      const initialStackSrc = nextTrackForChannel("stack");
+      musicStackEl.src = initialStackSrc || musicPool.stack[0];
+      musicStackEl.setAttribute("data-track", musicStackEl.src);
       musicStackEl.loop = true;
       musicStackEl.preload = "auto";
       musicStackEl.playsInline = true;
@@ -2383,18 +3159,32 @@
       musicStackEl.volume = 0;
       musicStackEl.load();
 
+      const geigerEl = new Audio();
+      geigerEl.src = "./sounds/555933__cookiespolicy__geiger-counter-hotspot-uneven.wav";
+      geigerEl.setAttribute("data-track", geigerEl.src);
+      geigerEl.loop = true;
+      geigerEl.preload = "auto";
+      geigerEl.playsInline = true;
+      geigerEl.muted = false;
+      geigerEl.volume = 0;
+      geigerEl.load();
+
       // Prefer true audio-linked analysers; fallback to direct mode on blocked browsers.
       let musicDispatchSource = null;
       let musicStackSource = null;
+      let geigerSource = null;
       let musicDispatchDirect = true;
       let musicStackDirect = true;
+      let geigerDirect = true;
       let scopeDispatchAnalyser = null;
       let scopeStackAnalyser = null;
       try {
         musicDispatchSource = audioCtx.createMediaElementSource(musicDispatchEl);
         musicStackSource = audioCtx.createMediaElementSource(musicStackEl);
+        geigerSource = audioCtx.createMediaElementSource(geigerEl);
         musicDispatchSource.connect(musicDispatchGain);
         musicStackSource.connect(musicStackGain);
+        geigerSource.connect(geigerGain);
         musicDispatchGain.connect(master);
         musicStackGain.connect(master);
 
@@ -2409,11 +3199,14 @@
 
         musicDispatchDirect = false;
         musicStackDirect = false;
+        geigerDirect = false;
       } catch (err) {
         musicDispatchSource = null;
         musicStackSource = null;
+        geigerSource = null;
         musicDispatchDirect = true;
         musicStackDirect = true;
+        geigerDirect = true;
         scopeDispatchAnalyser = null;
         scopeStackAnalyser = null;
       }
@@ -2428,6 +3221,7 @@
       audio.noiseGain = noiseGain;
       audio.jamGain = jamGain;
       audio.maskGain = maskGain;
+      audio.geigerGain = geigerGain;
       audio.musicDispatchGain = musicDispatchGain;
       audio.musicStackGain = musicStackGain;
       audio.noiseFilter = noiseFilter;
@@ -2437,10 +3231,13 @@
       audio.sourceB = srcB;
       audio.musicDispatchEl = musicDispatchEl;
       audio.musicStackEl = musicStackEl;
+      audio.geigerEl = geigerEl;
       audio.musicDispatchSource = musicDispatchSource;
       audio.musicStackSource = musicStackSource;
+      audio.geigerSource = geigerSource;
       audio.musicDispatchDirect = musicDispatchDirect;
       audio.musicStackDirect = musicStackDirect;
+      audio.geigerDirect = geigerDirect;
       audio.scopeDispatchAnalyser = scopeDispatchAnalyser;
       audio.scopeStackAnalyser = scopeStackAnalyser;
       audio.scopeDispatchData = scopeDispatchAnalyser ? new Uint8Array(scopeDispatchAnalyser.fftSize) : null;
@@ -2450,62 +3247,100 @@
       return true;
     }
 
+    function syncBeatPulseCss() {
+      document.documentElement.style.setProperty("--beat-pulse", beatState.pulse.toFixed(3));
+    }
+
+    function updateBeatPulseFrame(nowMs) {
+      if (!beatState.lastMs) beatState.lastMs = nowMs;
+      const dtMs = Math.max(0, Math.min(50, nowMs - beatState.lastMs));
+      beatState.lastMs = nowMs;
+
+      const attack = 1 - Math.exp(-dtMs / 34);
+      const decay = Math.exp(-dtMs / 88);
+
+      if (beatState.target > beatState.pulse) {
+        beatState.pulse += (beatState.target - beatState.pulse) * attack;
+      } else {
+        beatState.pulse *= decay;
+      }
+
+      beatState.target = Math.max(0, beatState.target - dtMs * 0.0105);
+      if (beatState.pulse < 0.003 && beatState.target < 0.003) {
+        beatState.pulse = 0;
+        beatState.target = 0;
+      }
+      syncBeatPulseCss();
+    }
+
     function sampleBeatPulse(dtMs = 90) {
       if (!state.powerOn || !state.running) {
-        beatState.pulse = Math.max(0, beatState.pulse - dtMs * 0.004);
-        document.documentElement.style.setProperty("--beat-pulse", beatState.pulse.toFixed(3));
+        beatState.target = 0;
         return;
       }
 
       const rawChannel = state.pending?.channel || state.blockWinner || state.channel;
+      const winnerHold = !!state.pending || isAdvanceGateActive();
       if (rawChannel === "noise") {
-        beatState.pulse = Math.max(0, beatState.pulse - dtMs * 0.01);
+        beatState.target = 0;
         beatState.ema *= 0.85;
         beatState.cooldownMs = Math.max(0, beatState.cooldownMs - dtMs);
-        document.documentElement.style.setProperty("--beat-pulse", beatState.pulse.toFixed(3));
         return;
       }
       const active = rawChannel === "stack" ? "stack" : "dispatch";
       const analyser = active === "dispatch" ? audio.scopeDispatchAnalyser : audio.scopeStackAnalyser;
       const freqData = active === "dispatch" ? audio.scopeDispatchFreqData : audio.scopeStackFreqData;
+      const fallbackEl = active === "dispatch" ? audio.musicDispatchEl : audio.musicStackEl;
 
-      let pulse = beatState.pulse;
+      let pulse = beatState.target;
       if (analyser && freqData) {
         analyser.getByteFrequencyData(freqData);
-        const maxBin = Math.min(30, freqData.length - 1);
+        const bassMaxBin = Math.min(10, freqData.length - 1);
+        const lowMidMaxBin = Math.min(24, freqData.length - 1);
         let bass = 0;
-        let count = 0;
-        for (let i = 2; i <= maxBin; i += 1) {
+        let bassCount = 0;
+        let lowMid = 0;
+        let lowMidCount = 0;
+        for (let i = 2; i <= bassMaxBin; i += 1) {
           bass += freqData[i];
-          count += 1;
+          bassCount += 1;
         }
-        bass = count > 0 ? bass / count : 0;
+        for (let i = bassMaxBin + 1; i <= lowMidMaxBin; i += 1) {
+          lowMid += freqData[i];
+          lowMidCount += 1;
+        }
+        bass = bassCount > 0 ? bass / bassCount : 0;
+        lowMid = lowMidCount > 0 ? lowMid / lowMidCount : 0;
+        const bassDrive = Math.max(0, bass - lowMid * 0.32);
         if (beatState.ema <= 0) beatState.ema = bass;
-        beatState.ema = beatState.ema * 0.92 + bass * 0.08;
+        beatState.ema = beatState.ema * 0.88 + bassDrive * 0.12;
         beatState.cooldownMs = Math.max(0, beatState.cooldownMs - dtMs);
-        const threshold = beatState.ema * 1.22 + 6;
-        if (bass > threshold && beatState.cooldownMs <= 0) {
+        const threshold = beatState.ema * 1.16 + 4;
+        if (bassDrive > threshold && beatState.cooldownMs <= 0) {
           pulse = 1;
-          beatState.cooldownMs = 130;
+          beatState.cooldownMs = 105;
         } else {
-          pulse = Math.max(0, pulse - dtMs * 0.0055);
+          pulse = Math.max(0, pulse - dtMs * 0.0105);
+        }
+        if (winnerHold && fallbackEl && !fallbackEl.paused) {
+          const beatPhase = (fallbackEl.currentTime * (active === "dispatch" ? 146 : 132)) / 60;
+          const beatShape = Math.pow(Math.max(0, Math.sin(beatPhase * Math.PI * 2)), 4.2);
+          pulse = Math.max(pulse, beatShape * 0.96);
         }
       } else {
-        const fallbackEl = active === "dispatch" ? audio.musicDispatchEl : audio.musicStackEl;
         if (fallbackEl && !fallbackEl.paused && state.running) {
           // Fallback beat when analyser path is unavailable: tempo-like pulse from track time.
           const t = fallbackEl.currentTime;
           const bpmLike = active === "dispatch" ? 146 : 132;
           const beatPhase = (t * bpmLike) / 60;
           const beatShape = Math.pow(Math.max(0, Math.sin(beatPhase * Math.PI * 2)), 4.6);
-          pulse = Math.max(pulse - dtMs * 0.0045, beatShape * 0.92);
+          pulse = beatShape * 0.92;
         } else {
-          pulse = Math.max(0, pulse - dtMs * 0.004);
+          pulse = Math.max(0, pulse - dtMs * 0.0105);
         }
       }
 
-      beatState.pulse = pulse;
-      document.documentElement.style.setProperty("--beat-pulse", beatState.pulse.toFixed(3));
+      beatState.target = clamp(pulse, 0, 1);
     }
 
     function nextTrackForChannel(channel) {
@@ -2580,10 +3415,12 @@
       };
       startOne(audio.musicDispatchEl);
       startOne(audio.musicStackEl);
+      startOne(audio.geigerEl);
       // Retry briefly in case first play races before metadata is ready.
       setTimeout(() => {
         startOne(audio.musicDispatchEl);
         startOne(audio.musicStackEl);
+        startOne(audio.geigerEl);
       }, 220);
     }
 
@@ -2608,7 +3445,28 @@
           ? clamp((62 - sig.quality) / 82, 0.22, 1)
           : 0;
       const jamLevel = running ? clamp(state.jamPenalty / 120, 0, 1) : 0;
-      const burst = jamLevel > 0.72 && Math.random() < 0.08 ? 0.05 : 0;
+      interferenceState.hissPhase = clamp(interferenceState.hissPhase + 0.08 + noiseLevel * 0.11 + jamLevel * 0.16, 0, 9999);
+      interferenceState.noiseDrift = interferenceState.noiseDrift * 0.9 + (Math.random() * 2 - 1) * (0.08 + noiseLevel * 0.22 + jamLevel * 0.12);
+      interferenceState.jamWarp = interferenceState.jamWarp * 0.84 + (Math.random() * 2 - 1) * (0.12 + jamLevel * 0.3);
+      interferenceState.clickBurst = Math.max(0, interferenceState.clickBurst - 1);
+      interferenceState.geigerPulse = Math.max(0, interferenceState.geigerPulse - 0.08);
+      if (interferenceState.burstHold > 0) {
+        interferenceState.burstHold = Math.max(0, interferenceState.burstHold - 1);
+      } else if ((jamLevel > 0.42 && Math.random() < 0.08 + jamLevel * 0.06) || (noiseLevel > 0.35 && Math.random() < 0.035 + noiseLevel * 0.04)) {
+        interferenceState.burstHold = 2 + Math.floor(Math.random() * 5);
+      }
+      if (Math.random() < 0.014 + noiseLevel * 0.085 + jamLevel * 0.11) {
+        interferenceState.clickBurst = 2 + Math.floor(Math.random() * (3 + jamLevel * 5));
+      }
+      if (Math.random() < 0.012 + noiseLevel * 0.045 + jamLevel * 0.14) {
+        interferenceState.geigerPulse = 0.45 + Math.random() * (0.4 + jamLevel * 0.5);
+      }
+      const burst = interferenceState.burstHold > 0
+        ? 0.022 + jamLevel * 0.05 + Math.random() * 0.055
+        : 0;
+      const hissLfo = 0.72 + Math.sin(interferenceState.hissPhase) * 0.16 + Math.sin(interferenceState.hissPhase * 0.31) * 0.09;
+      const clickAccent = interferenceState.clickBurst > 0 ? 1.18 + Math.random() * 0.5 : 1;
+      const flutter = (0.84 + Math.random() * 0.38 + noiseLevel * 0.22) * hissLfo;
       let dispatchTarget = running && sig.channel === "dispatch"
         ? musicLevel
         : 0;
@@ -2624,11 +3482,14 @@
       const goodSignal = Math.max(dispatchTarget, stackTarget);
       const noiseDuck = 1 - goodSignal * 0.55;
       const musicMask = running && !noSignal ? clamp(Math.pow(1 - clean, 0.95), 0, 1) : 0;
-      const maskFlutter = running && !noSignal ? (0.88 + Math.random() * 0.26) : 0;
+      const maskFlutter = running && !noSignal ? (0.78 + Math.random() * 0.46 + jamLevel * 0.1) : 0;
 
       if (hasCtx) {
-        audio.noiseGain.gain.setTargetAtTime(noiseLevel * 0.095 * noiseDuck, now, 0.06);
-        audio.jamGain.gain.setTargetAtTime(jamLevel * 0.16 + burst, now, 0.045);
+        const noiseTexture = clamp(0.64 + Math.abs(interferenceState.noiseDrift) * 1.05 + interferenceState.clickBurst * 0.06, 0.64, 2.1);
+        const jamTexture = clamp(0.82 + Math.abs(interferenceState.jamWarp) * 0.88 + burst * 5.4, 0.82, 2.15);
+        const hissAccent = 0.88 + Math.max(0, Math.sin(interferenceState.hissPhase * 1.7)) * 0.24;
+        audio.noiseGain.gain.setTargetAtTime(noiseLevel * 0.115 * noiseDuck * flutter * noiseTexture * hissAccent, now, 0.045);
+        audio.jamGain.gain.setTargetAtTime((jamLevel * 0.17 * jamTexture * clickAccent) + burst, now, 0.028);
         audio.maskGain.gain.setTargetAtTime(musicMask * 0.072 * maskFlutter, now, 0.06);
         if (audio.musicDispatchGain) {
           audio.musicDispatchGain.gain.setTargetAtTime(audio.musicDispatchDirect ? 0.00001 : dispatchTarget, now, 0.14);
@@ -2636,16 +3497,25 @@
         if (audio.musicStackGain) {
           audio.musicStackGain.gain.setTargetAtTime(audio.musicStackDirect ? 0.00001 : stackTarget, now, 0.14);
         }
-        audio.noiseFilter.type = noSignal ? "lowpass" : "bandpass";
-        audio.noiseFilter.Q.setTargetAtTime(noSignal ? 0.45 : 0.8, now, 0.1);
+        if (noSignal) {
+          const modeRoll = Math.random();
+          audio.noiseFilter.type = modeRoll < 0.18 ? "highpass" : modeRoll < 0.42 ? "bandpass" : "lowpass";
+        } else {
+          audio.noiseFilter.type = Math.random() < 0.12 + jamLevel * 0.08 ? "highpass" : "bandpass";
+        }
+        audio.noiseFilter.Q.setTargetAtTime((noSignal ? 0.45 : 0.8) + Math.abs(interferenceState.noiseDrift) * 0.55 + interferenceState.clickBurst * 0.08, now, 0.08);
         const noiseFreq = noSignal
-          ? 260 + noiseLevel * 520
-          : 900 + noiseLevel * 2200;
+          ? 180 + noiseLevel * 920 + interferenceState.noiseDrift * 260 + Math.sin(interferenceState.hissPhase * 0.8) * 110
+          : 620 + noiseLevel * 2720 + interferenceState.noiseDrift * 420 + interferenceState.clickBurst * 55;
         audio.noiseFilter.frequency.setTargetAtTime(noiseFreq, now, 0.12);
-        audio.jamFilter.frequency.setTargetAtTime(1300 + jamLevel * 3200 + Math.random() * 120, now, 0.08);
-        audio.jamFilter.Q.setTargetAtTime(1.1 + jamLevel * 2.2, now, 0.08);
-        audio.maskFilter.frequency.setTargetAtTime(1450 + musicMask * 3600, now, 0.08);
+        audio.jamFilter.frequency.setTargetAtTime(980 + jamLevel * 3760 + interferenceState.jamWarp * 680 + Math.random() * 420 + interferenceState.clickBurst * 90, now, 0.06);
+        audio.jamFilter.Q.setTargetAtTime(1.1 + jamLevel * 2.2 + Math.abs(interferenceState.jamWarp) * 0.6 + interferenceState.clickBurst * 0.16, now, 0.06);
+        audio.maskFilter.frequency.setTargetAtTime(1320 + musicMask * 3900 + Math.abs(interferenceState.noiseDrift) * 280, now, 0.08);
         audio.maskFilter.Q.setTargetAtTime(0.45 + musicMask * 1.3, now, 0.08);
+        if (audio.geigerGain) {
+          const geigerTarget = running ? clamp((noiseLevel * 0.18 + jamLevel * 0.52) * (0.88 + interferenceState.geigerPulse), 0, 0.62) : 0;
+          audio.geigerGain.gain.setTargetAtTime(audio.geigerDirect ? 0.00001 : geigerTarget, now, 0.03);
+        }
       }
 
       if (audio.musicDispatchEl) {
@@ -2658,6 +3528,17 @@
         audio.musicStackEl.volume = audio.musicStackDirect ? clamp(stackTarget * 1.05, 0, 1) : 1;
         if (running && audio.musicStackEl.paused) audio.musicStackEl.play().catch(() => {});
       }
+      if (audio.geigerEl) {
+        audio.geigerEl.muted = false;
+        const geigerDirectLevel = running ? clamp((noiseLevel * 0.42 + jamLevel * 0.96) * (0.9 + interferenceState.geigerPulse), 0, 0.82) : 0;
+        audio.geigerEl.volume = audio.geigerDirect ? geigerDirectLevel : 1;
+        if (running && geigerDirectLevel > 0.004 && audio.geigerEl.paused) audio.geigerEl.play().catch(() => {});
+        if (running && !audio.geigerDirect && audio.geigerEl.paused) audio.geigerEl.play().catch(() => {});
+        if (!running && !audio.geigerEl.paused && audio.geigerDirect) {
+          audio.geigerEl.pause();
+          audio.geigerEl.currentTime = 0;
+        }
+      }
     }
 
     function applyTheme(name) {
@@ -2667,39 +3548,157 @@
       if (el.themeSelect.value !== themeName) {
         el.themeSelect.value = themeName;
       }
-      if (el.displayThemeSelect && el.displayThemeSelect.value !== themeName) {
-        el.displayThemeSelect.value = themeName;
-      }
+      syncDisplaySelectorsFromControls();
       localStorage.setItem("freq_theme", themeName);
     }
 
     function syncDisplaySelectorsFromControls() {
-      if (el.displayNameSelect && el.nameInput) {
-        const current = (el.nameInput.value || "").trim();
-        const hasOption = [...el.displayNameSelect.options].some((o) => o.value === current);
-        if (hasOption) el.displayNameSelect.value = current;
+      setConfigKnobValue("name", (el.nameInput?.value || "").trim() || "Wavefox");
+      setConfigKnobValue("faction", el.factionSelect?.value || "maker");
+      setConfigKnobValue("theme", el.themeSelect?.value || "field");
+    }
+
+    function getConfigKnobMeta(kind) {
+      if (kind === "name") {
+        return {
+          button: el.displayNameKnob,
+          indicator: el.displayNameKnobIndicator,
+          state: el.displayNameKnobState,
+          lcdLag: true,
+          options: displayNameOptions,
+          onChange: (value) => {
+            if (!el.nameInput) return;
+            el.nameInput.value = value;
+            if (state.running) {
+              state.name = el.nameInput.value.trim().slice(0, 18) || "Wavefox";
+              renderHeader();
+            }
+          }
+        };
       }
-      if (el.displayFactionSelect && el.factionSelect) {
-        el.displayFactionSelect.value = el.factionSelect.value;
+      if (kind === "faction") {
+        return {
+          button: el.displayFactionKnob,
+          indicator: el.displayFactionKnobIndicator,
+          state: el.displayFactionKnobState,
+          lcdLag: true,
+          options: displayFactionOptions,
+          onChange: (value) => {
+            if (el.factionSelect) el.factionSelect.value = value;
+          }
+        };
       }
-      if (el.displayThemeSelect && el.themeSelect) {
-        el.displayThemeSelect.value = el.themeSelect.value;
+      return {
+        button: el.displayThemeKnob,
+        indicator: el.displayThemeKnobIndicator,
+        state: el.displayThemeKnobState,
+        lcdLag: true,
+        options: displayThemeOptions,
+        onChange: (value) => {
+          if (el.themeSelect) el.themeSelect.value = value;
+          applyTheme(value);
+        }
+      };
+    }
+
+    function renderConfigKnob(meta, index) {
+      if (!meta.button || !meta.indicator || !meta.state || !meta.options.length) return;
+      const safeIndex = clamp(index, 0, meta.options.length - 1);
+      const angle = meta.options.length === 1 ? 0 : -132 + (264 * safeIndex / (meta.options.length - 1));
+      const option = meta.options[safeIndex];
+      meta.indicator.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+      meta.button.setAttribute("aria-valuenow", String(safeIndex));
+      meta.button.setAttribute("aria-valuemax", String(meta.options.length - 1));
+      meta.button.setAttribute("aria-valuetext", option.label);
+      meta.button.dataset.index = String(safeIndex);
+      if (meta.lcdLag) {
+        queueConfigStateLag(meta.state, option.label);
+      } else {
+        meta.state.textContent = option.label;
       }
     }
 
+    function queueConfigStateLag(node, label) {
+      if (!node) return;
+      node.dataset.pendingLabel = label;
+      node.classList.add("lagging");
+      if (node._lagTimer) window.clearTimeout(node._lagTimer);
+      node._lagTimer = window.setTimeout(() => {
+        node.textContent = node.dataset.pendingLabel || label;
+        node.classList.remove("lagging");
+        triggerLcdChangeEffect(node);
+        node._lagTimer = 0;
+      }, 180);
+    }
+
+    function setConfigKnobValue(kind, value) {
+      const meta = getConfigKnobMeta(kind);
+      const index = Math.max(0, meta.options.findIndex((option) => option.value === value));
+      renderConfigKnob(meta, index);
+    }
+
+    function stepConfigKnob(kind, delta) {
+      const meta = getConfigKnobMeta(kind);
+      if (!meta.button || !meta.options.length) return;
+      const current = Number(meta.button.dataset.index || 0);
+      const next = (current + delta + meta.options.length) % meta.options.length;
+      renderConfigKnob(meta, next);
+      meta.onChange(meta.options[next].value);
+    }
+
+    function setupConfigKnob(kind) {
+      const meta = getConfigKnobMeta(kind);
+      if (!meta.button) return;
+      meta.button.setAttribute("role", "slider");
+      renderConfigKnob(meta, 0);
+      meta.button.addEventListener("click", () => stepConfigKnob(kind, 1));
+      meta.button.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        stepConfigKnob(kind, e.deltaY > 0 ? 1 : -1);
+      }, { passive: false });
+      meta.button.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+          stepConfigKnob(kind, 1);
+          e.preventDefault();
+        }
+        if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+          stepConfigKnob(kind, -1);
+          e.preventDefault();
+        }
+        if (e.key === "Home") {
+          renderConfigKnob(meta, 0);
+          meta.onChange(meta.options[0].value);
+          e.preventDefault();
+        }
+        if (e.key === "End") {
+          const last = meta.options.length - 1;
+          renderConfigKnob(meta, last);
+          meta.onChange(meta.options[last].value);
+          e.preventDefault();
+        }
+      });
+    }
+    function assignCarrierBands() {
+      const dispatchLeft = Math.random() < 0.5;
+      state.dispatchBand = dispatchLeft ? { min: 8, max: 42 } : { min: 58, max: 92 };
+      state.stackBand = dispatchLeft ? { min: 58, max: 92 } : { min: 8, max: 42 };
+    }
+
     function respawnCarriers() {
-      let d = frnd(5, 95);
-      let s = frnd(5, 95);
+      const earlyLevelFactor = clamp(0.24 + (state.block / Math.max(1, state.maxBlocks)) * 1.08, 0.24, 1);
+      assignCarrierBands();
+      let d = frnd(state.dispatchBand.min, state.dispatchBand.max);
+      let s = frnd(state.stackBand.min, state.stackBand.max);
       let guard = 0;
       while (Math.abs(d - s) < 16 && guard < 40) {
-        d = frnd(5, 95);
-        s = frnd(5, 95);
+        d = frnd(state.dispatchBand.min, state.dispatchBand.max);
+        s = frnd(state.stackBand.min, state.stackBand.max);
         guard += 1;
       }
       state.dispatchBase = d;
       state.stackBase = s;
-      state.dispatchDriftVel = frnd(0.03, 0.09) * (Math.random() < 0.5 ? -1 : 1);
-      state.stackDriftVel = frnd(0.03, 0.09) * (Math.random() < 0.5 ? -1 : 1);
+      state.dispatchDriftVel = frnd(0.012, 0.09 * earlyLevelFactor) * (Math.random() < 0.5 ? -1 : 1);
+      state.stackDriftVel = frnd(0.012, 0.09 * earlyLevelFactor) * (Math.random() < 0.5 ? -1 : 1);
     }
 
     function respawnJammers() {
@@ -2728,9 +3727,9 @@
         reputation: "Reputation",
         morale: "Moral",
         tech: "Tech",
-        credits: "Credits",
+        credits: "Scrip",
         intel: "Intel",
-        signal: "Signal",
+        signal: "Energie",
         heat: "Heat"
       };
       return labels[key] || key;
@@ -2765,7 +3764,7 @@
           B: "Der Scrub loescht harte Profile, hinterlaesst aber charakteristische Lueckenmuster. STACKCAST startet einen stillen Suchlauf, die Noise-Lage nimmt zu, und du kaufst Zeit fuer Zivilknoten, die sonst direkt ins Ledger gefallen waeren."
         },
         s_laser_window: {
-          A: "Nach deinem Geocacher-Push wird Kabelwald innerhalb eines Blocks zum Goldrauschkorridor. Killcoin-Runner, Schrottsammler und Hardliner kollidieren an denselben Knoten, und das Laserfenster hinterlaesst eine Route voller offener Rechnungen.",
+          A: "Nach deinem Geocacher-Push wird Kabelwald innerhalb eines Levels zum Goldrauschkorridor. Killcoin-Runner, Schrottsammler und Hardliner kollidieren an denselben Knoten, und das Laserfenster hinterlaesst eine Route voller offener Rechnungen.",
           B: "Die Retros nutzen das Blindfenster chirurgisch: ein Zero-Relais geht kurz dunkel, zwei Jagdlisten brechen ab und Dispatch erhaelt ein messbares Reichweitenfenster. Niemand nennt dich offiziell, aber mehrere Relais danken in codierten Sidebands."
         },
         d_sponsor_slot: {
@@ -2817,7 +3816,7 @@
           B: "Der Sponsor-gebundene Patch bringt Premium-Wartung fuer zahlende Knoten. In den Randbereichen bleiben Ausfaelle hoch, und der Vorwurf 'Pay-to-survive' haftet an deiner Frequenz."
         },
         d_roamer_splinter: {
-          A: "Die Moderation zwingt beide Roamer-Zuege in ein geteiltes Ladefenster. Niemand ist zufrieden, aber die Lieferkette reisst nicht, und du kaufst Frieden fuer mindestens einen Block.",
+          A: "Die Moderation zwingt beide Roamer-Zuege in ein geteiltes Ladefenster. Niemand ist zufrieden, aber die Lieferkette reisst nicht, und du kaufst Frieden fuer mindestens ein Level.",
           B: "Mit einseitigem Push gewinnt ein Zug sofort. Der Verlierer kappt daraufhin zwei Nebenwege, was den Konflikt nur zeitversetzt und teurer zurueckbringt."
         },
         d_dispatch_blackbook: {
@@ -2829,7 +3828,7 @@
           B: "Der Verkauf der Timing-Daten macht dich zum stillen Gewinner eines knappen Marktes. Spaeter erinnern sich alle, wer wusste, wann die Lichter in den Randsektoren ausgingen."
         },
         d_zero_counterstrike: {
-          A: "Der offene Gegenschlag zwingt Zero-Broker in die sichtbare Eskalation. Mehr Leute glauben dir, aber die Route wird fuer mehrere Blocks zur aktiven Gefahrenzone.",
+          A: "Der offene Gegenschlag zwingt Zero-Broker in die sichtbare Eskalation. Mehr Leute glauben dir, aber die Route wird fuer mehrere Level zur aktiven Gefahrenzone.",
           B: "Schadensbegrenzung stabilisiert Versorgung und senkt die Sichtbarkeit des Konflikts. Zero bleibt im Spiel, kann den Erfolg aber nicht mehr als totalen Sieg rahmen."
         },
         d_maker_shadowroute: {
@@ -2865,7 +3864,7 @@
           B: "Der offene Feed verteilt Risiko-Wissen breit. Du verlierst Exklusivmarge, gewinnst aber einen Ruf als Sender mit oeffentlichem Nutzen."
         },
         s_shadow_channel: {
-          A: "Marktpreise im Schattenkanal treiben Arbitrage innerhalb eines Blocks auf Maximum. Danach sind Grundwaren teurer und echte Hilfefenster enger.",
+          A: "Marktpreise im Schattenkanal treiben Arbitrage innerhalb eines Levels auf Maximum. Danach sind Grundwaren teurer und echte Hilfefenster enger.",
           B: "Notlagen-Priorisierung nutzt denselben Kanal fuer Evak-Hops und Feldkliniken. Weniger Geld pro Minute, deutlich mehr Wirkung pro Sendeslot."
         },
         s_loop_signature: {
@@ -2918,7 +3917,7 @@
         },
         s_geocacher_collapse: {
           A: "Die Umleitung verteilt den Cache-Druck auf mehrere Achsen. Weniger Spitzengewalt, mehr kontrollierbare Kleinflammen.",
-          B: "Der Markt regelt brutal effizient: schnelle Gewinner, viele Verlierer, und ein ueberhitzter Korridor fuer den Rest des Blocks."
+          B: "Der Markt regelt brutal effizient: schnelle Gewinner, viele Verlierer, und ein ueberhitzter Korridor fuer den Rest des Levels."
         },
         s_scrubbed_consequence: {
           A: "Weitere Tarnung verdichtet dein Profil als Schutzsender fuer sensible Signaturen. Das kostet Rechenfenster, senkt aber direkte Verwertbarkeit im Stack.",
@@ -2936,7 +3935,7 @@
           ? "Stack-Folge: Du nutzt den technischen Hebel aggressiv. Datenfluss, Profit und Risiko steigen gleichzeitig und formen die naechste Konfliktlage."
           : "Stack-Folge: Du priorisierst Stabilitaet und Netzgesundheit. Kurzfristig weniger Glanz, langfristig bessere Resilienz gegen Jagd und Jammer.";
       }
-      return "Folge: Die Entscheidung veraendert Signalwege, Loyalitaeten und Risikoachsen. Ihr voller Preis zeigt sich ueber mehrere Blocks.";
+      return "Folge: Die Entscheidung veraendert Signalwege, Loyalitaeten und Risikoachsen. Ihr voller Preis zeigt sich ueber mehrere Level.";
     }
 
     function canTriggerEvent(event) {
@@ -2955,49 +3954,142 @@
     }
 
     function randomContract() {
-      const target = Math.random() < 0.5 ? "dispatch" : "stack";
-      const required = rnd(2, 3);
-      const reward = target === "dispatch"
-        ? { reputation: 6, morale: 5, credits: 4 }
-        : { tech: 7, intel: 6, credits: 5 };
+      const nextTarget = state.lastContractTarget === "dispatch"
+        ? "stack"
+        : state.lastContractTarget === "stack"
+          ? "dispatch"
+          : (Math.random() < 0.5 ? "dispatch" : "stack");
+      const templates = [
+        {
+          id: "dispatch_public_relay",
+          title: "Public Relay Sweep",
+          target: "dispatch",
+          required: [2, 4],
+          reward: () => ({ credits: rnd(3, 5), intel: rnd(3, 5), reputation: rnd(1, 2) }),
+          brief: "Sichere offene Dispatch-Locks fuer das oeffentliche Relay."
+        },
+        {
+          id: "dispatch_trust_feed",
+          title: "Trust Feed Audit",
+          target: "dispatch",
+          required: [3, 5],
+          reward: () => ({ credits: rnd(3, 5), morale: rnd(3, 5), reputation: rnd(1, 2) }),
+          brief: "Stabilisiere vertrauenswuerdige Dispatch-Slots ohne Eskalation."
+        },
+        {
+          id: "dispatch_camp_chain",
+          title: "Camp Chain Patch",
+          target: "dispatch",
+          required: [2, 3],
+          reward: () => ({ intel: rnd(3, 5), signal: rnd(3, 5), credits: rnd(2, 4) }),
+          brief: "Halte genug Dispatch-Runden fuer die Camp-Versorgung zusammen."
+        },
+        {
+          id: "stack_salvage_window",
+          title: "Salvage Window",
+          target: "stack",
+          required: [2, 4],
+          reward: () => ({ intel: rnd(5, 8), signal: rnd(3, 5), tech: rnd(1, 2) }),
+          brief: "Ziehe verwertbare STACKCAST-Locks aus einem instabilen Fenster."
+        },
+        {
+          id: "stack_ghost_slot",
+          title: "Ghost Slot Harvest",
+          target: "stack",
+          required: [3, 5],
+          reward: () => ({ intel: rnd(6, 9), credits: rnd(1, 3), tech: rnd(1, 2) }),
+          brief: "Sammle mehrere STACKCAST-Locks aus dem Ghost-Slot."
+        },
+        {
+          id: "stack_overclock_probe",
+          title: "Overclock Probe",
+          target: "stack",
+          required: [2, 3],
+          reward: () => ({ signal: rnd(4, 6), tech: rnd(3, 5), intel: rnd(3, 5) }),
+          brief: "Halte das STACKCAST-Fenster lang genug fuer technische Proben."
+        },
+        {
+          id: "mixed_signal_duet",
+          title: "Signal Duet",
+          target: nextTarget,
+          required: [3, 4],
+          reward: () => ({ credits: rnd(2, 4), intel: rnd(4, 6), signal: rnd(2, 4) }),
+          brief: "Bediene die aktuell profitablere Seite des Bandes fuer Folgeauftraege."
+        },
+        {
+          id: "mixed_quiet_run",
+          title: "Quiet Run",
+          target: nextTarget,
+          required: [2, 3],
+          reward: () => ({ morale: rnd(3, 5), intel: rnd(3, 5), credits: rnd(2, 4) }),
+          brief: "Bringe mehrere saubere Locks ohne zu viel Chaos durch."
+        }
+      ];
+      const previousId = state.contract?.id || null;
+      const eligible = templates.filter((template) => template.id !== previousId && template.target === nextTarget);
+      const template = pickEvent(eligible.length > 0 ? eligible : templates);
+      const target = typeof template.target === "function" ? template.target() : template.target;
+      const required = rnd(template.required[0], template.required[1]);
+      const reward = template.reward();
       state.contract = {
+        id: template.id,
+        title: template.title,
+        brief: template.brief,
         target,
         required,
         progress: 0,
         reward
       };
+      state.lastContractTarget = target;
     }
 
     function renderContract() {
       if (!state.contract) {
         el.contractText.textContent = "Kein Vertrag aktiv.";
+        if (el.contractFill) el.contractFill.style.width = "0%";
+        if (el.contractMeta) el.contractMeta.textContent = "Kein Fortschritt.";
         return;
       }
       const t = state.contract.target === "dispatch" ? "Dispatch Locks" : "STACKCAST Locks";
-      el.contractText.textContent = `${t}: ${state.contract.progress}/${state.contract.required}. Bonus bei Abschluss: +${Object.entries(state.contract.reward).map(([k,v])=>`${v} ${k}`).join(", ")}.`;
+      const progress = clamp((state.contract.progress / Math.max(1, state.contract.required)) * 100, 0, 100);
+      const title = state.contract.title || t;
+      const brief = state.contract.brief || `Sichere ${state.contract.required} erfolgreiche Runde(n).`;
+      el.contractText.textContent = `${title}: ${brief}`;
+      if (el.contractFill) el.contractFill.style.width = `${progress}%`;
+      if (el.contractMeta) {
+        el.contractMeta.textContent = `${t} · Fortschritt ${state.contract.progress}/${state.contract.required} · Reward +${Object.entries(state.contract.reward).map(([k, v]) => `${v} ${effectLabel(k)}`).join(", ")}.`;
+      }
     }
 
     function nudgeSignals() {
       const diff = runDifficulty();
+      const levelProgress = clamp(state.block / Math.max(1, state.maxBlocks), 0, 1);
+      const earlyLevelFactor = clamp(0.28 + levelProgress * 1.02, 0.28, 1);
+      const directionUnlock = clamp((levelProgress - 0.42) / 0.58, 0, 1);
       state.t += 0.09;
       const t = state.t;
-      const driftScale = 0.78 + diff * 0.78;
-      const jitterD = (Math.random() - 0.5) * (0.08 + diff * 0.18);
-      const jitterS = (Math.random() - 0.5) * (0.08 + diff * 0.18);
-      const accel = 0.008 + diff * 0.014;
-      const vmax = 0.18 + diff * 0.16;
+      const driftScale = 0.42 + earlyLevelFactor * (0.28 + diff * 0.86);
+      const jitterD = (Math.random() - 0.5) * (0.02 + earlyLevelFactor * (0.04 + diff * 0.16));
+      const jitterS = (Math.random() - 0.5) * (0.02 + earlyLevelFactor * (0.04 + diff * 0.16));
+      const accel = 0.0025 + earlyLevelFactor * (0.003 + diff * 0.016);
+      const vmax = 0.05 + earlyLevelFactor * (0.045 + diff * 0.245);
+      const turnChance = directionUnlock * (0.00045 + earlyLevelFactor * (0.001 + diff * 0.0086));
+      const rerouteChance = directionUnlock * (0.0001 + earlyLevelFactor * (0.00035 + diff * 0.0068));
+      const reroutePushD = 0.03 + earlyLevelFactor * (0.03 + diff * 0.16);
+      const reroutePushS = 0.03 + earlyLevelFactor * (0.03 + diff * 0.17);
 
-      // Inertia drift: keeps moving in one direction longer, only occasional turns.
-      state.dispatchDriftVel = clamp(state.dispatchDriftVel * 0.985 + frnd(-accel, accel), -vmax, vmax);
-      state.stackDriftVel = clamp(state.stackDriftVel * 0.985 + frnd(-accel, accel), -vmax, vmax);
+      // Early levels mostly vary speed while staying on course; direction flips ramp in later.
+      const inertia = 0.994 - earlyLevelFactor * 0.003 - directionUnlock * 0.003;
+      state.dispatchDriftVel = clamp(state.dispatchDriftVel * inertia + frnd(-accel, accel), -vmax, vmax);
+      state.stackDriftVel = clamp(state.stackDriftVel * inertia + frnd(-accel, accel), -vmax, vmax);
 
-      // Rare turning impulses instead of frequent direction flips.
-      if (Math.random() < 0.004 + diff * 0.006) state.dispatchDriftVel *= -0.55;
-      if (Math.random() < 0.004 + diff * 0.006) state.stackDriftVel *= -0.55;
+      // Direction changes stay mostly dormant until later levels.
+      if (Math.random() < turnChance) state.dispatchDriftVel *= -0.48;
+      if (Math.random() < turnChance) state.stackDriftVel *= -0.48;
 
-      // Rare larger reroute nudges.
-      if (Math.random() < 0.0015 + diff * 0.006) state.dispatchDriftVel += frnd(-0.14, 0.14);
-      if (Math.random() < 0.0015 + diff * 0.006) state.stackDriftVel += frnd(-0.15, 0.15);
+      // Larger reroutes also unlock later than pure speed variation.
+      if (Math.random() < rerouteChance) state.dispatchDriftVel += frnd(-reroutePushD, reroutePushD);
+      if (Math.random() < rerouteChance) state.stackDriftVel += frnd(-reroutePushS, reroutePushS);
       state.dispatchDriftVel = clamp(state.dispatchDriftVel, -vmax, vmax);
       state.stackDriftVel = clamp(state.stackDriftVel, -vmax, vmax);
 
@@ -3005,31 +4097,31 @@
       state.stackBase += state.stackDriftVel;
 
       // Soft bounce at range edges.
-      if (state.dispatchBase < 8 || state.dispatchBase > 42) {
-        state.dispatchBase = clamp(state.dispatchBase, 8, 42);
+      if (state.dispatchBase < state.dispatchBand.min || state.dispatchBase > state.dispatchBand.max) {
+        state.dispatchBase = clamp(state.dispatchBase, state.dispatchBand.min, state.dispatchBand.max);
         state.dispatchDriftVel *= -0.62;
       }
-      if (state.stackBase < 58 || state.stackBase > 92) {
-        state.stackBase = clamp(state.stackBase, 58, 92);
+      if (state.stackBase < state.stackBand.min || state.stackBase > state.stackBand.max) {
+        state.stackBase = clamp(state.stackBase, state.stackBand.min, state.stackBand.max);
         state.stackDriftVel *= -0.62;
       }
       if (Math.abs(state.dispatchBase - state.stackBase) < 14) {
         if (state.dispatchBase < state.stackBase) {
-          state.dispatchBase = clamp(state.dispatchBase - 0.9, 8, 42);
+          state.dispatchBase = clamp(state.dispatchBase - 0.9, state.dispatchBand.min, state.dispatchBand.max);
           state.dispatchDriftVel = Math.min(state.dispatchDriftVel, -0.02);
         } else {
-          state.stackBase = clamp(state.stackBase + 0.9, 58, 92);
+          state.stackBase = clamp(state.stackBase + 0.9, state.stackBand.min, state.stackBand.max);
           state.stackDriftVel = Math.max(state.stackDriftVel, 0.02);
         }
       }
 
       state.dispatchFreq = clamp(
         state.dispatchBase + Math.sin(t * 0.56) * (6.2 * driftScale) + Math.sin(t * 1.28) * (1.1 * driftScale) + jitterD,
-        6, 45
+        state.dispatchBand.min - 2, state.dispatchBand.max + 2
       );
       state.stackFreq = clamp(
         state.stackBase + Math.sin(t * 0.62 + 1.2) * (6.9 * driftScale) + Math.sin(t * 1.34 + 0.4) * (1.2 * driftScale) + jitterS,
-        55, 94
+        state.stackBand.min - 2, state.stackBand.max + 2
       );
       state.jammers.forEach((j, i) => {
         const micro = (Math.random() - 0.5) * 0.32;
@@ -3063,6 +4155,128 @@
       if (!el.powerSwitchWrap) return;
       el.powerSwitchWrap.classList.toggle("blink-hint", !!on);
     }
+    function utilityMeta(kind) {
+      return utilityShopConfig[kind] || null;
+    }
+    function utilityStock(kind) {
+      const meta = utilityMeta(kind);
+      if (!meta) return 0;
+      return state.utilityStock[meta.stockKey] || 0;
+    }
+    function setUtilityStock(kind, value) {
+      const meta = utilityMeta(kind);
+      if (!meta) return;
+      state.utilityStock[meta.stockKey] = clamp(value, 0, utilityStockCap);
+    }
+    function utilityButton(kind) {
+      if (kind === "stabilizer") return el.stabilizeBtn;
+      if (kind === "hint") return el.hintBtn;
+      return el.mapBtn;
+    }
+    function utilityShopButton(kind) {
+      if (kind === "stabilizer") return el.lcdBuyStabilizer;
+      if (kind === "hint") return el.lcdBuyHint;
+      return el.lcdBuyMap;
+    }
+    function lcdShopItemMeta(kind) {
+      return lcdShopItemConfig[kind] || null;
+    }
+    function lcdShopItemButton(kind) {
+      if (kind === "energy") return el.lcdBuyEnergy;
+      if (kind === "solar") return el.lcdBuySolar;
+      if (kind === "reputation") return el.lcdBuyRep;
+      return el.lcdBuyMorale;
+    }
+    function refreshUtilityButtons() {
+      const inShop = isAdvanceGateActive();
+      if (el.lcdShopMeta) {
+        el.lcdShopMeta.textContent = `Scrip ${Math.round(state.stats.credits)} · Intel ${Math.round(state.stats.intel)} · Energie ${Math.round(state.stats.signal)} · Moral ${Math.round(state.stats.morale)} · Reputation ${Math.round(state.stats.reputation)}`;
+      }
+      ["stabilizer", "hint", "map"].forEach((kind) => {
+        const meta = utilityMeta(kind);
+        const btn = utilityButton(kind);
+        const shopBtn = utilityShopButton(kind);
+        if (!meta || !btn) return;
+        const stock = utilityStock(kind);
+        if (inShop) {
+          btn.textContent = `${meta.baseLabel} [${stock}]`;
+          btn.disabled = true;
+          if (shopBtn) {
+            shopBtn.textContent = `${meta.buyLabel} · ${stock}/${utilityStockCap}`;
+            shopBtn.disabled = state.stats[meta.stat] < meta.cost || stock >= utilityStockCap;
+          }
+        } else {
+          btn.textContent = `${meta.baseLabel} [${stock}]`;
+          if (state.running && !state.pending) {
+            btn.disabled = stock <= 0;
+          }
+          if (shopBtn) {
+            shopBtn.textContent = `${meta.buyLabel} · ${stock}/${utilityStockCap}`;
+            shopBtn.disabled = true;
+          }
+        }
+      });
+      ["energy", "solar", "reputation", "morale"].forEach((kind) => {
+        const meta = lcdShopItemMeta(kind);
+        const shopBtn = lcdShopItemButton(kind);
+        if (!meta || !shopBtn) return;
+        const bought = state.shopPurchases[kind] || 0;
+        const limit = meta.limit || 99;
+        const gainLabel = meta.gainLabel || `+${Object.entries(meta.gain).map(([key, value]) => `${value} ${effectLabel(key)}`).join(", ")}`;
+        if (inShop) {
+          shopBtn.textContent = `${meta.buyLabel} · ${gainLabel} · ${bought}/${limit}`;
+          shopBtn.disabled = state.stats[meta.stat] < meta.cost || bought >= limit;
+        } else {
+          shopBtn.textContent = `${meta.buyLabel} · ${gainLabel} · ${bought}/${limit}`;
+          shopBtn.disabled = true;
+        }
+      });
+      if (el.statusLcd) el.statusLcd.classList.toggle("shop-open", inShop);
+    }
+    function buyUtility(kind) {
+      if (!state.running || state.pending || !isAdvanceGateActive()) return;
+      const meta = utilityMeta(kind);
+      if (!meta) return;
+      const stock = utilityStock(kind);
+      if (stock >= utilityStockCap) {
+        el.statusLine.textContent = `${meta.baseLabel} ist bereits voll aufgefuellt.`;
+        return;
+      }
+      if (state.stats[meta.stat] < meta.cost) {
+        el.statusLine.textContent = `${meta.baseLabel} braucht ${meta.cost} ${effectLabel(meta.stat)}.`;
+        return;
+      }
+      state.stats[meta.stat] = clamp(state.stats[meta.stat] - meta.cost);
+      setUtilityStock(kind, stock + 1);
+      el.statusLine.textContent = `${meta.baseLabel} gekauft. Vorrat ${utilityStock(kind)}/${utilityStockCap}.`;
+      log(`${meta.baseLabel} gekauft fuer ${meta.cost} ${effectLabel(meta.stat)}.`, "tone-n");
+      renderHeader();
+      renderStats();
+    }
+    function buyLcdShopItem(kind) {
+      if (!state.running || state.pending || !isAdvanceGateActive()) return;
+      const meta = lcdShopItemMeta(kind);
+      if (!meta) return;
+      const bought = state.shopPurchases[kind] || 0;
+      const limit = meta.limit || 99;
+      if (bought >= limit) {
+        el.statusLine.textContent = `${meta.baseLabel} ist fuer diesen Run ausgeschopft.`;
+        return;
+      }
+      if (state.stats[meta.stat] < meta.cost) {
+        el.statusLine.textContent = `${meta.baseLabel} braucht ${meta.cost} ${effectLabel(meta.stat)}.`;
+        return;
+      }
+      state.stats[meta.stat] = clamp(state.stats[meta.stat] - meta.cost);
+      state.shopPurchases[kind] = bought + 1;
+      if (kind === "solar") state.solarUpgrade = (state.solarUpgrade || 0) + 1;
+      else applyEffect(meta.gain);
+      const gainLabel = meta.gainLabel || `+${Object.entries(meta.gain).map(([key, value]) => `${value} ${effectLabel(key)}`).join(", ")}`;
+      el.statusLine.textContent = `${meta.baseLabel} gekauft. ${gainLabel}.`;
+      log(`${meta.baseLabel} gekauft fuer ${meta.cost} ${effectLabel(meta.stat)}.`, "tone-n");
+      renderHeader();
+      renderStats();
+    }
     function isAdvanceGateActive() {
       if (!state.running || state.pending) return false;
       const locksInBlock = (state.locksThisBlock.dispatch || 0) + (state.locksThisBlock.stack || 0);
@@ -3070,6 +4284,7 @@
     }
 
     function updateActionHints() {
+      el.nextBtn.disabled = true;
       setCta(el.startBtn, null);
       setCta(el.nextBtn, null);
       setCta(el.optA, null);
@@ -3078,17 +4293,26 @@
       setBlink(el.startBtn, false);
       setPowerBlink(false);
       setBlink(el.nextBtn, false);
+      setBlink(el.stabilizeBtn, false);
+      setBlink(el.hintBtn, false);
       setBlink(el.optA, false);
       setBlink(el.optB, false);
       setBlink(el.mapBtn, false);
+      refreshUtilityButtons();
 
       if (!state.powerOn) {
+        el.stabilizeBtn.disabled = true;
+        el.hintBtn.disabled = true;
+        el.mapBtn.disabled = true;
         setPowerBlink(true);
         el.actionHint.textContent = "Power auf I schalten.";
         return;
       }
 
       if (!state.running) {
+        el.stabilizeBtn.disabled = true;
+        el.hintBtn.disabled = true;
+        el.mapBtn.disabled = true;
         el.actionHint.textContent = "Run beendet. Fuer neuen Run: auf O und wieder auf I.";
         return;
       }
@@ -3098,7 +4322,6 @@
         el.hintBtn.disabled = true;
         el.mapBtn.disabled = true;
         el.nudgeDownBtn.disabled = true;
-        el.fineCenterBtn.disabled = true;
         el.nudgeUpBtn.disabled = true;
         setCta(el.optA, "cta-focus");
         setCta(el.optB, "cta-focus");
@@ -3112,23 +4335,33 @@
       el.hintBtn.disabled = false;
       el.mapBtn.disabled = false;
       el.nudgeDownBtn.disabled = false;
-      el.fineCenterBtn.disabled = false;
       el.nudgeUpBtn.disabled = false;
 
       if (isAdvanceGateActive()) {
+        el.nextBtn.disabled = false;
         el.stabilizeBtn.disabled = true;
         el.hintBtn.disabled = true;
         el.mapBtn.disabled = true;
         el.nudgeDownBtn.disabled = true;
-        el.fineCenterBtn.disabled = true;
         el.nudgeUpBtn.disabled = true;
         setCta(el.nextBtn, "cta-focus-alt");
-        setBlink(el.nextBtn, true);
-        const left = Math.max(0, (5200 - state.autoNextMs) / 1000);
-        el.actionHint.textContent = `Block bereit: nur Naechster Block. Auto-advance in ${left.toFixed(1)}s.`;
-      } else {
+        setCta(el.stabilizeBtn, "cta-focus");
+        setCta(el.hintBtn, "cta-focus");
         setCta(el.mapBtn, "cta-focus-alt");
+        setBlink(el.nextBtn, true);
+        setBlink(el.stabilizeBtn, true);
+        setBlink(el.hintBtn, true);
         setBlink(el.mapBtn, true);
+        refreshUtilityButtons();
+        el.actionHint.textContent = "Level bereit: Kaufen oder direkt Naechstes Level.";
+      } else {
+        setCta(el.stabilizeBtn, "cta-focus");
+        setCta(el.hintBtn, "cta-focus");
+        setCta(el.mapBtn, "cta-focus-alt");
+        setBlink(el.stabilizeBtn, true);
+        setBlink(el.hintBtn, true);
+        setBlink(el.mapBtn, true);
+        refreshUtilityButtons();
         el.actionHint.textContent = "Jetzt tunen und ersten Lock holen (optional: Map Ping fuer kurze Hilfe).";
       }
     }
@@ -3138,21 +4371,21 @@
     }
 
     function renderHeader() {
+      if (el.radioRoot) el.radioRoot.classList.toggle("full-lock-active", Boolean(state.pending));
       if (el.scopeShell) el.scopeShell.classList.toggle("power-off", !state.powerOn);
       if (el.leftDisplay) el.leftDisplay.classList.toggle("power-off", !state.powerOn);
       if (el.statusLcd) el.statusLcd.classList.toggle("power-off", !state.powerOn);
+      if (el.statusLcd) el.statusLcd.classList.toggle("game-over", state.gameOverReason === "power");
       if (!state.powerOn) {
         el.ticker.textContent = "POWER O · OFFLINE";
       } else {
-        el.ticker.textContent = `Block ${state.block}/${state.maxBlocks} · Tag ${state.day} ${String(state.hour).padStart(2, "0")}:00 · ${state.name} · Score ${Math.round(state.score)}`;
+        el.ticker.textContent = `Level ${state.block}/${state.maxBlocks} · Tag ${state.day} ${String(state.hour).padStart(2, "0")}:00 · ${state.name} · Score ${Math.round(state.score)}`;
       }
       el.freqValue.textContent = `${state.freq.toFixed(2)} MHz`;
       el.dial.setAttribute("aria-valuenow", (state.fineMode ? state.fineAnchor : state.freq).toFixed(2));
       el.fineDial.setAttribute("aria-valuenow", state.fineAccel.toFixed(2));
       const drivePct = Math.round((state.fineAccel / 6) * 100);
       el.fineReadout.textContent = `SPEED ${drivePct >= 0 ? "+" : ""}${drivePct}%`;
-      el.fineCenterBtn.classList.toggle("mode-fine", state.fineMode);
-      el.fineCenterBtn.classList.toggle("mode-coarse", !state.fineMode);
 
       const a = mapFreqToAngle(state.fineMode ? state.fineAnchor : state.freq);
       el.notch.style.transform = `translateX(-50%) rotate(${a}deg)`;
@@ -3164,22 +4397,31 @@
       el.channelChip.textContent = `Kanal: ${channelName}`;
       el.qualityChip.textContent = `Qualitaet: ${Math.round(state.quality)}% · Jam ${Math.round(state.jamPenalty)}%`;
       el.gameChip.textContent = `Combo ${state.combo} · Heat ${Math.round(state.heat)} · Mode ${state.fineMode ? "FEIN" : "GROB"} · Map ${mapVisible() ? "ON" : "OFF"}`;
-      const snow = clamp((state.jamPenalty - 10) / 120, 0, 1);
-      document.documentElement.style.setProperty("--snow-opacity", (snow * 0.62).toFixed(3));
+      const jamSnow = clamp((state.jamPenalty - 10) / 120, 0, 1);
+      const lowSignalSnow = clamp((38 - Math.max(state.quality, 0)) / 38, 0, 1);
+      const snow = clamp(jamSnow * 0.72 + lowSignalSnow * 0.58, 0, 1);
+      document.documentElement.style.setProperty("--snow-opacity", (snow * 0.72).toFixed(3));
       document.documentElement.style.setProperty("--snow-strength", snow.toFixed(3));
 
       renderLockLeds(el.lockDispatchLeds, state.lock.dispatch, "dispatch");
       renderLockLeds(el.lockStackLeds, state.lock.stack, "stack");
       setDashNeedle(el.qualityNeedle, clamp(state.quality, 0, 100));
       setDashNeedle(el.signalNeedle, state.stats.signal);
+      if (el.batteryFill) {
+        const cells = el.batteryFill.children;
+        const lit = Math.round((clamp(state.stats.signal, 0, 100) / 100) * cells.length);
+        for (let i = 0; i < cells.length; i += 1) {
+          cells[i].classList.toggle("on", i < lit);
+        }
+      }
       const level = clamp(state.quality + (state.running ? rnd(-2, 2) : 0), 0, 100);
       const ledLevel = clamp((level + 12) / 112, 0, 1) * (1 - clamp(state.jamPenalty / 220, 0, 0.42));
       const r = Math.round(28 + ledLevel * 60);
       const g = Math.round(112 + ledLevel * 143);
       const b = Math.round(52 + ledLevel * 82);
-      el.sigLed.style.opacity = (0.24 + ledLevel * 0.76).toFixed(2);
+      el.sigLed.style.opacity = (0.38 + ledLevel * 0.62).toFixed(2);
       el.sigLed.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-      el.sigLed.style.boxShadow = `0 0 ${3 + ledLevel * 10}px rgba(132,255,182,${0.16 + ledLevel * 0.52}), inset 0 0 8px rgba(167,255,205,${0.2 + ledLevel * 0.5})`;
+      el.sigLed.style.boxShadow = `0 0 ${8 + ledLevel * 18}px rgba(132,255,182,${0.28 + ledLevel * 0.6}), 0 0 ${14 + ledLevel * 26}px rgba(132,255,182,${0.12 + ledLevel * 0.24}), inset 0 0 10px rgba(210,255,228,${0.28 + ledLevel * 0.44})`;
       const tunePos = state.fineMode ? 50 : state.freq;
       el.fmNeedle.style.bottom = `${tunePos}%`;
       el.fmNeedle.classList.toggle("good", state.quality > 70);
@@ -3201,10 +4443,9 @@
       el.jammer1Marker.classList.toggle("show", reveal && inFineView(j1Pos));
       el.jammer2Marker.classList.toggle("show", reveal && inFineView(j2Pos));
 
-      const css = getComputedStyle(document.documentElement);
-      if (state.channel === "dispatch") el.channelChip.style.color = css.getPropertyValue("--dispatch").trim() || "#ffcf84";
-      else if (state.channel === "stack") el.channelChip.style.color = css.getPropertyValue("--stack").trim() || "#9ed0ff";
-      else el.channelChip.style.color = "#c7d8e8";
+      if (state.channel === "dispatch") el.channelChip.style.color = "#5f7350";
+      else if (state.channel === "stack") el.channelChip.style.color = "#667a56";
+      else el.channelChip.style.color = "#6f845d";
 
       renderContract();
       updateActionHints();
@@ -3215,37 +4456,41 @@
       lcdState.pendingFreq = `FREQ ${state.freq.toFixed(2)} MHz`;
       lcdState.pendingStats = statConfig.map(([key, label]) => ({ key, label, v: Math.round(state.stats[key]) }));
       const now = (window.performance && performance.now) ? performance.now() : Date.now();
-      if (!lcdState.hasFrame || now - lcdState.lastCommit >= lcdState.nextDelay) {
+      if (isBlockAnnouncementActive(now) || !lcdState.hasFrame || now - lcdState.lastCommit >= lcdState.nextDelay) {
         commitLcdFrame(now);
       }
     }
 
     function commitLcdFrame(now) {
-      if (!el.lcdFreq || !el.stats) return;
+      if (!el.lcdFreq || !el.stats || !el.statusLcd) return;
       const rows = lcdState.pendingStats || statConfig.map(([key, label]) => ({ key, label, v: Math.round(state.stats[key]) }));
+      const blockAnnouncement = isBlockAnnouncementActive(now);
+      const powerGameOver = state.gameOverReason === "power";
       if (el.lcdGhost && lcdState.hasFrame) {
         const prevTitle = el.lcdTitle ? el.lcdTitle.textContent : "LCD STATUS";
         const prevFreq = el.lcdFreq.textContent;
         const prevStats = el.stats.innerHTML;
-        const prevSelects = el.lcdDisplaySelects ? el.lcdDisplaySelects.outerHTML : "";
-        el.lcdGhost.innerHTML = `<div class="lcd-title">${prevTitle}</div>${prevSelects}<div class="lcd-readout">${prevFreq}</div><div class="lcd-ghost-stats">${prevStats}</div>`;
+        el.lcdGhost.innerHTML = `<div class="lcd-title">${prevTitle}</div><div class="lcd-readout">${prevFreq}</div><div class="lcd-ghost-stats">${prevStats}</div>`;
         el.lcdGhost.classList.remove("show");
         void el.lcdGhost.offsetWidth;
         el.lcdGhost.classList.add("show");
       }
 
-      el.lcdFreq.textContent = lcdState.pendingFreq;
+      el.statusLcd.classList.toggle("block-announce", blockAnnouncement);
+      if (el.lcdTitle) el.lcdTitle.textContent = powerGameOver ? "LCD Status" : (blockAnnouncement ? " " : "LCD Status");
+      el.lcdFreq.textContent = powerGameOver ? "GAME OVER" : (blockAnnouncement ? lcdState.announcementText : lcdState.pendingFreq);
       el.stats.innerHTML = "";
-      rows.forEach(({ label, v }) => {
-        const row = document.createElement("div");
-        row.className = "stat-row";
-        row.innerHTML = `<div>${label}</div><div class=\"track\"><div class=\"fill ${meterClass(v)}\" style=\"width:${v}%\"></div></div><div>${v}</div>`;
-        el.stats.appendChild(row);
-      });
-
+      if (!blockAnnouncement && !powerGameOver) {
+        rows.forEach(({ label, v }) => {
+          const row = document.createElement("div");
+          row.className = "stat-row";
+          row.innerHTML = `<div>${label}</div><div class=\"track\"><div class=\"fill ${meterClass(v)}\" style=\"width:${v}%\"></div></div><div>${v}</div>`;
+          el.stats.appendChild(row);
+        });
+      }
       lcdState.hasFrame = true;
       lcdState.lastCommit = now;
-      lcdState.nextDelay = 190 + Math.random() * 320;
+      lcdState.nextDelay = powerGameOver ? 9999 : (blockAnnouncement ? 80 : 190 + Math.random() * 320);
     }
 
     function mapFreqToAngle(freq) {
@@ -3326,6 +4571,14 @@
           bar.appendChild(led);
         }
       });
+      if (el.batteryFill) {
+        el.batteryFill.innerHTML = "";
+        for (let i = 0; i < 10; i += 1) {
+          const cell = document.createElement("span");
+          cell.className = "battery-cell";
+          el.batteryFill.appendChild(cell);
+        }
+      }
     }
 
     function renderLockLeds(bar, value, type) {
@@ -3364,12 +4617,14 @@
       const diff = runDifficulty();
       const d = Math.abs(state.freq - state.dispatchFreq);
       const s = Math.abs(state.freq - state.stackFreq);
-      const widthScale = 1.35 - diff * 0.73;
-      const coreScale = 1.28 - diff * 0.72;
-      const shoulderD = (5.9 + state.heat * 0.02) * widthScale;
-      const shoulderS = (5.5 + state.heat * 0.018) * widthScale;
-      const coreD = (0.085 + state.heat * 0.0005) * coreScale;
-      const coreS = (0.08 + state.heat * 0.0005) * coreScale;
+      const widthScale = 1.62 - diff * 0.96;
+      const coreScale = 1.54 - diff * 0.9;
+      const shoulderBase = 6.2 + state.heat * 0.019;
+      const coreBase = 0.092 + state.heat * 0.00046;
+      const shoulderD = shoulderBase * widthScale;
+      const shoulderS = shoulderBase * widthScale;
+      const coreD = coreBase * coreScale;
+      const coreS = coreBase * coreScale;
       const qDShoulder = 68 * Math.exp(-(d * d) / (2 * shoulderD * shoulderD));
       const qSShoulder = 68 * Math.exp(-(s * s) / (2 * shoulderS * shoulderS));
       const qDCore = 34 * Math.exp(-(d * d) / (2 * coreD * coreD));
@@ -3387,18 +4642,19 @@
 
       const baseChannel = qD >= qS ? "dispatch" : "stack";
       const baseQuality = baseChannel === "dispatch" ? qD : qS;
-      const effective = Math.round(baseQuality - state.jamPenalty * 1.08);
+      const jamScale = 0.78 + diff * 0.48;
+      const effective = Math.round(baseQuality - state.jamPenalty * jamScale);
 
       if (effective <= -8) {
         return { channel: "noise", quality: effective };
       }
-      if (baseChannel === "dispatch" && baseQuality > 12) {
+      if (baseChannel === "dispatch" && baseQuality > 10) {
         return { channel: "dispatch", quality: effective };
       }
-      if (baseChannel === "stack" && baseQuality > 12) {
+      if (baseChannel === "stack" && baseQuality > 10) {
         return { channel: "stack", quality: effective };
       }
-      return { channel: "noise", quality: Math.round(Math.max(qD, qS) * 0.4 - state.jamPenalty * 0.95) };
+      return { channel: "noise", quality: Math.round(Math.max(qD, qS) * 0.45 - state.jamPenalty * (0.72 + diff * 0.36)) };
     }
 
     function onLiveSample() {
@@ -3423,11 +4679,7 @@
         state.lock.dispatch = winner === "dispatch" ? 100 : 0;
         state.lock.stack = winner === "stack" ? 100 : 0;
         updateRadioAudio({ channel: winner, quality: 100 });
-        state.autoNextMs += 90;
-        if (state.autoNextMs >= 5200) {
-          nextBlock();
-          return;
-        }
+        state.autoNextMs = 0;
         renderHeader();
         return;
       }
@@ -3438,6 +4690,11 @@
       const sig = getSignal();
       state.channel = sig.channel;
       state.quality = sig.quality;
+      const qualityFloor = 48 + diff * 18;
+      const qualityPenalty = sig.quality >= qualityFloor
+        ? 0
+        : ((qualityFloor - sig.quality) / Math.max(18, 32 - diff * 8)) * (0.7 + diff * 1.95);
+      const earlyAssist = 0.48 - diff * 0.48;
       const lockGain = sig.quality >= 84
         ? 2.5 + (sig.quality - 84) * 0.11
         : sig.quality >= 66
@@ -3445,11 +4702,11 @@
           : sig.quality >= 52
             ? 0.16 + (sig.quality - 52) * 0.02
             : sig.quality < 0
-              ? -4.9
-              : -2.1;
-      const otherDecay = 1.65 + diff * 1.25;
+              ? -2.1
+              : -0.48;
+      const otherDecay = 0.82 + diff * 0.54;
       const tunePressure = (1 - diff) * 0.9 - diff * 0.5;
-      const channelGain = lockGain + tunePressure - state.jamPenalty * (0.008 + diff * 0.006);
+      const channelGain = lockGain + tunePressure + earlyAssist - qualityPenalty - state.jamPenalty * (0.0028 + diff * 0.0021);
 
       if (sig.channel === "dispatch") {
         state.lock.dispatch = clamp(state.lock.dispatch + channelGain, 0, 100);
@@ -3458,13 +4715,17 @@
         state.lock.stack = clamp(state.lock.stack + channelGain, 0, 100);
         state.lock.dispatch = clamp(state.lock.dispatch - otherDecay, 0, 100);
       } else {
-        state.lock.dispatch = clamp(state.lock.dispatch - (1.8 + state.jamPenalty * 0.02), 0, 100);
-        state.lock.stack = clamp(state.lock.stack - (1.8 + state.jamPenalty * 0.02), 0, 100);
+        state.lock.dispatch = clamp(state.lock.dispatch - (0.56 + state.jamPenalty * 0.0064), 0, 100);
+        state.lock.stack = clamp(state.lock.stack - (0.46 + state.jamPenalty * 0.0048), 0, 100);
       }
 
-      if (sig.channel === "dispatch") state.stats.signal = clamp(state.stats.signal + 0.14 - state.jamPenalty * 0.006);
-      else if (sig.channel === "stack") state.stats.signal = clamp(state.stats.signal + 0.1 - state.jamPenalty * 0.006);
-      else state.stats.signal = clamp(state.stats.signal - (sig.quality < 0 ? 0.55 : 0.18));
+      const solarPhase = clamp(1 - Math.abs(state.hour - 12) / 6, 0, 1);
+      const solarBoost = state.solarUpgrade || 0;
+      const solarTrickle = 0.004 + solarPhase * 0.012 + solarBoost * (0.003 + solarPhase * 0.005);
+      if (sig.channel === "dispatch") state.stats.signal = clamp(state.stats.signal + solarTrickle - state.jamPenalty * 0.006);
+      else if (sig.channel === "stack") state.stats.signal = clamp(state.stats.signal + solarTrickle - state.jamPenalty * 0.006);
+      else state.stats.signal = clamp(state.stats.signal - (sig.quality < 0 ? 0.55 : 0.18) + solarTrickle * 0.35);
+      if (enforceEnergyGameOver()) return;
 
       if (sig.quality < 0) {
         state.heat = clamp(state.heat + 0.16, 0, 100);
@@ -3489,7 +4750,8 @@
     function spawnDecision(channel) {
       const list = channel === "dispatch" ? dispatchEvents : stackEvents;
       const event = pickEvent(list);
-      state.pending = { channel, event };
+      const optionMeta = resolveDecisionMeta(channel, event);
+      state.pending = { channel, event, optionMeta };
       state.channel = channel;
       state.quality = 100;
       state.jamPenalty = 0;
@@ -3503,10 +4765,15 @@
       el.decisionText.textContent = `${event.title}: ${event.text}`;
       el.optA.textContent = `A: ${event.a}`;
       el.optB.textContent = `B: ${event.b}`;
-      el.optAText.textContent = "Konsequenz A: unklar vor Ausfuehrung.";
-      el.optBText.textContent = "Konsequenz B: unklar vor Ausfuehrung.";
-      el.optA.disabled = false;
-      el.optB.disabled = false;
+      el.optAText.textContent = optionMeta.A.unlocked
+        ? `${effectLabel(optionMeta.A.focusStat)} ${optionMeta.A.statValue}/${optionMeta.A.requirement} · Einfluss ${Math.round(optionMeta.A.intensity * 100)}%`
+        : `Gesperrt: ${effectLabel(optionMeta.A.focusStat)} ${optionMeta.A.requirement}+ noetig.`;
+      el.optBText.textContent = optionMeta.B.unlocked
+        ? `${effectLabel(optionMeta.B.focusStat)} ${optionMeta.B.statValue}/${optionMeta.B.requirement} · Einfluss ${Math.round(optionMeta.B.intensity * 100)}%`
+        : `Gesperrt: ${effectLabel(optionMeta.B.focusStat)} ${optionMeta.B.requirement}+ noetig.`;
+      el.optA.disabled = !optionMeta.A.unlocked;
+      el.optB.disabled = !optionMeta.B.unlocked;
+      triggerLcdChangeEffect(el.decisionScreen);
       el.statusLine.textContent = channel === "dispatch"
         ? "Dispatch lock erreicht. Entscheidung offen."
         : "STACKCAST lock erreicht. Entscheidung offen.";
@@ -3525,16 +4792,87 @@
       if (state.faction === "maker") state.stats.tech = clamp(state.stats.tech + 1);
       if (state.faction === "roamer") state.stats.credits = clamp(state.stats.credits + 1);
       if (state.faction === "orden") state.stats.morale = clamp(state.stats.morale + 1);
+      enforceEnergyGameOver();
+    }
+    function enforceEnergyGameOver() {
+      if (!state.running) return false;
+      if (state.stats.signal > 0) return false;
+      finishRun("power");
+      return true;
+    }
+    function getDecisionFocusStat(channel, effect = {}) {
+      const scores = {
+        reputation: Math.abs(effect.reputation || 0) * 1.35 + (channel === "dispatch" ? 2.4 : 0),
+        tech: Math.abs(effect.tech || 0) * 1.35 + (channel === "stack" ? 2.4 : 0),
+        morale: Math.abs(effect.morale || 0) * 1.35 + Math.max(0, -(effect.reputation || 0)) * 0.35 + Math.max(0, effect.heat || 0) * 0.22,
+      };
+      return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+    }
+    function getDecisionOptionMeta(channel, effect = {}, fallback = false) {
+      const focusStat = getDecisionFocusStat(channel, effect);
+      const reach = Object.entries(effect).reduce((sum, [key, value]) => {
+        if (key === "heat") return sum + Math.abs(value) * 0.65;
+        return sum + Math.abs(value) * 0.6;
+      }, 0);
+      const maxSwing = Math.max(0, ...Object.values(effect).map((value) => Math.abs(value)));
+      const penaltyWeight = Math.max(0, -(effect.reputation || 0)) + Math.max(0, -(effect.morale || 0)) + Math.max(0, effect.heat || 0);
+      const requirement = fallback ? 0 : clamp(Math.round(reach * 0.18 + maxSwing * 0.12 + penaltyWeight * 0.1), 0, 8);
+      const statValue = clamp(state.stats[focusStat] || 0, 0, 100);
+      const unlocked = fallback || statValue >= requirement;
+      const intensity = 0.35 + (statValue / 100) * 1.05;
+      return { focusStat, requirement, statValue, unlocked, intensity };
+    }
+    function resolveDecisionMeta(channel, event) {
+      const metaA = getDecisionOptionMeta(channel, event.effectA || {});
+      const metaB = getDecisionOptionMeta(channel, event.effectB || {});
+      if (metaA.unlocked || metaB.unlocked) return { A: metaA, B: metaB };
+      if (metaA.requirement <= metaB.requirement) {
+        return { A: getDecisionOptionMeta(channel, event.effectA || {}, true), B: metaB };
+      }
+      return { A: metaA, B: getDecisionOptionMeta(channel, event.effectB || {}, true) };
+    }
+    function scaleDecisionEffect(effect = {}, intensity = 1) {
+      const scaled = {};
+      for (const [key, value] of Object.entries(effect)) {
+        let next = Math.round(value * intensity);
+        if (next === 0 && value !== 0) next = value > 0 ? 1 : -1;
+        scaled[key] = next;
+      }
+      return scaled;
+    }
+    function roundClearReward(channel) {
+      if (channel === "dispatch") {
+        return { credits: 1, intel: 1, signal: 2, reputation: 1, morale: 1 };
+      }
+      return { intel: 2, signal: 2, tech: 1 };
+    }
+    function advanceContract(channel) {
+      if (!state.contract || state.contract.target !== channel) return;
+      state.contract.progress = clamp(state.contract.progress + 1, 0, state.contract.required);
+      log(`Bounty Fortschritt: ${state.contract.progress}/${state.contract.required} fuer ${channel === "dispatch" ? "Dispatch" : "STACKCAST"}.`, "tone-n");
+      if (state.contract.progress < state.contract.required) return;
+
+      const reward = state.contract.reward || {};
+      applyEffect(reward);
+      state.score += 24;
+      log(`Bounty abgeschlossen: +${Object.entries(reward).map(([k, v]) => `${v} ${effectLabel(k)}`).join(", ")}.`, "tone-d");
+      randomContract();
     }
 
     function choose(option) {
       if (!state.pending) return;
       const pending = state.pending;
+      const optionMeta = pending.optionMeta?.[option];
+      if (optionMeta && !optionMeta.unlocked) {
+        el.statusLine.textContent = `${effectLabel(optionMeta.focusStat)} ${optionMeta.requirement}+ noetig fuer diese Entscheidung.`;
+        return;
+      }
       state.pending = null;
       const ev = pending.event;
       const ch = pending.channel;
       try {
-        const fx = option === "A" ? ev.effectA : ev.effectB;
+        const rawFx = option === "A" ? ev.effectA : ev.effectB;
+        const fx = scaleDecisionEffect(rawFx || {}, optionMeta?.intensity || 1);
         applyEffect(fx);
         const chosenFlag = option === "A" ? ev.flagA : ev.flagB;
         if (chosenFlag) {
@@ -3546,23 +4884,24 @@
         log(`Effekte: ${formatEffect(fx || {})}`, ch === "dispatch" ? "tone-d" : "tone-s");
         const continuation = loreContinuation(ev, option);
         log(`Folge: ${continuation}`, ch === "dispatch" ? "tone-d" : "tone-s");
+        const payout = roundClearReward(ch);
+        applyEffect(payout);
+        log(`Runden-Reward: +${Object.entries(payout).map(([k, v]) => `${v} ${effectLabel(k)}`).join(", ")}.`, ch === "dispatch" ? "tone-d" : "tone-s");
         state.combo += 1;
         state.score += 10 + state.combo * 2;
 
-        if (state.contract && state.contract.target === ch) {
-          state.contract.progress += 1;
-          if (state.contract.progress >= state.contract.required) {
-            applyEffect(state.contract.reward);
-            state.score += 24;
-            log(`Contract abgeschlossen: ${state.contract.target.toUpperCase()} bounty kassiert.`, "tone-d");
-            randomContract();
-          }
-        }
+        advanceContract(ch);
 
         el.decisionText.textContent = `Folge: ${continuation}`;
         el.optAText.textContent = option === "A" ? `Ausgefuehrt A: ${formatEffect(fx || {})}` : "Ausgefuehrt A: -";
         el.optBText.textContent = option === "B" ? `Ausgefuehrt B: ${formatEffect(fx || {})}` : "Ausgefuehrt B: -";
-        el.statusLine.textContent = "Live-Abtastung aktiv. Halte die Frequenz stabil fuer den naechsten lock.";
+        triggerLcdChangeEffect(el.decisionScreen);
+        if (state.block + 1 >= state.maxBlocks) {
+          state.block = state.maxBlocks;
+          el.statusLine.textContent = "12/12 Level geschafft. Run abgeschlossen.";
+        } else {
+          el.statusLine.textContent = "Runde abgeschlossen. Kaufe Utility-Nachschub oder gehe ins naechste Level.";
+        }
       } catch (err) {
         console.error("Decision handling error", err);
         log("Entscheidung verarbeitet, aber ein Event-Fehler wurde abgefangen.", "tone-n");
@@ -3570,15 +4909,26 @@
       }
       el.optA.disabled = true;
       el.optB.disabled = true;
+      if (state.running && state.block >= state.maxBlocks) {
+        finishRun("cleared");
+        return;
+      }
       renderHeader();
       renderStats();
     }
 
     function nextBlock() {
       if (!state.running || state.pending) return;
+      const diff = runDifficulty();
       state.autoNextMs = 0;
       state.blockWinner = null;
       state.block += 1;
+      state.lock.dispatch = 0;
+      state.lock.stack = 0;
+      state.channel = "noise";
+      state.quality = 0;
+      state.jamPenalty = 0;
+      state.lastChannel = "noise";
       state.hour += 2;
       if (state.hour >= 24) {
         state.hour -= 24;
@@ -3586,6 +4936,8 @@
       }
 
       respawnCarriers();
+      state.dispatchFreq = state.dispatchBase;
+      state.stackFreq = state.stackBase;
       if (Math.random() < 0.4) {
         respawnJammers();
       }
@@ -3593,20 +4945,17 @@
       state.locksThisBlock.stack = 0;
       state.combo = Math.max(0, state.combo - 1);
       state.heat = clamp(state.heat - 6, 0, 100);
+      const energyDrain = 1 + Math.floor(diff * 1.5);
 
-      state.stats.morale = clamp(state.stats.morale - rnd(1, 3));
-      state.stats.credits = clamp(state.stats.credits - rnd(0, 2));
-      state.stats.intel = clamp(state.stats.intel - rnd(0, 2));
-      state.stats.signal = clamp(state.stats.signal - rnd(1, 3));
+      state.stats.morale = clamp(state.stats.morale - rnd(0, 1));
+      state.stats.credits = clamp(state.stats.credits - rnd(0, 1));
+      state.stats.intel = clamp(state.stats.intel - rnd(0, 1));
+      state.stats.signal = clamp(state.stats.signal - rnd(energyDrain, energyDrain + 1));
       state.score += 4;
 
       if (state.faction === "orden") state.stats.morale = clamp(state.stats.morale + 2);
 
-      if (state.stats.morale <= 0 || state.stats.reputation <= 0) {
-        state.stats.morale = clamp(state.stats.morale + 18);
-        state.stats.reputation = clamp(state.stats.reputation + 15);
-        log("Community-Boost holt dich zurueck ins Spiel.", "tone-d");
-      }
+      if (enforceEnergyGameOver()) return;
 
       if (state.block >= state.maxBlocks) {
         finishRun();
@@ -3614,9 +4963,9 @@
         assignLevelMusic(true);
         if (audio.musicDispatchEl && audio.musicDispatchEl.paused) audio.musicDispatchEl.play().catch(() => {});
         if (audio.musicStackEl && audio.musicStackEl.paused) audio.musicStackEl.play().catch(() => {});
-        randomContract();
-        el.statusLine.textContent = "Neuer Block: Frequenzen driften live, Bounty aktualisiert.";
-        log("Blockwechsel: neue Signalrouten + neuer Bounty Contract.", "tone-n");
+        el.statusLine.textContent = "Neues Level: Frequenzen driften live, Bounty laeuft weiter.";
+        log("Levelwechsel: neue Signalrouten, aktiver Bounty bleibt bestehen.", "tone-n");
+        announceBlockOnLcd(state.block);
       }
 
       renderHeader();
@@ -3624,53 +4973,59 @@
     }
 
     function stabilizeSignal() {
-      if (!state.running || state.pending || isAdvanceGateActive()) return;
-      if (state.stats.credits < 5 || state.creditsSpendCooldown > 0) {
-        el.statusLine.textContent = "Stabilizer braucht 5 Credits und ist kurz auf Cooldown.";
+      if (!state.running || state.pending) return;
+      if (isAdvanceGateActive()) return;
+      if (utilityStock("stabilizer") <= 0 || state.creditsSpendCooldown > 0) {
+        el.statusLine.textContent = "Kein Stabilizer-Vorrat oder noch auf Cooldown.";
         return;
       }
-      state.stats.credits = clamp(state.stats.credits - 5);
+      setUtilityStock("stabilizer", utilityStock("stabilizer") - 1);
       state.creditsSpendCooldown = 2;
       state.lock.dispatch = clamp(state.lock.dispatch + 18);
       state.lock.stack = clamp(state.lock.stack + 18);
       state.stats.signal = clamp(state.stats.signal + 8);
       state.score += 6;
-      el.statusLine.textContent = "Stabilizer aktiv: lock-Aufbau beschleunigt.";
+      el.statusLine.textContent = `Stabilizer aktiv: lock-Aufbau beschleunigt. Rest ${utilityStock("stabilizer")}.`;
       log("Signal Stabilizer gezuendet.", "tone-d");
+      renderHeader();
       renderStats();
     }
 
     function hintPing() {
-      if (!state.running || state.pending || isAdvanceGateActive()) return;
-      if (state.stats.intel < 6) {
-        el.statusLine.textContent = "Hint Ping braucht 6 Intel.";
+      if (!state.running || state.pending) return;
+      if (isAdvanceGateActive()) return;
+      if (utilityStock("hint") <= 0) {
+        el.statusLine.textContent = "Kein Hint-Ping-Vorrat vorhanden.";
         return;
       }
-      state.stats.intel = clamp(state.stats.intel - 6);
+      setUtilityStock("hint", utilityStock("hint") - 1);
       const dispatchHint = state.dispatchFreq.toFixed(1);
       const stackHint = state.stackFreq.toFixed(1);
       const contractHint = state.contract ? (state.contract.target === "dispatch" ? "Prioritaet: Dispatch" : "Prioritaet: STACKCAST") : "Kein Contract";
-      el.statusLine.textContent = `Hint: D ${dispatchHint} / S ${stackHint} · ${contractHint}.`;
+      el.statusLine.textContent = `Hint: D ${dispatchHint} / S ${stackHint} · ${contractHint}. Rest ${utilityStock("hint")}.`;
       log(`Hint Ping -> D ${dispatchHint} / S ${stackHint}`, "tone-s");
+      renderHeader();
       renderStats();
     }
 
     function mapPing() {
-      if (!state.running || state.pending || isAdvanceGateActive()) return;
-      if (state.stats.intel < 4) {
-        el.statusLine.textContent = "Map Ping braucht 4 Intel.";
+      if (!state.running || state.pending) return;
+      if (isAdvanceGateActive()) return;
+      if (utilityStock("map") <= 0) {
+        el.statusLine.textContent = "Kein Map-Ping-Vorrat vorhanden.";
         return;
       }
-      state.stats.intel = clamp(state.stats.intel - 4);
+      setUtilityStock("map", utilityStock("map") - 1);
       state.mapReveal = 8.5;
-      el.statusLine.textContent = "Map Overlay aktiv: Signale und Jammer kurz sichtbar.";
+      el.statusLine.textContent = `Map Overlay aktiv: Signale und Jammer kurz sichtbar. Rest ${utilityStock("map")}.`;
       log("Map Ping aktiviert. Overlay fuer kurze Zeit offen.", "tone-s");
       renderHeader();
       renderStats();
     }
 
-    function finishRun() {
+    function finishRun(reason = "score") {
       state.running = false;
+      state.gameOverReason = reason === "power" ? "power" : null;
       el.nextBtn.disabled = true;
       el.stabilizeBtn.disabled = true;
       el.hintBtn.disabled = true;
@@ -3689,7 +5044,15 @@
         state.stats.signal * 0.1
       );
 
-      if (score >= 72) {
+      if (reason === "power") {
+        state.stats.signal = 0;
+        state.powerOn = false;
+        el.statusLine.textContent = `Run Ende. Energie bei 0.`;
+        log("Systemkollaps: Keine Energie mehr verfuegbar.", "tone-n");
+      } else if (reason === "cleared") {
+        el.statusLine.textContent = "Run Ende. 12/12 Level geschafft.";
+        log("Kampagne abgeschlossen: alle 12 Runden gewonnen.", "tone-d");
+      } else if (score >= 72) {
         el.statusLine.textContent = `Run Ende. Score ${score}: Dispatch-Legende.`;
         log(`Finalscore ${score}. Die Wasteland funkt deinen Namen.`, "tone-d");
       } else if (score >= 52) {
@@ -3699,6 +5062,10 @@
         el.statusLine.textContent = `Run Ende. Score ${score}: naechster Run wird besser.`;
         log(`Finalscore ${score}. Mehr Locks, mehr Punkte.`, "tone-n");
       }
+      lcdState.lastCommit = 0;
+      lcdState.nextDelay = 0;
+      renderHeader();
+      renderStats();
     }
 
     function startRun() {
@@ -3746,17 +5113,22 @@
       state.lock.dispatch = 0;
       state.lock.stack = 0;
       state.locksThisBlock = { dispatch: 0, stack: 0 };
+      state.utilityStock = { stabilizer: 1, hint: 1, map: 1 };
+      state.shopPurchases = { energy: 0, solar: 0, reputation: 0, morale: 0 };
+      state.solarUpgrade = 0;
       state.storyFlags = {};
       state.storySeen = {};
+      state.gameOverReason = null;
+      state.lastContractTarget = null;
       respawnJammers();
       state.creditsSpendCooldown = 0;
       state.stats = {
-        reputation: 54,
-        morale: state.faction === "orden" ? 63 : 57,
-        tech: state.faction === "maker" ? 57 : 50,
-        credits: state.faction === "roamer" ? 26 : 22,
-        intel: 28,
-        signal: 58,
+        reputation: 0,
+        morale: 0,
+        tech: 0,
+        credits: 5,
+        intel: 18,
+        signal: 48,
       };
       randomContract();
 
@@ -3766,7 +5138,8 @@
       el.optAText.textContent = "Konsequenz A: -";
       el.optBText.textContent = "Konsequenz B: -";
       el.decisionText.textContent = "Lore-Intel ist live. Halte Frequenzen stabil, loese Locks aus und spiel die Bounty-Board Contracts.";
-      el.nextBtn.disabled = false;
+      triggerLcdChangeEffect(el.decisionScreen);
+      el.nextBtn.disabled = true;
       el.stabilizeBtn.disabled = false;
       el.hintBtn.disabled = false;
       el.mapBtn.disabled = false;
@@ -3782,6 +5155,7 @@
     function powerOff() {
       state.powerOn = false;
       state.running = false;
+      state.gameOverReason = null;
       state.pending = null;
       state.blockWinner = null;
       state.autoNextMs = 0;
@@ -3789,6 +5163,7 @@
       state.lock.stack = 0;
       state.locksThisBlock.dispatch = 0;
       state.locksThisBlock.stack = 0;
+      state.utilityStock = { stabilizer: 1, hint: 1, map: 1 };
       state.channel = "noise";
       state.quality = 0;
       state.jamPenalty = 0;
@@ -3802,10 +5177,10 @@
       el.hintBtn.disabled = true;
       el.mapBtn.disabled = true;
       el.nudgeDownBtn.disabled = true;
-      el.fineCenterBtn.disabled = true;
       el.nudgeUpBtn.disabled = true;
       el.nextBtn.disabled = true;
       el.decisionText.textContent = "SYSTEM OFFLINE.";
+      triggerLcdChangeEffect(el.decisionScreen);
       el.statusLine.textContent = "Power O: Alle Systeme aus.";
       if (audio.musicDispatchEl) {
         audio.musicDispatchEl.pause();
@@ -3817,13 +5192,21 @@
         audio.musicStackEl.currentTime = 0;
         audio.musicStackEl.volume = 0;
       }
+      if (audio.geigerEl) {
+        audio.geigerEl.pause();
+        audio.geigerEl.currentTime = 0;
+        audio.geigerEl.volume = 0;
+      }
       if (audio.noiseGain && audio.ctx) audio.noiseGain.gain.setTargetAtTime(0.00001, audio.ctx.currentTime, 0.04);
       if (audio.jamGain && audio.ctx) audio.jamGain.gain.setTargetAtTime(0.00001, audio.ctx.currentTime, 0.04);
       if (audio.maskGain && audio.ctx) audio.maskGain.gain.setTargetAtTime(0.00001, audio.ctx.currentTime, 0.04);
+      if (audio.geigerGain && audio.ctx) audio.geigerGain.gain.setTargetAtTime(0.00001, audio.ctx.currentTime, 0.04);
       beatState.pulse = 0;
+      beatState.target = 0;
       beatState.ema = 0;
       beatState.cooldownMs = 0;
-      document.documentElement.style.setProperty("--beat-pulse", "0");
+      beatState.lastMs = 0;
+      syncBeatPulseCss();
       renderHeader();
       renderStats();
     }
@@ -3942,6 +5325,7 @@
     }
 
     function drawScope(t) {
+      updateBeatPulseFrame(t || ((window.performance && performance.now) ? performance.now() : Date.now()));
       const w = el.scope.width;
       const h = el.scope.height;
       if (!state.powerOn) {
@@ -3963,12 +5347,9 @@
         : getSignal();
       const now = t * 0.001;
       const scopeQuality = sig.quality;
-      const ampBase = Math.max(18, 42 + scopeQuality * 1.12);
-      const jamNoise = winnerHold ? 0 : Math.max(0, state.jamPenalty * 0.28);
-      const noise = winnerHold ? 0 : ((sig.channel === "noise" ? 24 : sig.channel === "stack" ? 11 : 8) + jamNoise);
-      const cycles = sig.channel === "dispatch" ? 16 : sig.channel === "stack" ? 27 : 8;
-      const speed = sig.channel === "dispatch" ? 2.2 : sig.channel === "stack" ? 3.6 : 1.6;
+      const ampBase = Math.max(36, 84 + scopeQuality * 1.9);
       const q = clamp(scopeQuality, 0, 100) / 100;
+      const staticWarp = (!winnerHold ? Math.abs(interferenceState.noiseDrift) + Math.abs(interferenceState.jamWarp) : 0);
       let mp3Wave = null;
       let waveChannel = "noise";
       const dVol = audio.musicDispatchEl ? audio.musicDispatchEl.volume : 0;
@@ -3990,6 +5371,12 @@
           mp3Wave = data;
         }
       }
+      const waveAmpBoost = waveChannel === "stack" ? 1.72 : 1;
+      const ghostAmpBoost = waveChannel === "stack" ? 1.58 : 1;
+      const jamNoise = winnerHold ? 0 : Math.max(0, state.jamPenalty * 0.28);
+      const noise = winnerHold ? 0 : ((sig.channel === "noise" ? 24 : sig.channel === "stack" ? 11 : 8) + jamNoise);
+      const cycles = sig.channel === "dispatch" ? 16 : sig.channel === "stack" ? 27 : 8;
+      const speed = sig.channel === "dispatch" ? 2.2 : sig.channel === "stack" ? 3.6 : 1.6;
       let r;
       let g;
       let b;
@@ -4006,8 +5393,8 @@
       }
       const color = `rgb(${r}, ${g}, ${b})`;
 
-      const envFreq = sig.channel === "stack" ? 3.5 : 2.4;
-      const envDepth = sig.channel === "noise" ? 0.25 : 0.65;
+      const envFreq = sig.channel === "stack" ? 3.5 : sig.channel === "noise" ? 1.8 + staticWarp * 2.4 : 2.4;
+      const envDepth = sig.channel === "noise" ? 0.25 + staticWarp * 0.18 : 0.65;
       const timeBase = now;
       const scanY = ((now * 120) % h);
       ctx.strokeStyle = "rgba(147,240,191,0.09)";
@@ -4027,20 +5414,23 @@
         if (mp3Wave) {
           const i = Math.floor(p * (mp3Wave.length - 1));
           const sample = (mp3Wave[i] - 128) / 128;
-          const amp = 34 + q * 112;
+          const amp = (72 + q * 182) * waveAmpBoost;
           y = h / 2 + sample * amp + (Math.random() - 0.5) * noise * 0.22;
         } else {
           const fallbackEl = waveChannel === "dispatch" ? audio.musicDispatchEl : audio.musicStackEl;
           if (waveChannel !== "noise" && fallbackEl && !fallbackEl.paused) {
             const tt = fallbackEl.currentTime * 3.4;
             const sample = Math.sin(p * 42 + tt) * 0.72 + Math.sin(p * 77 + tt * 1.9) * 0.28;
-            const amp = 30 + q * 88;
+            const amp = (62 + q * 150) * waveAmpBoost;
             y = h / 2 + sample * amp + (Math.random() - 0.5) * noise * 0.16;
           } else {
           const env = 0.45 + envDepth * (0.5 + 0.5 * Math.sin((p * envFreq * Math.PI * 2) + timeBase * 1.15));
-          const fm = Math.sin((p * 4.2) + timeBase * 2.1) * (scopeQuality / 140);
+          const fm = Math.sin((p * 4.2) + timeBase * 2.1 + staticWarp * 1.2) * (scopeQuality / 140);
+          const grit = sig.channel === "noise"
+            ? Math.sin((p * 93) + timeBase * (8.5 + staticWarp * 3.8)) * (8 + staticWarp * 14)
+            : 0;
           const carrier = Math.sin((p * cycles * Math.PI * 2) + timeBase * speed + fm);
-          y = h / 2 + carrier * ampBase * env + (Math.random() - 0.5) * noise;
+          y = h / 2 + carrier * ampBase * env + grit + (Math.random() - 0.5) * noise * (1 + staticWarp * 0.35);
           }
         }
         if (x === 0) ctx.moveTo(x, y);
@@ -4059,17 +5449,18 @@
           const i = Math.floor(p * (mp3Wave.length - 1));
           const i2 = Math.min(mp3Wave.length - 1, i + 18);
           const sample = (mp3Wave[i2] - 128) / 128;
-          y = h / 2 + sample * (26 + q * 78);
+          y = h / 2 + sample * ((26 + q * 78) * ghostAmpBoost);
         } else {
           const fallbackEl = waveChannel === "dispatch" ? audio.musicDispatchEl : audio.musicStackEl;
           if (waveChannel !== "noise" && fallbackEl && !fallbackEl.paused) {
             const tt = fallbackEl.currentTime * 2.7;
             const sample = Math.sin(p * 36 + tt) * 0.68 + Math.sin(p * 66 + tt * 1.7) * 0.22;
-            y = h / 2 + sample * (22 + q * 56);
+            y = h / 2 + sample * ((22 + q * 56) * ghostAmpBoost);
           } else {
           const env = 0.45 + envDepth * (0.5 + 0.5 * Math.sin((p * envFreq * Math.PI * 2) + timeBase * 1.15 + 0.7));
-          const carrier = Math.sin((p * cycles * Math.PI * 2) + timeBase * speed + 0.9);
-          y = h / 2 + carrier * (ampBase * 0.86) * env;
+          const carrier = Math.sin((p * cycles * Math.PI * 2) + timeBase * speed + 0.9 + staticWarp * 0.8);
+          const shimmer = sig.channel === "noise" ? Math.sin((p * 57) + timeBase * 5.4) * (5 + staticWarp * 10) : 0;
+          y = h / 2 + carrier * (ampBase * 1.02) * env + shimmer;
           }
         }
         if (x === 0) ctx.moveTo(x, y);
@@ -4084,23 +5475,27 @@
       ctx.lineTo(w, h / 2);
       ctx.stroke();
 
-      if (!winnerHold && state.jamPenalty > 12) {
-        const snowStrength = clamp((state.jamPenalty - 12) / 140, 0, 1);
-        const dots = Math.floor(160 + snowStrength * 820);
+      if (!winnerHold) {
+        const lowSignalSnow = clamp((34 - Math.max(scopeQuality, 0)) / 34, 0, 1);
+        const jamSnow = clamp((state.jamPenalty - 12) / 140, 0, 1);
+        const snowStrength = clamp(Math.max(jamSnow, lowSignalSnow * 0.9), 0, 1);
+        if (snowStrength > 0.08) {
+        const dots = Math.floor(220 + snowStrength * 980);
         for (let i = 0; i < dots; i += 1) {
           const x = Math.random() * w;
           const y = Math.random() * h;
-          const alpha = 0.07 + Math.random() * (0.18 + snowStrength * 0.22);
+          const alpha = 0.08 + Math.random() * (0.22 + snowStrength * 0.26);
           ctx.fillStyle = `rgba(235,245,255,${alpha})`;
           ctx.fillRect(x, y, 1.2, 1.2);
         }
-        const bands = Math.floor(1 + snowStrength * 5);
+        const bands = Math.floor(1 + snowStrength * 6);
         for (let i = 0; i < bands; i += 1) {
           const y = Math.random() * h;
-          const height = 1 + Math.random() * (3 + snowStrength * 4);
-          const alpha = 0.05 + snowStrength * 0.18;
+          const height = 1 + Math.random() * (4 + snowStrength * 5);
+          const alpha = 0.06 + snowStrength * 0.2;
           ctx.fillStyle = `rgba(255,255,255,${alpha})`;
           ctx.fillRect(0, y, w, height);
+        }
         }
       }
 
@@ -4117,6 +5512,9 @@
     function boot() {
       initLockLeds();
       setupDial();
+      setupConfigKnob("name");
+      setupConfigKnob("faction");
+      setupConfigKnob("theme");
 
       const storedTheme = localStorage.getItem("freq_theme") || "field";
       applyTheme(storedTheme);
@@ -4140,44 +5538,23 @@
         setCoarseFreq((state.fineMode ? state.fineAnchor : state.freq) - 0.25);
         renderHeader();
       });
-      el.fineCenterBtn.addEventListener("click", () => {
-        if (isAdvanceGateActive()) return;
-        setFineAccel(0);
-        el.statusLine.textContent = `Fine reset auf ${state.fineAnchor.toFixed(2)} MHz.`;
-        renderHeader();
-      });
       el.nudgeUpBtn.addEventListener("click", () => {
         if (isAdvanceGateActive()) return;
         setCoarseFreq((state.fineMode ? state.fineAnchor : state.freq) + 0.25);
         renderHeader();
       });
       el.mapBtn.addEventListener("click", mapPing);
+      if (el.lcdBuyStabilizer) el.lcdBuyStabilizer.addEventListener("click", () => buyUtility("stabilizer"));
+      if (el.lcdBuyHint) el.lcdBuyHint.addEventListener("click", () => buyUtility("hint"));
+      if (el.lcdBuyMap) el.lcdBuyMap.addEventListener("click", () => buyUtility("map"));
+      if (el.lcdBuyEnergy) el.lcdBuyEnergy.addEventListener("click", () => buyLcdShopItem("energy"));
+      if (el.lcdBuySolar) el.lcdBuySolar.addEventListener("click", () => buyLcdShopItem("solar"));
+      if (el.lcdBuyRep) el.lcdBuyRep.addEventListener("click", () => buyLcdShopItem("reputation"));
+      if (el.lcdBuyMorale) el.lcdBuyMorale.addEventListener("click", () => buyLcdShopItem("morale"));
       el.themeSelect.addEventListener("change", () => {
         applyTheme(el.themeSelect.value);
         syncDisplaySelectorsFromControls();
       });
-      if (el.displayNameSelect) {
-        el.displayNameSelect.addEventListener("change", () => {
-          if (!el.nameInput) return;
-          el.nameInput.value = el.displayNameSelect.value;
-          if (state.running) {
-            state.name = el.nameInput.value.trim().slice(0, 18) || "Wavefox";
-            renderHeader();
-          }
-        });
-      }
-      if (el.displayFactionSelect) {
-        el.displayFactionSelect.addEventListener("change", () => {
-          if (!el.factionSelect) return;
-          el.factionSelect.value = el.displayFactionSelect.value;
-        });
-      }
-      if (el.displayThemeSelect) {
-        el.displayThemeSelect.addEventListener("change", () => {
-          if (el.themeSelect) el.themeSelect.value = el.displayThemeSelect.value;
-          applyTheme(el.displayThemeSelect.value);
-        });
-      }
       el.optA.addEventListener("click", () => choose("A"));
       el.optB.addEventListener("click", () => choose("B"));
 
